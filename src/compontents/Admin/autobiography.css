@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800');
+
+
+.ql-picker.ql-font {
+    .ql-picker-item {
+      font-size: 0;
+      &:before {
+        content: attr(data-value) !important;
+        font-size: 14px;
+      }
+    }
+  }
+  
+  .ql-picker.ql-font{
+    .ql-active {
+      &:before {
+        content: attr(data-value) !important;
+        font-size: 14px;
+      }
+    }
+  }
+  
+  .ql-picker.ql-font .ql-picker-label[data-value="Helvetica"]::before, 
+  .ql-picker.ql-font .ql-picker-item[data-value="Helvetica"]::before
+  {
+      font-family: "Helvetica", cursive;;
+      content: "Helvetica" !important;
+  }
+  .ql-picker.ql-font .ql-picker-label[data-value="Nanum-Gothic"]::before, 
+  .ql-picker.ql-font .ql-picker-item[data-value="Nanum-Gothic"]::before
+  {
+      font-family: "Nanum Gothic", cursive;;
+      content: "Nanum-Gothic" !important;
+  }
+
+  .ql-picker.ql-font .ql-picker-label[data-value="Roboto"]::before, 
+  .ql-picker.ql-font .ql-picker-item[data-value="Roboto"]::before
+  {
+      font-family: "Roboto", cursive;;
+      content: "Roboto" !important;
+  }
+  
+  .ql-picker.ql-font .ql-picker-label[data-value="Raleway"]::before, 
+  .ql-picker.ql-font .ql-picker-item[data-value="Raleway"]::before
+  {
+      font-family: "Raleway", cursive;;
+      content: "Raleway" !important;
+  }
+  
+  .ql-picker.ql-font .ql-picker-label[data-value="Montserrat"]::before, 
+  .ql-picker.ql-font .ql-picker-item[data-value="Montserrat"]::before
+  {
+      font-family: "Montserrat", cursive;;
+      content: "Montserrat" !important;
+  }
+  
+  .ql-picker.ql-font .ql-picker-label[data-value="Lato"]::before, 
+  .ql-picker.ql-font .ql-picker-item[data-value="Lato"]::before
+  {
+      font-family: "Lato", cursive;;
+      content: "Lato" !important;
+  }
+  
+  .ql-picker.ql-font .ql-picker-label[data-value="Rubik"]::before, 
+  .ql-picker.ql-font .ql-picker-item[data-value="Rubik"]::before
+  {
+      font-family: "Rubik", cursive;;
+      content: "Rubik" !important;
+  }
+  
+  /* Set content font-families */
+  .ql-font-Helvetica {
+    font-family: "Helvetica";
+  }
+  .ql-font-Nanum-Gothic {
+    font-family: "Nanum-Gothic";
+  }
+  .ql-font-Roboto {
+    font-family: "Roboto";
+  }
+  .ql-font-Raleway {
+    font-family: "Raleway";
+  }
+  .ql-font-Montserrat {
+    font-family: "Montserrat";
+  }
+  .ql-font-Lato {
+    font-family: "Lato";
+  }
+  .ql-font-Rubik {
+    font-family: "Rubik";
+  }
+
+  .ql-snow .ql-picker.ql-size .ql-picker-label::before, 
+.ql-snow .ql-picker.ql-size .ql-picker-item::before {
+  content: attr(data-value);
+}
+
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="8px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="8px"]::before {
+    content: '8px';
+}
+.ql-snow .ql-size[value="8px"] {
+    font-size: 8px;
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="9px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="9px"]::before {
+    content: '9px';
+}
+.ql-snow .ql-size[value="9px"] {
+    font-size: 9px;
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="10px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="10px"]::before {
+    content: '10px';
+}
+.ql-snow .ql-size[value="10px"] {
+    font-size: 10px;
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="11px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="11px"]::before {
+    content: '11px';
+}
+.ql-snow .ql-size[value="11px"] {
+    font-size: 11px;
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="12px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="12px"]::before {
+    content: '12px';
+}
+.ql-snow .ql-size[value="12px"] {
+    font-size: 12px;
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="14px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14px"]::before {
+    content: '14px';
+}
+.ql-snow .ql-size[value="14px"] {
+    font-size: 14px;
+}
+
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="18px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18px"]::before {
+    content: '18px';
+}
+.ql-snow .ql-size[value="18px"] {
+    font-size: 18px;
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="24px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="24px"]::before {
+    content: '24px';
+}
+.ql-snow .ql-size[value="24px"] {
+    font-size: 24px;
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="36px"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="36px"]::before {
+    content: '36px';
+}
+.ql-size[value="36px"] {
+    font-size: 36px;
+}
+
+p {margin-bottom: 0.1rem !important;}
+img { width: 100%; }
+.ql-size-8px { font-size : 8px;}
+.ql-size-9px { font-size : 9px;}
+.ql-size-10px { font-size : 10px;}
+.ql-size-11px { font-size : 11px;}
+.ql-size-12px { font-size : 12px;}
+.ql-size-14px { font-size : 14px;}
+.ql-size-18px { font-size : 18px;}
+.ql-size-24px { font-size : 24px;}
+.ql-size-36px { font-size : 36px;}

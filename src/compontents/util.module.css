@@ -1,0 +1,19 @@
+
+@media print {
+    @page {
+        size : A4;
+        margin: 20mm;
+    }
+    .PrintIcon {
+        width : 22px !important;
+    }
+    .printShare {
+        display: none;
+        /* visibility:hidden; */
+        /* width : 250px !important;
+        position: relative;
+        transform: translate(-100px,0); */
+        /* margin-right: 15vw !important; */
+        border: 1px solid red;
+    }
+}
