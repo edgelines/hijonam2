@@ -2,6 +2,7 @@ const path = require('path');
 // const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); //추가
 const HtmlWebpackPlugin = require('html-webpack-plugin') //추가
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
     mode: "development",
@@ -12,6 +13,7 @@ const config = {
     output: {
         path: path.resolve(__dirname, './dist'),
         filename: 'build.js',
+        publicPath: '/', // 라우터 링크 못읽는 현상 수정
     },
     resolve: {
         modules: [path.join(__dirname, "src"), "node_modules"],
@@ -66,9 +68,16 @@ const config = {
             template: path.resolve(__dirname, 'src', 'index.html'),  // index.html 파일의 경로를 지정합니다.
             inject: true,
             filename: path.resolve(__dirname, './dist/index.html')
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: 'public/img', to: 'img' }
+            ]
         })
     ],
-    devtool: "inline-source-map",
+    // devtool: "inline-source-map",
+    // devtool: "hidden-source-map", production
+    devtool: "eval", // 개발버전
     devServer: {
         static: {
             directory: path.join(__dirname, 'public'),
@@ -78,6 +87,10 @@ const config = {
         port: 3000,
         hot: true,
         historyApiFallback: true,
+        open: false,
+    },
+    watchOptions: {
+        ignored: /node_modules/,
     },
 }
 

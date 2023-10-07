@@ -194,7 +194,7 @@ export default function HomePage({ lang }) {
                         </Grid>
                     </Grid>
 
-
+                    {/* Exhibition */}
                     <Grid container textAlign='start' sx={{ mt: '30px' }} >
                         <Grid container>
                             <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
@@ -226,6 +226,7 @@ export default function HomePage({ lang }) {
                         </Grid>
                     </Grid>
 
+                    {/* Autobiography */}
                     <Grid container textAlign='start' sx={{ mt: '30px' }}>
                         <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
                             Autobiography
@@ -245,6 +246,8 @@ export default function HomePage({ lang }) {
                             }
                         </Grid>
                     </Grid>
+
+                    {/* Photos */}
                     <Grid container textAlign='start' sx={{ mt: '30px' }}>
                         <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
                             Recent Photos Upload
@@ -254,7 +257,29 @@ export default function HomePage({ lang }) {
                                 See All
                             </Link>
                         </Grid>
-                        <Grid item xs={12} sx={{ marginTop: '1vh' }} >
+                        <Grid item xs={12} sx={{ marginTop: '1vh' }}>
+                            <Grid container spacing={2}>
+                                {Object.entries(photos).map(([key, photo], index) => (
+                                    <Grid item xs={3} key={key}>
+                                        <div style={{ position: 'relative', paddingBottom: '75%' }}>
+                                            <img
+                                                src={`/img/Photos/${photo.folderName}/${photo.fileName}`}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'cover'
+                                                }}
+                                            />
+                                        </div>
+                                        <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photo.title}</p>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Grid>
+                        {/* <Grid item xs={12} sx={{ marginTop: '1vh' }} >
                             <Grid container spacing={2}>
                                 <Grid item xs={3}>
                                     <div style={{ position: 'relative', paddingBottom: '75%' }}>
@@ -324,7 +349,7 @@ export default function HomePage({ lang }) {
                                     <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.other.title}</p>
                                 </Grid>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
 
                 </Grid>
@@ -335,7 +360,7 @@ export default function HomePage({ lang }) {
                             <Grid item xs={12} textAlign='start'>
                                 <img src={logo} style={{ width: "25vw" }} />
                             </Grid>
-
+                            {/* Clock */}
                             <Grid item xs={12} sx={{ mt: '1vh' }} >
                                 <Grid container >
                                     <Grid item xs={3} container direction="column" alignItems="center">
@@ -388,6 +413,7 @@ export default function HomePage({ lang }) {
                                 </Grid>
                             </Grid>
 
+                            {/* Exhibition */}
                             <Grid item xs={12} textAlign='start' sx={{ mt: '1vh' }} >
                                 <Grid container>
                                     <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
@@ -419,6 +445,7 @@ export default function HomePage({ lang }) {
                                 </Grid>
                             </Grid>
 
+                            {/* Photos */}
                             <Grid item xs={12} textAlign='start' sx={{ mt: '1vh' }}>
                                 <Grid container>
                                     <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
@@ -429,64 +456,26 @@ export default function HomePage({ lang }) {
                                             See All
                                         </Link>
                                     </Grid>
-                                    <Grid item xs={12} sx={{ marginTop: '1vh' }} >
+                                    <Grid item xs={12} sx={{ marginTop: '1vh' }}>
                                         <Grid container spacing={2}>
-                                            <Grid item xs={3}>
-                                                <div style={{ position: 'relative', paddingBottom: '75%' }}>
-                                                    <img src={`/img/Photos/${photos.exhibition.folderName}/${photos.exhibition.fileName}`}
-                                                        // style={{ height: '15vh', objectFit: 'cover' }} 
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: 0,
-                                                            left: 0,
-                                                            width: '100%',
-                                                            height: '100%',
-                                                            objectFit: 'cover'
-                                                        }}
-                                                    />
-
-                                                </div>
-                                                <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.exhibition.title}</p>
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <div style={{ position: 'relative', paddingBottom: '75%' }} >
-                                                    <img src={`/img/Photos/${photos.studioUS.folderName}/${photos.studioUS.fileName}`} style={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        objectFit: 'cover'
-                                                    }} />
-                                                </div>
-                                                <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.studioUS.title}</p>
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <div style={{ position: 'relative', paddingBottom: '75%' }} >
-                                                    <img src={`/img/Photos/${photos.studioKorea.folderName}/${photos.studioKorea.fileName}`} style={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        objectFit: 'cover'
-                                                    }} />
-                                                </div>
-                                                <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.studioKorea.title}</p>
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <div style={{ position: 'relative', paddingBottom: '75%' }} >
-                                                    <img src={`/img/Photos/${photos.other.folderName}/${photos.other.fileName}`} style={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        objectFit: 'cover'
-                                                    }} />
-                                                </div>
-                                                <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.other.title}</p>
-                                            </Grid>
+                                            {Object.entries(photos).map(([key, photo], index) => (
+                                                <Grid item xs={3} key={key}>
+                                                    <div style={{ position: 'relative', paddingBottom: '75%' }}>
+                                                        <img
+                                                            src={`/img/Photos/${photo.folderName}/${photo.fileName}`}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: 0,
+                                                                left: 0,
+                                                                width: '100%',
+                                                                height: '100%',
+                                                                objectFit: 'cover'
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photo.title}</p>
+                                                </Grid>
+                                            ))}
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -538,12 +527,13 @@ const AutobiographyContentComponent = ({ lang, title, content, postId, onClick }
     const someProps = { fontFamily: lang === 'Kr' ? 'Nanum Gothic' : 'Crimson Text', fontSize: 12, }
     const theme = generateTheme(someProps);
     const navigate = useNavigate();
+
     const goToDetailPage = (postId) => {
-        navigate(`/bio/autobiography/detail/${postId}`);
+        navigate(`/bio/autobiography/${postId}`);
     };
     return (
         <Box sx={{ paddingTop: 1 }}
-            onClick={() => goToDetailPage(postId)}
+            onClick={() => goToDetailPage(String(postId))}
         >
             <Grid container>
                 <Grid item xs={7}>

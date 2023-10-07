@@ -1,5 +1,23 @@
 # hijonam.com
 
+### TodoList || Bug Report
+- Tablet.Ver Pre-Style
+
+### 2023.10.07
+- 삼성동 사무실+집 : main
+    - pc + Mobile 스타일링 Master 작업
+    - Mobile 
+        - Home : Autobiography 추가, link연결
+        - Autobiography Detail Link 수정
+    - Webpack Config 
+        - 라우터에서 페이지 랜더링 안되는 부분 수정
+        - public > img 이미지
+        - watchOptions: { ignored: /node_modules/ },
+        - output: { publicPath: '/', }, 
+        - devtool: "eval",  
+        - devSever : {historyApiFallback: true,}
+        - 빌드시 pubilc의 img > dist로 이동
+
 ### 2023.10.06
 - CRA -> Babel + Webpack 
 
