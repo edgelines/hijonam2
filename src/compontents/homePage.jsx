@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Grid } from '@mui/material';
+import { useNavigate, Link } from 'react-router-dom';
+import { Grid, Typography, Box, Stack } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
+import { generateTheme } from './util.jsx';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
 import logo from '../assets/hijonam_logo.png'
 import Clock from 'react-clock';
 import 'react-clock/dist/Clock.css';
 
-export default function HomePage() {
+export default function HomePage({ lang }) {
     const isMobile = useMediaQuery('(max-width:600px)');
     const [imgData, setImgData] = useState([]);
-    const [exhibition, setExhibition] = useState([])
-    const [photos, setPhotos] = useState({ exhibition: {}, studioUS: {}, studioKorea: {}, other: {} })
-    const [worldTime, setWorldTime] = useState({ seoul: new Date(), newYork: new Date() })
+    const [exhibition, setExhibition] = useState([]);
+    const [autobiographyContent, setAutobiographyContent] = useState([]);
+    const [photos, setPhotos] = useState({ exhibition: {}, studioUS: {}, studioKorea: {}, other: {} });
+    const [worldTime, setWorldTime] = useState({ seoul: new Date(), newYork: new Date() });
 
     const fetchData = async () => {
         await axios.get('http://hijonam.com/img/home').then((response) => {
@@ -91,6 +94,12 @@ export default function HomePage() {
         }).catch((error) => {
             console.error("Error fetching upcomingExhibition:", error);
         });
+        await axios.get(`http://hijonam.com/img/autobiography`).then((response) => {
+            const data = response.data[response.data.length - 1]
+            setAutobiographyContent(data);
+        }).catch((error) => {
+            console.error("Error fetching artworks:", error);
+        });
     }
 
     useEffect(() => {
@@ -118,11 +127,14 @@ export default function HomePage() {
         const interval = setInterval(updateTime, 500);
         return () => clearInterval(interval);
     }, []);
+    // 모바일 스타일링
+    const mobileHomeClockStyle = { fontSize: '12px', lineHeight: '14px' }
 
     return (
         <>
             {isMobile ? (
-                <Grid container sx={{ padding: 3 }} >
+                <Grid container sx={{ padding: 3, mt: '3px' }} >
+                    {/* 시계 */}
                     <Grid container>
                         <Grid item xs={3} container direction="column" alignItems="center">
                             <Clock
@@ -140,16 +152,23 @@ export default function HomePage() {
                                 secondHandLength={75}
                                 secondHandOppositeLength={17}
                                 secondHandWidth={2}
-                                size={80}
+                                size={75}
                             />
                         </Grid>
-                        <Grid item xs={2.8} container direction="column" justifyContent="flex-end" textAlign='end'>
-                            NEW YORK
-                            <div>{worldTime.newYork.toLocaleTimeString("en-US")}</div>
-                            <div>{worldTime.newYork.toLocaleDateString()}</div>
+                        <Grid item xs={0.3}></Grid>
+                        <Grid item xs={2.5} container direction="column" justifyContent="flex-end" textAlign='start'>
+                            <Typography sx={mobileHomeClockStyle}>
+                                NEW YORK
+                            </Typography>
+                            <Typography sx={mobileHomeClockStyle}>
+                                {worldTime.newYork.toLocaleTimeString("en-US")}
+                            </Typography>
+                            <Typography sx={mobileHomeClockStyle}>
+                                {worldTime.newYork.toLocaleDateString()}
+                            </Typography>
                         </Grid>
                         <Grid item xs={0.4}></Grid>
-                        <Grid item xs={2.8} container direction="column" alignItems="center">
+                        <Grid item xs={3} container direction="column" alignItems="center">
                             <Clock value={worldTime.seoul}
                                 hourHandLength={53}
                                 hourHandOppositeLength={17}
@@ -164,131 +183,150 @@ export default function HomePage() {
                                 secondHandLength={75}
                                 secondHandOppositeLength={17}
                                 secondHandWidth={2}
-                                size={80}
+                                size={75}
                             />
                         </Grid>
-                        <Grid item xs={3} container direction="column" justifyContent="flex-end" textAlign='end'>
-                            SEOUL
-                            <div>{worldTime.seoul.toLocaleTimeString("en-US")}</div>
-                            <div>{worldTime.seoul.toLocaleDateString()}</div>
+                        <Grid item xs={0.3}></Grid>
+                        <Grid item xs={2.5} container direction="column" justifyContent="flex-end" textAlign='start'>
+                            <Typography sx={mobileHomeClockStyle}>SEOUL</Typography>
+                            <Typography sx={mobileHomeClockStyle}>{worldTime.seoul.toLocaleTimeString("en-US")}</Typography>
+                            <Typography sx={mobileHomeClockStyle}>{worldTime.seoul.toLocaleDateString()}</Typography>
                         </Grid>
                     </Grid>
-                    <Grid container>
-                        <Grid item xs={12} textAlign='start' sx={{ mt: '1vh' }} >
-                            <Grid container>
-                                <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
-                                    Exhibition
-                                </Grid>
-                                <Grid item xs={2} textAlign='end' sx={{ borderBottom: '1px solid black' }}>
-                                    <Link to={`/exhibition/upcoming/`} style={{ color: 'black', textDecoration: 'none' }}>
-                                        See All
-                                    </Link>
-                                </Grid>
-                                {
-                                    exhibition.map((item, index) => (
-                                        <Grid container className="border-bottom" key={item.id} sx={{ height: '7vh' }} >
-                                            <Grid item xs={8} sx={{ alignSelf: 'center' }} >
-                                                <tr>
-                                                    <td>{item.soloGroup === 0 ? 'Solo Exhibition' : item.soloGroup === 1 ?
-                                                        'Group Exhibition' : !item.soloGroup ? '' : ''}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>{item.title ? item.title : ''}</td>
-                                                </tr>
-                                            </Grid>
-                                            <Grid item xs={4} textAlign='end' sx={{ alignSelf: 'center' }} >
-                                                <span> {item.startDate ? `${item.startDate} ~ ${item.endDate}` : ''} </span>
-                                            </Grid>
-                                        </Grid>
-                                    ))
-                                }
+
+
+                    <Grid container textAlign='start' sx={{ mt: '30px' }} >
+                        <Grid container>
+                            <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
+                                Exhibition
                             </Grid>
-                        </Grid>
-
-                        <Grid item xs={12} textAlign='start' sx={{ mt: '1vh' }}>
-                            <Grid container>
-                                <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
-                                    Recent Photos Upload
-                                </Grid>
-                                <Grid item xs={2} textAlign='end' sx={{ borderBottom: '1px solid black' }}>
-                                    <Link to={`/bio/photos`} style={{ color: 'black', textDecoration: 'none' }}>
-                                        See All
-                                    </Link>
-                                </Grid>
-                                <Grid item xs={12} sx={{ marginTop: '1vh' }} >
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={3}>
-                                            <div style={{ position: 'relative', paddingBottom: '75%' }}>
-                                                {photos.exhibition && photos.exhibition.fileName &&
-                                                    <img src={`/img/Photos/${photos.exhibition.folderName}/${photos.exhibition.fileName[0]}`}
-                                                        // <img src={`/img/Photos/${photos.exhibition.folderName}/${photos.exhibition.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`}
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: 0,
-                                                            left: 0,
-                                                            width: '100%',
-                                                            height: '100%',
-                                                            objectFit: 'cover'
-                                                        }}
-                                                    />
-                                                }
-
-                                            </div>
-                                            <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.exhibition.title}</p>
+                            <Grid item xs={2} textAlign='end' sx={{ borderBottom: '1px solid black' }}>
+                                <Link to={`/exhibition/upcoming/`} style={{ color: 'black', textDecoration: 'none' }}>
+                                    See All
+                                </Link>
+                            </Grid>
+                            {
+                                exhibition.map((item, index) => (
+                                    <Grid container className="border-bottom" key={item.id} sx={{ height: '6vh' }} >
+                                        <Grid item xs={8} sx={{ alignSelf: 'center' }} >
+                                            <tr>
+                                                <td>{item.soloGroup === 0 ? 'Solo Exhibition' : item.soloGroup === 1 ?
+                                                    'Group Exhibition' : !item.soloGroup ? '' : ''}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{item.title ? item.title : ''}</td>
+                                            </tr>
                                         </Grid>
-                                        <Grid item xs={3}>
-                                            <div style={{ position: 'relative', paddingBottom: '75%' }} >
-                                                {photos.studioUS && photos.studioUS.fileName &&
-                                                    <img src={`/img/Photos/${photos.studioUS.folderName}/${photos.studioUS.fileName[0]}`} style={{
-                                                        // <img src={`/img/Photos/${photos.studioUS.folderName}/${photos.studioUS.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`} style={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        objectFit: 'cover'
-                                                    }} />
-                                                }
-                                            </div>
-                                            <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.studioUS.title}</p>
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <div style={{ position: 'relative', paddingBottom: '75%' }} >
-                                                {photos.studioKorea && photos.studioKorea.fileName &&
-                                                    <img src={`/img/Photos/${photos.studioKorea.folderName}/${photos.studioKorea.fileName[0]}`} style={{
-                                                        // <img src={`/img/Photos/${photos.studioKorea.folderName}/${photos.studioKorea.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`} style={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        objectFit: 'cover'
-                                                    }} />
-                                                }
-                                            </div>
-                                            <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.studioKorea.title}</p>
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <div style={{ position: 'relative', paddingBottom: '75%' }} >
-                                                {photos.other && photos.other.fileName &&
-                                                    <img src={`/img/Photos/${photos.other.folderName}/${photos.other.fileName[0]}`} style={{
-                                                        // <img src={`/img/Photos/${photos.other.folderName}/${photos.other.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`} style={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        objectFit: 'cover'
-                                                    }} />
-                                                }
-                                            </div>
-                                            <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.other.title}</p>
+                                        <Grid item xs={4} textAlign='end' sx={{ alignSelf: 'center' }} >
+                                            <span> {item.startDate ? `${item.startDate} ~ ${item.endDate}` : ''} </span>
                                         </Grid>
                                     </Grid>
+                                ))
+                            }
+                        </Grid>
+                    </Grid>
+
+                    <Grid container textAlign='start' sx={{ mt: '30px' }}>
+                        <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
+                            Autobiography
+                        </Grid>
+                        <Grid item xs={2} textAlign='end' sx={{ borderBottom: '1px solid black' }}>
+                            <Link to={`/bio/autobiography/`} style={{ color: 'black', textDecoration: 'none' }}>
+                                See All
+                            </Link>
+                        </Grid>
+                        <Grid item xs={12}>
+                            {autobiographyContent && autobiographyContent.title ?
+                                <AutobiographyContentComponent
+                                    lang={lang} title={lang === 'En' ? autobiographyContent.title : autobiographyContent.title_kr}
+                                    content={lang === 'En' ? autobiographyContent.content : autobiographyContent.content_kr}
+                                    postId={autobiographyContent.id} />
+                                : <div>Loading...</div>
+                            }
+                        </Grid>
+                    </Grid>
+                    <Grid container textAlign='start' sx={{ mt: '30px' }}>
+                        <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
+                            Recent Photos Upload
+                        </Grid>
+                        <Grid item xs={2} textAlign='end' sx={{ borderBottom: '1px solid black' }}>
+                            <Link to={`/bio/photos`} style={{ color: 'black', textDecoration: 'none' }}>
+                                See All
+                            </Link>
+                        </Grid>
+                        <Grid item xs={12} sx={{ marginTop: '1vh' }} >
+                            <Grid container spacing={2}>
+                                <Grid item xs={3}>
+                                    <div style={{ position: 'relative', paddingBottom: '75%' }}>
+                                        {photos.exhibition && photos.exhibition.fileName &&
+                                            <img src={`/img/Photos/${photos.exhibition.folderName}/${photos.exhibition.fileName[0]}`}
+                                                // <img src={`/img/Photos/${photos.exhibition.folderName}/${photos.exhibition.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'cover'
+                                                }}
+                                            />
+                                        }
+
+                                    </div>
+                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.exhibition.title}</p>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <div style={{ position: 'relative', paddingBottom: '75%' }} >
+                                        {photos.studioUS && photos.studioUS.fileName &&
+                                            <img src={`/img/Photos/${photos.studioUS.folderName}/${photos.studioUS.fileName[0]}`} style={{
+                                                // <img src={`/img/Photos/${photos.studioUS.folderName}/${photos.studioUS.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`} style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover'
+                                            }} />
+                                        }
+                                    </div>
+                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.studioUS.title}</p>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <div style={{ position: 'relative', paddingBottom: '75%' }} >
+                                        {photos.studioKorea && photos.studioKorea.fileName &&
+                                            <img src={`/img/Photos/${photos.studioKorea.folderName}/${photos.studioKorea.fileName[0]}`} style={{
+                                                // <img src={`/img/Photos/${photos.studioKorea.folderName}/${photos.studioKorea.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`} style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover'
+                                            }} />
+                                        }
+                                    </div>
+                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.studioKorea.title}</p>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <div style={{ position: 'relative', paddingBottom: '75%' }} >
+                                        {photos.other && photos.other.fileName &&
+                                            <img src={`/img/Photos/${photos.other.folderName}/${photos.other.fileName[0]}`} style={{
+                                                // <img src={`/img/Photos/${photos.other.folderName}/${photos.other.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`} style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover'
+                                            }} />
+                                        }
+                                    </div>
+                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.other.title}</p>
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
+
                 </Grid>
             ) : (
                 <Grid container>
@@ -472,4 +510,76 @@ export default function HomePage() {
         </>
 
     );
+}
+
+
+const AutobiographyContentComponent = ({ lang, title, content, postId, onClick }) => {
+    // 1. 이미지 URL 추출하기
+    const imageRegex = /<img.*?src="(.*?)".*?>/; // 이미지 태그에서 src 값을 추출하는 정규식
+    const imageMatch = content.match(imageRegex);
+    const imageUrl = imageMatch ? imageMatch[1] : null; // 첫 번째 이미지 URL
+
+    // 모든 <p> 태그의 내용을 추출하는 정규식
+    const pTagsRegex = /<p.*?>([\s\S]*?)<\/p>/g;
+    const pTagsMatches = [...content.matchAll(pTagsRegex)];
+
+    let firstPText = "";
+
+    for (let i = 0; i < pTagsMatches.length; i++) {
+        const pContent = pTagsMatches[i][1].trim();
+        // <img 태그나 <br 태그만을 포함하는 <p> 태그를 건너뜀
+        if (!/<img /i.test(pContent) && pContent !== "<br>") {
+            firstPText = pContent.replace(/<\/?[^>]+(>|$)/g, "");
+            break;
+        }
+    }
+    // 첫 번째 이미지 및 <br> 태그만을 포함하지 않는 <p> 태그의 텍스트에서 100자 추출하기
+    const snippet = lang === 'En' ? firstPText.substr(0, 86) : firstPText.substr(0, 60);
+    const someProps = { fontFamily: lang === 'Kr' ? 'Nanum Gothic' : 'Crimson Text', fontSize: 12, }
+    const theme = generateTheme(someProps);
+    const navigate = useNavigate();
+    const goToDetailPage = (postId) => {
+        navigate(`/bio/autobiography/detail/${postId}`);
+    };
+    return (
+        <Box sx={{ paddingTop: 1 }}
+            onClick={() => goToDetailPage(postId)}
+        >
+            <Grid container>
+                <Grid item xs={7}>
+                    {imageUrl &&
+                        <img src={imageUrl} alt="Post Thumbnail"
+                            loading="lazy"
+                            className='thumbnail thumbnail-img'
+                            style={{
+                                width: '100%',
+                                objectFit: 'cover',
+                                border: '1px solid grey'
+                            }}
+                        />}
+                </Grid>
+                <Grid item xs={0.5}></Grid>
+                <Grid item xs={4.5} >
+                    <Grid item container direction="column" justifyContent="flex-end" sx={{ height: '100%' }}>
+                        <Stack
+                            direction="column"
+                            justifyContent="flex-end"
+                            alignItems="flex-start"
+                        >
+                            <ThemeProvider theme={theme} >
+                                <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#474747' }}>
+                                    {title}
+                                </Typography>
+                                <Typography textAlign='start' sx={{ fontSize: lang === 'En' ? '12px' : '11.3px', color: '#474747', marginBottom: '15px', lineHeight: lang === 'En' ? '15px' : '17px' }}>
+                                    {snippet}...
+                                </Typography>
+                            </ThemeProvider>
+                        </Stack>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Box>
+        // <Link to={`/bio/autobiography/${String(postId)}`} style={{ color: 'black', textDecoration: 'none' }}>
+        // </Link >
+    )
 }

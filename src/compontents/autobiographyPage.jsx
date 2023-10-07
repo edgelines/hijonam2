@@ -211,7 +211,7 @@ const ContentsRoot = ({ lang, data, handleClickDetailPage }) => {
     return (
         <>
             {isMobile ?
-                <Grid container>
+                <Grid container >
                     {data.map((item, index) => (
                         <PostView key={index} lang={lang} title={lang === 'En' ? item.title : item.title_kr} content={lang === 'En' ? item.content : item.content_kr}
                             views={item.views} postId={item.id}
@@ -267,7 +267,7 @@ const PostView = ({ lang, title, content, views, postId, onClick }) => {
     const theme = generateTheme(someProps);
     return (
         <Link to={`/bio/autobiography/${postId}`} style={{ color: 'black', textDecoration: 'none' }}>
-            <Box sx={{ border: '1px solid grey', padding: 1, cursor: 'pointer', marginBottom: isMobile ? '3vh' : '' }} className={isMobile ? "" : `${StyledCSS.listGroupitem}`}
+            <Box sx={{ border: '1px solid grey', padding: 1, cursor: 'pointer', marginBottom: isMobile ? '50px' : '' }} className={isMobile ? "" : `${StyledCSS.listGroupitem}`}
                 onClick={onClick}>
                 {imageUrl &&
                     <img src={imageUrl} alt="Post Thumbnail"
@@ -285,13 +285,17 @@ const PostView = ({ lang, title, content, views, postId, onClick }) => {
                     sx={{ marginTop: '1.8vh' }}
                 >
                     <ThemeProvider theme={theme} >
-                        <Typography sx={{ fontSize: isMobile ? '20px' : '22.5px', fontWeight: 600, color: '#474747' }}>
-                            {title}
-                        </Typography>
-                        <Typography textAlign='start' sx={{ fontSize: lang === 'En' ? '16px' : '11.3px', color: '#474747', marginBottom: '15px', lineHeight: lang === 'En' ? '15px' : '17px' }}>
-                            {snippet}...
-                        </Typography>
-                        <Typography textAlign='start' sx={{ fontSize: '10.8px', color: '#474747' }}>
+                        <Grid container sx={{ marginBottom: isMobile && lang === 'Kr' ? '10px' : '0px' }}>
+                            <Typography sx={{ fontSize: isMobile ? '20px' : '22.5px', fontWeight: 600, color: '#474747' }}>
+                                {title}
+                            </Typography>
+                        </Grid>
+                        <Grid container sx={{ marginBottom: isMobile && lang === 'Kr' ? '5px' : '0px' }}>
+                            <Typography textAlign='start' sx={{ fontSize: lang === 'En' ? '12px' : '11px', color: '#474747', marginBottom: '15px', lineHeight: lang === 'En' ? '15px' : '17px' }}>
+                                {snippet}...
+                            </Typography>
+                        </Grid>
+                        <Typography textAlign='start' sx={{ mt: '5px', fontSize: '10.8px', color: '#474747' }}>
                             {lang === 'En' ? `Views : ${views}` : `조회수 : ${views} `}
                         </Typography>
                     </ThemeProvider>
@@ -302,14 +306,19 @@ const PostView = ({ lang, title, content, views, postId, onClick }) => {
 }
 
 // Post를 눌렀을때 상세페이지
-export const PostDetailView = ({ history, location, match, lang, clickData, componentRef }) => {
+export const PostDetailView = ({ history, location, match, clickData, lang, componentRef }) => {
     const isMobile = useMediaQuery('(max-width:600px)');
+    // const [clickData, setClickData] = useState({});
     const { postId } = useParams();
     const [post, setPost] = useState({});
     const [view, setView] = useState(null);
 
     const fetchData = async () => {
         try {
+            // const res = await axios.get(`http://hijonam.com/img/autobiography`);
+            // const result = res.find(item => item.id === postId);
+            // console.log(result);
+            // setClickData(result);
             const response = await axios.put(`http://hijonam.com/img/autobiography/views/${postId}`); // 조회수 +1 증가
             setView(response.data.views); // 증가된 조회수 반환
         } catch (error) {
@@ -351,7 +360,7 @@ export const PostDetailView = ({ history, location, match, lang, clickData, comp
     return (
         <>
             {isMobile ?
-                <Grid container sx={{ marginBottom: '7vh' }}>
+                <Grid container sx={{ marginBottom: '30px' }}>
                     <ThemeProvider theme={theme}>
                         <Grid item xs={12} textAlign='start'>
                             <Grid container>
@@ -369,7 +378,7 @@ export const PostDetailView = ({ history, location, match, lang, clickData, comp
                         <Grid item xs={12} textAlign='start' sx={{ mt: 1 }}>
                             <Typography variant='span' className={`${StyledCSS.printView}`}>{lang === 'En' ? `Views : ${view}` : `조회수 : ${view}`}</Typography>
                         </Grid>
-                        <Grid item xs={12} textAlign='start' sx={{ mt: 2 }}>
+                        <Grid item xs={12} textAlign='justify' sx={{ mt: 2 }}>
                             {Parser(post.content || "")}
                         </Grid>
                     </ThemeProvider>

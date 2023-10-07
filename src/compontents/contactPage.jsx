@@ -99,7 +99,7 @@ export default function ContactPage() {
                     <MarginPictures title='CONTACT' />
                     <Grid container sx={{ overflowX: 'hidden', padding: 3 }}>
                         <Grid container >
-                            <span style={{ fontSize: '16px', textAlign: 'start' }}>{Contact_title}</span>
+                            <span style={{ fontSize: '12px', textAlign: 'start' }}>{Contact_title}</span>
                         </Grid>
 
                         <Grid container sx={{ marginTop: '2vh' }}>
@@ -153,7 +153,7 @@ export default function ContactPage() {
                             </Grid>
 
                             <Grid container sx={{ marginTop: '1vh' }} direction='column' alignItems='end'>
-                                <Button variant="outlined" style={{ color: 'black', borderColor: '#bbb' }} onClick={submit}>Submit</Button>
+                                <Button variant="outlined" style={{ color: 'black', borderColor: '#bbb', fontSize: '12px' }} onClick={submit}>Submit</Button>
                             </Grid>
                         </Grid>
                     </Grid>

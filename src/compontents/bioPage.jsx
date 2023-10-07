@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import { Route, Routes, HashRouter, useNavigate, useLocation } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Grid, Tabs, Tab, Typography } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
@@ -24,7 +24,7 @@ export default function BioPage({ lang }) {
     return (
         <>
             {isMobile ? (
-                <Grid container sx={{ maxWidth: '100vw', overflowX: 'hidden' }}>
+                <Grid container sx={{ maxWidth: '100vw' }}>
                     <MarginPictures title={gangeTitle} subTitle={subTitle} height={'20vh'} />
                     <Grid container sx={{ mt: '0.5vh', maxWidth: '100vw', }} >
                         <Grid item container direction="column" alignItems='center'>
@@ -123,11 +123,11 @@ const Biography = ({ lang }) => {
     }
     useEffect(() => { fetchData(); }, [])
     return (
-        <Grid container sx={{ marginTop: '-1.4vh', maxWidth: '100vw', width: '100vw' }}>
+        <Grid container>
             <Grid item container direction="column" alignItems='left'>
                 <TimeLineTable title={'education'} data={education} lang={lang} />
-                <TimeLineTable title={'awards'} data={awards} lang={lang} />
-                <TimeLineTable title={'Artistic Engagement'} data={artistic} lang={lang} />
+                <TimeLineTable title={'awards'} data={awards} lang={lang} style={{ marginTop: '30px', }} />
+                <TimeLineTable title={'Artistic Engagement'} data={artistic} lang={lang} style={{ marginTop: '30px', }} />
             </Grid>
         </Grid>
     )
@@ -135,25 +135,33 @@ const Biography = ({ lang }) => {
 
 const TimeLineTable = ({ title, lang, data }) => {
     const isMobile = useMediaQuery('(max-width:600px)');
-    const someProps = { fontFamily: lang === 'Kr' ? 'Bitgoeul_Medium' : 'Helvetica', fontSize: lang === 'Kr' ? 13 : 13 }
+    const someProps = { fontFamily: lang === 'Kr' ? 'Bitgoeul_Medium' : 'Helvetica', fontSize: lang === 'Kr' ? 12 : 12 }
     const theme = generateTheme(someProps);
     return (
         <>
             {isMobile ?
-                <Grid container sx={{ marginTop: '5.5vh', overflowX: 'hidden' }}>
-                    <Grid item xs={0.5}></Grid>
-                    <Grid item xs={11.5}>
-                        <Grid container>
-                            <Grid item xs={12} textAlign='start' >
-                                <Grid container>
-                                    <Grid item xs={0.3}></Grid>
-                                    <Grid item xs={9} sx={{ fontSize: '22.4px' }}>
-                                        {title.toUpperCase()}
-                                    </Grid>
+                <Grid container sx={{ padding: 3 }}>
+                    <Grid container textAlign='start'>
+                        <Typography sx={{ fontSize: '20px' }}>
+                            {title.toUpperCase()}
+                        </Typography>
+                    </Grid>
+                    <Grid container sx={{ marginTop: '10px' }}>
+                        {data.map((item, index) => (
+                            <Grid container key={item.id} sx={{ marginBottom: '8px' }}>
+                                <Grid item xs={1.7}>
+                                    <Typography sx={{ fontFamily: 'Helvetica', fontSize: '12px', textAlign: 'start', lineHeight: '15px' }}>
+                                        {item.year}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={10.3}>
+                                    <Typography sx={{ fontSize: '12px', textAlign: 'start', lineHeight: '15px' }}>
+                                        {lang === 'En' ? item.title : item.title_kr}
+                                    </Typography>
                                 </Grid>
                             </Grid>
-                            <Grid item xs={12} >
-                                <Timeline
+                        ))}
+                        {/* <Timeline
                                     sx={{
                                         [`& .${timelineOppositeContentClasses.root}`]: {
                                             flex: 0.2,
@@ -181,12 +189,9 @@ const TimeLineTable = ({ title, lang, data }) => {
                                             </TimelineContent>
                                         </TimelineItem>
                                     ))}
-                                </Timeline>
-
-                            </Grid>
-                        </Grid>
+                                </Timeline> */}
                     </Grid>
-                </Grid>
+                </Grid >
                 :
                 // Non Mobile
                 <Grid container sx={{ marginTop: '50px' }} >

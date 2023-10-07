@@ -126,7 +126,7 @@ export default function ArtworksPage() {
                         <Swiper
                             slidesPerView={3}
                             spaceBetween={10}
-                            loop={true}
+                            // loop={true}
                             freeMode={true}
                             allowTouchMove={true}
                             touchEventsTarget="container"
@@ -140,22 +140,22 @@ export default function ArtworksPage() {
                             }}
                             modules={[FreeMode, Pagination]}
                             className={`${styledCSS.mySwiper}`}
-                            style={{ height: '160px' }}
+                            style={{ height: '170px' }}
                             on={{
                                 touchStart: handleSwiperStart,
                                 touchEnd: handleSwiperEnd,
                             }}
                         >
                             {genres.map((item) => (
-                                <SwiperSlide>
-                                    <Grid item container direction="column" alignItems="center" style={{ textAlign: 'center' }} className="mx-auto" key={item.id} onClick={() => handleSelectedGenres(item.genres)}>
+                                <SwiperSlide key={item.id}>
+                                    <Grid item container direction="column" alignItems="center" style={{ textAlign: 'center' }} className="mx-auto" onClick={() => handleSelectedGenres(item.genres)}>
                                         <Grid item direction="column" alignItems="center" style={{ width: '100%' }}>
                                             <img src={`/img/artworks/${item.fileName}`} style={{ width: '100%', objectFit: 'cover', aspectRatio: '1/1', }} loading="lazy"
                                                 className='rounded-3 mx-auto' />
-                                            <div class="swiper-lazy-preloader"></div>
+                                            <div className="swiper-lazy-preloader"></div>
                                         </Grid>
                                         <Grid item direction="column" alignItems="center" style={{ width: '100%' }}>
-                                            <Typography align="center" sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                                            <Typography align="center" sx={{ fontFamily: 'Helvetica', fontSize: '12px' }}>
                                                 {item.genres}
                                             </Typography>
                                         </Grid>
@@ -168,7 +168,7 @@ export default function ArtworksPage() {
 
                     {/* 선택된 장르의 모든 이미지 */}
                     <Grid container>
-                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '12px' }}>
                             {selectedDataFiltered.length} works
                         </Typography>
 
@@ -176,8 +176,10 @@ export default function ArtworksPage() {
                             <Swiper
                                 slidesPerView={3}
                                 spaceBetween={10}
-                                loop={true}
+                                // loop={true}
                                 freeMode={true}
+                                // momentumRatio={50}
+                                momentumVelocityRatio={0.03}
                                 allowTouchMove={true}
                                 touchEventsTarget="container"
                                 preventClicks={true}
@@ -199,8 +201,8 @@ export default function ArtworksPage() {
                                 }}
                             >
                                 {selectedDataFiltered ? selectedDataFiltered.map((item) => (
-                                    <SwiperSlide>
-                                        <Grid item container direction="column" alignItems="center" key={item.id} onClick={() => handleSeletedImg(item)} sx={{ mb: 1 }}>
+                                    <SwiperSlide key={item.id}>
+                                        <Grid item container direction="column" alignItems="center" onClick={() => handleSeletedImg(item)} sx={{ mb: 1 }}>
                                             <Grid item direction="column" alignItems="center" style={{ width: '100%' }}>
                                                 <img src={`/img/Artworks/${item.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`}
                                                     className={`rounded-3 mx-auto`} loading="lazy"
@@ -210,7 +212,7 @@ export default function ArtworksPage() {
                                                         objectFit: 'cover',
                                                     }}
                                                 />
-                                                <div class="swiper-lazy-preloader"></div>
+                                                <div className="swiper-lazy-preloader"></div>
                                             </Grid>
                                         </Grid>
                                     </SwiperSlide>
@@ -239,7 +241,7 @@ export default function ArtworksPage() {
                     </Grid>
 
                     {/* Show */}
-                    <Grid container sx={{ mt: '1.5vh' }}>
+                    <Grid container sx={{ mt: '20px' }}>
                         {
                             selectedImg && selectedImg.fileName ?
                                 <img src={`/img/Artworks/${selectedImg.fileName[0]}`} loading="lazy" style={{ width: `100%` }} />
@@ -248,7 +250,7 @@ export default function ArtworksPage() {
                     </Grid>
 
                     {/* 이미지 상세 정보 */}
-                    <Grid container sx={{ mt: '1.5vh', mb: '2vh' }}>
+                    <Grid container sx={{ mt: '25px', mb: '40px' }}>
                         <Grid item xs={12} container>
                             {selectedImg && selectedImg.title ?
                                 <>
@@ -256,22 +258,22 @@ export default function ArtworksPage() {
                                         <h5 style={{ fontFamily: 'Helvetica', fontWeight: 700 }}>{selectedImg.title}</h5>
                                     </Grid>
                                     <Grid container direction="column" alignItems="start">
-                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '12px' }}>
                                             {selectedImg.material}
                                         </Typography>
                                     </Grid>
                                     <Grid container direction="column" alignItems="start">
-                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '12px' }}>
                                             Height : {parseInt(selectedImg.sizeH * 0.393701)} in / {selectedImg.sizeH}cm
                                         </Typography>
                                     </Grid>
                                     <Grid container direction="column" alignItems="start">
-                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '12px' }}>
                                             Width : {parseInt(selectedImg.sizeW * 0.393701)} in / {selectedImg.sizeW}cm
                                         </Typography>
                                     </Grid>
                                     <Grid container direction="column" alignItems="start">
-                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '12px' }}>
                                             Executed {selectedImg.executed}
                                         </Typography>
                                     </Grid>
@@ -294,10 +296,10 @@ export default function ArtworksPage() {
                         </Grid>
                     </Grid>
 
-                    <div id="footer" className="border-top p-3 footerfont">
-                        <div className="mx-auto text-start">
+                    <div id="footer" className="border-top footerfont">
+                        <Typography sx={{ padding: 1, fontSize: '12px', textAlign: 'justify' }}>
                             {footerTitle}
-                        </div>
+                        </Typography>
                     </div>
                 </Grid>
             ) : (

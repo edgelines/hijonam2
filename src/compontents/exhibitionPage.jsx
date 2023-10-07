@@ -30,9 +30,8 @@ export default function ExhibitionPage({ lang }) {
         <>
             <MarginPictures title='EXHIBITION' subTitle={subTitle} />
             {isMobile ? (
-                <Grid container>
-                    <Grid item xs={0.5}></Grid>
-                    <Grid item xs={11} sx={{ mt: '1vh' }}>
+                <Grid container sx={{ paddingLeft: 3, paddingRight: 3 }}>
+                    <Grid item xs={12} sx={{ mt: '1vh' }}>
                         <ThemeProvider theme={theme}>
                             <Grid container direction="column" alignItems='center' >
                                 <Tabs value={location.pathname} onChange={(event, newValue) => navigate(newValue)}
@@ -52,7 +51,7 @@ export default function ExhibitionPage({ lang }) {
                             </Routes>
                         </Grid>
                     </Grid>
-                    <Grid item xs={0.5}></Grid>
+
                 </Grid>
             ) : (
                 <Grid container>
@@ -121,17 +120,65 @@ const PastExhibition = ({ lang }) => {
     return (
         <>
             {isMobile ?
-                <Grid container sx={{ maxWidth: '100vw' }}>
-                    <Grid item container textAlign='start' sx={{ mt: '3vh' }}>
-                        <Stack direction="row" spacing={5} sx={{ marginLeft: '0.8vw' }}>
+                <Grid container sx={{ marginBottom: '40px' }} >
+                    <Grid item container textAlign='start' sx={{ mt: '30px' }}>
+                        <Stack direction="row" spacing={5} >
                             <Chip icon={selectedChip === 'Solo' ? <DoneIcon /> : null}
                                 label="SOLO" onClick={() => btnData('Solo')} style={{ backgroundColor: selectedChip === 'Solo' ? '#eee' : 'transparent' }} />
                             <Chip icon={selectedChip === 'Group' ? <DoneIcon /> : null}
                                 label="GROUP" onClick={() => btnData('Group')} style={{ backgroundColor: selectedChip === 'Group' ? '#eee' : 'transparent' }} />
                         </Stack>
                     </Grid>
-                    <Grid tiem xs={12}>
-                        <Timeline
+                    <Grid tiem xs={12} sx={{ mt: '30px' }}>
+                        {data.map((item, index) => (
+                            <Grid container key={item.id} sx={{ marginBottom: '8px' }}>
+                                <Grid item xs={1.7}>
+                                    <Typography sx={{ fontFamily: 'Helvetica', fontSize: '12px', textAlign: 'start', lineHeight: '15px' }}>
+                                        {item.year}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={7}>
+                                    <Typography sx={{ fontSize: '12px', textAlign: 'start', lineHeight: '15px' }}>
+                                        {lang === 'En' ? item.title : item.title_kr}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={0.3}></Grid>
+                                <Grid item xs={3}>
+                                    <Typography sx={{ fontFamily: 'Helvetica', fontSize: '12px', lineHeight: '15px', textAlign: 'start' }}>
+                                        {item.location}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            // <TimelineItem key={item.id} sx={{ height: 'auto', minHeight: 'auto' }} >
+                            //     <TimelineOppositeContent>
+                            //         <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                            //             {item.year}
+                            //         </Typography>
+                            //     </TimelineOppositeContent>
+
+                            //     <TimelineSeparator>
+                            //         <TimelineDot sx={TimelineDotStyle} />
+                            //         {index < data.length - 1 && <TimelineConnector sx={{ height: 15, ...TimelineDotStyle }} />}
+                            //     </TimelineSeparator>
+
+                            //     <TimelineContent>
+                            //         <Grid container>
+                            //             <Grid item xs={9}>
+                            //                 <Typography sx={{ fontSize: '13px' }}>
+                            //                     {lang === 'En' ? item.title : item.title_kr}
+                            //                 </Typography>
+                            //             </Grid>
+                            //             <Grid item xs={0.2}></Grid>
+                            //             <Grid item xs={2.8}>
+                            //                 <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                            //                     {item.location}
+                            //                 </Typography>
+                            //             </Grid>
+                            //         </Grid>
+                            //     </TimelineContent>
+                            // </TimelineItem>
+                        ))}
+                        {/* <Timeline
                             sx={{
                                 [`& .${timelineOppositeContentClasses.root}`]: {
                                     flex: 0.13,
@@ -169,7 +216,7 @@ const PastExhibition = ({ lang }) => {
                                     </TimelineContent>
                                 </TimelineItem>
                             ))}
-                        </Timeline>
+                        </Timeline> */}
 
                     </Grid>
 

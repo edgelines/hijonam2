@@ -58,7 +58,7 @@ const handleMenuClick = () => {
                         top: 0,
                         left: 0,
                         width: '100%',
-                        height: '75vh',
+                        height: '35vh',
                         objectFit: 'cover'
                     }} />
                 </Box>
@@ -67,24 +67,22 @@ const handleMenuClick = () => {
                         <StyledNavbarBrand as={Link} to="/" style={{ marginLeft: '5vw', marginRight: '-5vw', zIndex: 999 }} >
                             <img src={logo} style={{ width: '35vw' }} />
                         </StyledNavbarBrand>
-
                         <IconButton aria-label="collapse" onClick={() => setCollapse(!collapse)}
                             aria-controls="Home Image Collapse"
                             aria-expanded={collapse}
-                            sx={{ marginTop: '3px', width: '30px', height: '30px', marginLeft: '10vw' }}
+                            sx={{ marginTop: '3px', width: '30px', height: '30px', marginLeft: '7vw' }}
                         >
                             {collapse ? <ArrowDropUpIcon sx={{ fontSize: '40px' }} /> :
                                 <ArrowDropDownIcon sx={{ fontSize: '40px' }} />
                             }
                         </IconButton>
-
-                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: '1vh' }}>
-                            <Typography sx={{ marginTop: '-1px', fontFamily: 'Helvetica', fontSize: '13px' }}>EN</Typography>
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: '1vh', ml : '-1vw' }}>
+                            <Typography sx={{ marginTop: '-1px', fontFamily: 'Helvetica', fontSize: '12px' }}>EN</Typography>
                             <AntSwitch onChange={handleSwitchChange} inputProps={{ 'aria-label': 'ant design' }} />
-                            <Typography sx={{ marginTop: '-1px', fontFamily: 'Helvetica', fontSize: '13px' }}>KR</Typography>
+                            <Typography sx={{ marginTop: '-1px', fontFamily: 'Helvetica', fontSize: '12px' }}>KR</Typography>
                         </Stack>
 
-                        <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setNavbarOpen(!navbarOpen)}  />
+                        <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={() => setNavbarOpen(!navbarOpen)} style={{ marginRight : '3vw'}} />
                         <Navbar.Collapse id="basic-navbar-nav" in={navbarOpen}>
                             <Nav className="mx-auto" onClick={handleMenuClick}>
                                 <StyledNavLink as={Link} to="/bio">BIOGRAPHY</StyledNavLink>

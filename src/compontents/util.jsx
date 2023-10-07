@@ -95,8 +95,8 @@ export const MarginPictures = ({ title, subTitle }) => {
                 <Grid container>
                     {/* <Grid item xs={12} container direction='column' justifyContent='center' sx={{ height: '264px', backgroundImage: `url(${gridImg})`, backgroundSzie: 'cover', padding: 0, margin: 0 }} > */}
                     <Grid item container direction='column'
-                        sx={{ width: '100vw', height: '18vh', backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(${gridImg})`, backgroundSzie: 'cover' }} >
-                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '28px', fontWeight: 800, color: 'white', marginTop: '5.5vh', marginBottom: '20px', letterSpacing: '2px' }}>{title}</Typography>
+                        sx={{ width: '100vw', height: '150px', backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ), url(${gridImg})`, backgroundSzie: 'cover' }} >
+                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '28px', fontWeight: 800, color: 'white', marginTop: '50px', marginBottom: '20px', letterSpacing: '2px' }}>{title}</Typography>
                         {subTitle ?
                             <Typography sx={{ fontFamily: 'Helvetica', fontSize: '18px', color: 'white' }}>— {subTitle} —</Typography>
                             :

@@ -73,9 +73,11 @@ const config = {
         static: {
             directory: path.join(__dirname, 'public'),
         },
-        host: "localhost",
+        // host: "localhost",
+        host: '0.0.0.0',
         port: 3000,
-        hot: true
+        hot: true,
+        historyApiFallback: true,
     },
 }
 

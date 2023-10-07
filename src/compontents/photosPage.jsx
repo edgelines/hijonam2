@@ -203,8 +203,10 @@ const PhotosDetail = ({ lang, value }) => {
                         <Swiper
                             slidesPerView={3}
                             spaceBetween={10}
-                            loop={true}
+                            // loop={true}
                             freeMode={true}
+                            // momentumRatio={50}
+                            momentumVelocityRatio={0.03}
                             allowTouchMove={true}
                             touchEventsTarget="container"
                             preventClicks={true}
@@ -217,7 +219,7 @@ const PhotosDetail = ({ lang, value }) => {
                                 type: 'fraction',
                             }}
                             modules={[FreeMode, Pagination]}
-                            className="mySwiper"
+                            // className="mySwiper"
                             style={{ height: '145px' }}
                             on={{
                                 touchStart: handleSwiperStart,
@@ -225,8 +227,8 @@ const PhotosDetail = ({ lang, value }) => {
                             }}
                         >
                             {data.map((item) => (
-                                <SwiperSlide>
-                                    <Grid item container direction="column" alignItems="center" style={{ textAlign: 'center' }} className="mx-auto" key={item.id} onClick={() => handleSelectedImg(item)}>
+                                <SwiperSlide key={item.id}>
+                                    <Grid item container direction="column" alignItems="center" style={{ textAlign: 'center' }} className="mx-auto" onClick={() => handleSelectedImg(item)}>
                                         <Grid item direction="column" alignItems="center" style={{ width: '100%' }}>
                                             {/* <img src={`/img/Photos/${item.folderName}/${item.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`} */}
                                             <img src={`/img/Photos/${item.folderName}/${item.fileName[0]}`}
@@ -239,7 +241,7 @@ const PhotosDetail = ({ lang, value }) => {
                                                     objectFit: 'cover'
                                                 }}
                                             />
-                                            <div class="swiper-lazy-preloader"></div>
+                                            <div className="swiper-lazy-preloader"></div>
                                         </Grid>
                                     </Grid>
                                 </SwiperSlide>

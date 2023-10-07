@@ -31,7 +31,7 @@ function App() {
                 <main id="wrapper">
                     <div className="container-fluid p-0">
                         <Routes>
-                            <Route path="/" element={<HomePage />} />
+                            <Route path="/" element={<HomePage lang={lang} />} />
                             <Route path="/bio/*" element={<Bio lang={lang} />} />
                             <Route path="/artworks" element={<Artworks />} />
                             <Route path="/exhibition/*" element={<Exhibition lang={lang} />} />
