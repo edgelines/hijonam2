@@ -1,7 +1,18 @@
 # hijonam.com
 
+## Script
+    - npm run start: "webpack-dev-server --config webpack.dev.js",
+    - npm run dev: "webpack --config webpack.dev.js",
+    - npm run build: "webpack --config webpack.prod.js"
+  
 ### TodoList || Bug Report
 - Tablet.Ver Pre-Style
+
+### 2023.10.08
+- Webpack.merge 기능 활용
+    - start : dev-sever
+    - dev : dev-build ( 디버깅용 )
+    - build : prod-build ( 배포용 )
 
 ### 2023.10.07
 - 삼성동 사무실+집 : main
