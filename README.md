@@ -7,6 +7,16 @@
   
 ### TodoList || Bug Report
 - Tablet.Ver Pre-Style
+- Tablet 12.9" 11" Sort Export PDF
+- Admin Report '장르별 기간별' 데이터구조 변경 < 옵시디언참조 >
+
+
+### 2023.10.09
+- Tablet Ver : {dev-tablet}
+    - 1차 스타일링 작업
+- @pmmmwh/react-refresh-webpack-plugin / react-refresh 추가 : 새로고침시 State 유지
+- Admin Autobiography Editor Split 
+- Admin Report Period-장르별기준 년도별 수정중..
 
 ### 2023.10.08
 - Webpack.merge 기능 활용
@@ -15,7 +25,7 @@
     - build : prod-build ( 배포용 )
 
 ### 2023.10.07
-- 삼성동 사무실+집 : main
+- 삼성동 사무실+집 : {main}
     - pc + Mobile 스타일링 Master 작업
     - Mobile 
         - Home : Autobiography 추가, link연결

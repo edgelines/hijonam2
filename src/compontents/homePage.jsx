@@ -11,6 +11,8 @@ import 'react-clock/dist/Clock.css';
 
 export default function HomePage({ lang }) {
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isTablet = useMediaQuery('(max-width:1200px)');
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     const [imgData, setImgData] = useState([]);
     const [exhibition, setExhibition] = useState([]);
     const [autobiographyContent, setAutobiographyContent] = useState([]);
@@ -362,55 +364,119 @@ export default function HomePage({ lang }) {
                             </Grid>
                             {/* Clock */}
                             <Grid item xs={12} sx={{ mt: '1vh' }} >
-                                <Grid container >
-                                    <Grid item xs={3} container direction="column" alignItems="center">
-                                        <Clock
-                                            value={worldTime.newYork}
-                                            hourHandLength={53}
-                                            hourHandOppositeLength={17}
-                                            hourHandWidth={5.3}
-                                            hourMarksLength={10}
-                                            hourMarksWidth={3}
-                                            minuteHandLength={80}
-                                            minuteHandOppositeLength={17}
-                                            minuteHandWidth={3.3}
-                                            minuteMarksLength={4.7}
-                                            minuteMarksWidth={2}
-                                            secondHandLength={75}
-                                            secondHandOppositeLength={17}
-                                            secondHandWidth={2}
-                                            size={135}
-                                        />
+
+                                {/* Ipad / PC */}
+                                {isLgTablet ?
+                                    <Grid container>
+                                        <Grid item xs={3} container direction="column" alignItems="center">
+                                            <Clock
+                                                value={worldTime.newYork}
+                                                hourHandLength={53}
+                                                hourHandOppositeLength={17}
+                                                hourHandWidth={5.3}
+                                                hourMarksLength={10}
+                                                hourMarksWidth={3}
+                                                minuteHandLength={80}
+                                                minuteHandOppositeLength={17}
+                                                minuteHandWidth={3.3}
+                                                minuteMarksLength={4.7}
+                                                minuteMarksWidth={2}
+                                                secondHandLength={75}
+                                                secondHandOppositeLength={17}
+                                                secondHandWidth={2}
+                                                size={isTablet ? 90 : 100}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={0.3}></Grid>
+                                        <Grid item xs={2.5} container direction="column" justifyContent="flex-end" textAlign='start'>
+                                            <Typography sx={mobileHomeClockStyle}>
+                                                NEW YORK
+                                            </Typography>
+                                            <Typography sx={mobileHomeClockStyle}>
+                                                {worldTime.newYork.toLocaleTimeString("en-US")}
+                                            </Typography>
+                                            <Typography sx={mobileHomeClockStyle}>
+                                                {worldTime.newYork.toLocaleDateString()}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={0.4}></Grid>
+                                        <Grid item xs={3} container direction="column" alignItems="center">
+                                            <Clock value={worldTime.seoul}
+                                                hourHandLength={53}
+                                                hourHandOppositeLength={17}
+                                                hourHandWidth={5.3}
+                                                hourMarksLength={10}
+                                                hourMarksWidth={3}
+                                                minuteHandLength={80}
+                                                minuteHandOppositeLength={17}
+                                                minuteHandWidth={3.3}
+                                                minuteMarksLength={4.7}
+                                                minuteMarksWidth={2}
+                                                secondHandLength={75}
+                                                secondHandOppositeLength={17}
+                                                secondHandWidth={2}
+                                                size={isTablet ? 90 : 100}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={0.3}></Grid>
+                                        <Grid item xs={2.5} container direction="column" justifyContent="flex-end" textAlign='start'>
+                                            <Typography sx={mobileHomeClockStyle}>SEOUL</Typography>
+                                            <Typography sx={mobileHomeClockStyle}>{worldTime.seoul.toLocaleTimeString("en-US")}</Typography>
+                                            <Typography sx={mobileHomeClockStyle}>{worldTime.seoul.toLocaleDateString()}</Typography>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs={3} container direction="column" justifyContent="flex-end" textAlign='start'>
-                                        NEW YORK
-                                        <div>{worldTime.newYork.toLocaleTimeString("en-US")}</div>
-                                        <div>{worldTime.newYork.toLocaleDateString()}</div>
+                                    :
+                                    <Grid container >
+                                        <Grid item xs={3} container direction="column" alignItems="center">
+                                            <Clock
+                                                value={worldTime.newYork}
+                                                hourHandLength={53}
+                                                hourHandOppositeLength={17}
+                                                hourHandWidth={5.3}
+                                                hourMarksLength={10}
+                                                hourMarksWidth={3}
+                                                minuteHandLength={80}
+                                                minuteHandOppositeLength={17}
+                                                minuteHandWidth={3.3}
+                                                minuteMarksLength={4.7}
+                                                minuteMarksWidth={2}
+                                                secondHandLength={75}
+                                                secondHandOppositeLength={17}
+                                                secondHandWidth={2}
+                                                size={135}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={3} container direction="column" justifyContent="flex-end" textAlign='start'>
+                                            NEW YORK
+                                            <div>{worldTime.newYork.toLocaleTimeString("en-US")}</div>
+                                            <div>{worldTime.newYork.toLocaleDateString()}</div>
+                                        </Grid>
+                                        <Grid item xs={3} container direction="column" alignItems="center">
+                                            <Clock value={worldTime.seoul}
+                                                hourHandLength={53}
+                                                hourHandOppositeLength={17}
+                                                hourHandWidth={5.3}
+                                                hourMarksLength={10}
+                                                hourMarksWidth={3}
+                                                minuteHandLength={80}
+                                                minuteHandOppositeLength={17}
+                                                minuteHandWidth={3.3}
+                                                minuteMarksLength={4.7}
+                                                minuteMarksWidth={2}
+                                                secondHandLength={75}
+                                                secondHandOppositeLength={17}
+                                                secondHandWidth={2}
+                                                size={135}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={3} container direction="column" justifyContent="flex-end" textAlign='start'>
+                                            SEOUL
+                                            <div>{worldTime.seoul.toLocaleTimeString("en-US")}</div>
+                                            <div>{worldTime.seoul.toLocaleDateString()}</div>
+                                        </Grid>
                                     </Grid>
-                                    <Grid item xs={3} container direction="column" alignItems="center">
-                                        <Clock value={worldTime.seoul}
-                                            hourHandLength={53}
-                                            hourHandOppositeLength={17}
-                                            hourHandWidth={5.3}
-                                            hourMarksLength={10}
-                                            hourMarksWidth={3}
-                                            minuteHandLength={80}
-                                            minuteHandOppositeLength={17}
-                                            minuteHandWidth={3.3}
-                                            minuteMarksLength={4.7}
-                                            minuteMarksWidth={2}
-                                            secondHandLength={75}
-                                            secondHandOppositeLength={17}
-                                            secondHandWidth={2}
-                                            size={135}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={3} container direction="column" justifyContent="flex-end" textAlign='start'>
-                                        SEOUL
-                                        <div>{worldTime.seoul.toLocaleTimeString("en-US")}</div>
-                                        <div>{worldTime.seoul.toLocaleDateString()}</div>
-                                    </Grid>
-                                </Grid>
+                                }
+
                             </Grid>
 
                             {/* Exhibition */}
@@ -484,7 +550,7 @@ export default function HomePage({ lang }) {
                     </Grid>
 
                     {/* 오른쪽 큰 사진 */}
-                    <Grid item xs={7} sx={{ height: '95vh' }}>
+                    <Grid item xs={7} sx={{ height: '95svh' }}>
                         <img src={`/img/Main/${imgData[0]}`} style={{
                             top: 0,
                             left: 0,
@@ -492,7 +558,6 @@ export default function HomePage({ lang }) {
                             height: '100%',
                             objectFit: 'cover'
                         }} />
-                        {imgData[0]}
                     </Grid>
                 </Grid>
             )}
