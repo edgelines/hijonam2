@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-// import { Grid, Box, Switch, FormControlLabel, Skeleton } from '@mui/material';
+import { Grid, Skeleton, Table, TableHead, TableBody, TableCell, TableContainer, TableRow, } from '@mui/material';
 import Highcharts from 'highcharts/highstock'
 import HighchartsReact from 'highcharts-react-official'
 require('highcharts/modules/accessibility')(Highcharts)
 
-export function Chart({ data, height, Select, currentPage }) {
+export function Chart({ data, height, Select }) {
     const [chartOptions, setChartOptions] = useState({
         chart: { type: 'column', height: height },
         title: { align: 'left', text: '', },
@@ -128,7 +128,11 @@ export function CombinationsChart({ data, height }) {
                 dataLabels: {
                     enabled: true,
                     formatter: function () {
-                        return (this.point.y).toLocaleString('ko-KR');
+                        if (this.point.y === 0) {
+                            return ''
+                        } else {
+                            return (this.point.y).toLocaleString('ko-KR');
+                        }
                     },
                 }
             },
@@ -163,10 +167,37 @@ export function CombinationsChart({ data, height }) {
 
     }, [data]);
     return (
-        <HighchartsReact
-            highcharts={Highcharts}
-            options={chartOptions}
-        />
+        <>
+            <Grid container>
+                <Grid item xs={12}>
+                    <HighchartsReact
+                        highcharts={Highcharts}
+                        options={chartOptions}
+                    />
+                </Grid>
+            </Grid>
+            <Grid container>
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>장르</TableCell>
+                                <TableCell>판매액(원)</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {data.series[data.series.length - 1].data.map((item) => (
+                                <TableRow container key={item.name}>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>{(item.y).toLocaleString('ko-KR')}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Grid>
+
+        </>
     );
 };
 

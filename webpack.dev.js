@@ -28,11 +28,11 @@ module.exports = merge(common, {
         }),
         new ReactRefreshWebpackPlugin(),
     ],
-    // output: {
-    //     path: path.resolve(__dirname, './dist'),
-    //     filename: '[name].js',
-    //     publicPath: '/', // 라우터 링크 못읽는 현상 수정
-    // },
+    output: {
+        path: path.resolve(__dirname, './dist'),
+        filename: '[name].js',
+        publicPath: '/', // 라우터 링크 못읽는 현상 수정
+    },
     module: {
         rules: [
             {
