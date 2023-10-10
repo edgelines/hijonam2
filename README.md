@@ -11,10 +11,16 @@
 - imgTableJS -> 
     delete 파일삭제 코드 작성중 >> Admin>photos
     put 부분 수정해야함
+- Admin Upcoming Add Bug >> save가 안됨
+- 11" 패드에서 전체 12px
 
 ### 2023.10.10
 {dev-tablet}
 - Admin Report Period-'년도별기준 장르'로 변경 > 추후 데이터 들어왔을때 2차 수정 예정
+{dev-meeting} : 삼성동
+- PC/Teblet -> Autobiography 추가, 스타일링 완료
+- Catalogue Page 준비중
+
 
 ### 2023.10.09
 {dev-tablet}

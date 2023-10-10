@@ -174,11 +174,12 @@ export default function SortPage() {
                 <MarginPictures title='SORT' />
                 {/* Tltle */}
                 <Grid container sx={{ mt: '2vh' }}>
-                    <Grid item xs={isTablet ? 9 : isLgTablet ? 9.5 : 10.05} textAlign='start'>
+                    <Grid item xs={isTablet ? 6.6 : isLgTablet ? 6.6 : 10.05} textAlign='start'>
                         <Typography sx={{ fontFamily: 'Helvetica', fontSize: '30px', paddingLeft: 2.7, paddingTop: 1.5, color: 'rgb(196, 196, 196)', fontWeight: 600 }}>
                             This page is designed to select artworks by genre and create a list of works
                         </Typography>
                     </Grid>
+                    <Grid item xs={isTablet ? 2.4 : isLgTablet ? 2.9 : 0} ></Grid>
                     <Grid item xs={isTablet ? 3 : isLgTablet ? 2.5 : 1.95} textAlign='end'>
                         <ThemeProvider theme={theme}>
                             <Grid container>

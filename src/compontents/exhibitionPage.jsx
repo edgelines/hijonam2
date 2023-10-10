@@ -319,7 +319,7 @@ const UpcomingExhibition = () => {
     const [present, setPresent] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
     const formattedMemo = (item) => {
-        return item.memo ? `<br />${item.memo}` : '';
+        return item.memo ? `${item.memo}` : '';
     }
     const fetchData = async () => {
         const response = await axios.get(`http://hijonam.com/img/upcomingExhibition`)

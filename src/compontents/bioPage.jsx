@@ -72,6 +72,9 @@ export default function BioPage({ lang }) {
                                         onClick={() => {
                                             setGangeTitle('AUTOBIOGRAPHY'); setSubTitle(null);
                                         }} />
+                                    <Tab value="/bio/catalogue/" label="Catalogue" onClick={() => {
+                                        setGangeTitle('CATALOGUE');
+                                    }} />
                                     <Tab value="/bio/photos/" label="Photos"
                                         onClick={() => {
                                             setGangeTitle('PHOTOS');
@@ -85,6 +88,7 @@ export default function BioPage({ lang }) {
                                 <Route path="/" element={<Biography lang={lang} setSubTitle={setSubTitle} />} />
                                 <Route path="/autobiography/*" element={<AutobiographyPage lang={lang} />} />
                                 <Route path="/photos" element={<Photos lang={lang} setSubTitle={setSubTitle} />} />
+                                <Route path="/catalogue" element={<CataloguePage lang={lang} setSubTitle={setSubTitle} />} />
                             </Routes>
                         </Grid>
                     </Grid>
@@ -244,6 +248,28 @@ const TimeLineTable = ({ title, lang, data }) => {
                     </Grid>
                 </Grid>
             }
+        </>
+    )
+}
+
+const CataloguePage = ({ lang }) => {
+    const title = "EXPLORE AND DOWNLOAD HIJONAM's CATALOGUE ON THIS PAGE"
+    return (
+        <>
+            <Grid container sx={{ mt: '80px' }}>
+                <Grid item xs={3}></Grid>
+                <Grid item xs={6}>
+                    <Grid container>
+                        <Typography align='start' sx={{ fontFamily: 'Helvetica', fontSize: '28px', paddingTop: 1.5, color: 'rgb(196, 196, 196)', fontWeight: 600 }}>
+                            {title}
+                        </Typography>
+                    </Grid>
+                    <Grid container sx={{ mt: '30px' }} >
+                        <Typography align='center' sx={{ color: 'dodgerblue' }} >CURRENTY CATALOGUE PAGE IS WORKING ON PROCESS</Typography>
+                    </Grid>
+                </Grid>
+                <Grid item xs={3}></Grid>
+            </Grid>
         </>
     )
 }

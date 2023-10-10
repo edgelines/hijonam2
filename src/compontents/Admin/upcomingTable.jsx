@@ -358,9 +358,9 @@ export default function ExhibitionPage({ loadDataUrl, name }) {
                                 {data.map((row) => (
                                     <TableRow key={row.id}>
                                         <TableCell>
-                                            <img src={`/img/Artworks/${row.fileName[0]}`} className="rounded-3 mx-auto"
+                                            <img src={`/img/Exhibition/${row.fileName[0]}`} className="rounded-3 mx-auto"
                                                 style={{
-                                                    width: '100%',
+                                                    width: '150px',
                                                     aspectRatio: '1 / 1',
                                                     objectFit: 'cover'
                                                 }}

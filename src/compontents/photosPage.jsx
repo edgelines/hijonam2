@@ -134,6 +134,7 @@ export default function PhotosPage({ lang, setSubTitle }) {
 
 const PhotosDetail = ({ lang, value }) => {
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isTablet = useMediaQuery('(max-width:1200px)');
     const isLgTablet = useMediaQuery('(max-width:1366px)');
     const [originData, setOriginData] = useState([]);
     const [data, setData] = useState([]);
@@ -302,14 +303,14 @@ const PhotosDetail = ({ lang, value }) => {
             ) : (
                 // NonMobile
                 <Grid container spacing={1} sx={{ width: '100%' }} >
-                    <Grid item xs={8.3} sx={{ mt: '87px' }}>
+                    <Grid item xs={8.3} sx={{ mt: isLgTablet ? '87px' : '74px' }}>
                         {isLgTablet ?
                             <Grid container spacing={5} sx={{ height: '100%' }}>
                                 <Grid item xs={0.61}></Grid>
                                 <Grid item xs={3.5} sx={{ paddingLeft: 1 }} >
                                     {/* Logo */}
                                     <Grid container>
-                                        <img src={logo} style={{ width: "5vw", marginBottom: '1.5vh', marginLeft: '-0.3vw' }} />
+                                        <img src={logo} style={{ width: isLgTablet ? "7vw" : "5vw", marginBottom: isLgTablet ? '5px' : '1.5vh', marginLeft: '-0.3vw' }} />
                                     </Grid>
 
                                     {/* Subtitle */}
@@ -437,11 +438,11 @@ const PhotosDetail = ({ lang, value }) => {
                         <Grid container>
                             <Grid item xs={12} container>
                                 <Grid item xs={2} textAlign='start'>
-                                    <Typography sx={{ fontFamily: 'Helvetica', fontSize: '22.4px', fontWeight: 600 }}>{yearValue[0]}</Typography>
+                                    <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>{yearValue[0]}</Typography>
                                 </Grid>
                                 <Grid item xs={8}></Grid>
                                 <Grid item xs={2} textAlign='end'>
-                                    <Typography sx={{ fontFamily: 'Helvetica', fontSize: '22.4px', fontWeight: 600 }}>{yearValue[1]}</Typography>
+                                    <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>{yearValue[1]}</Typography>
                                 </Grid>
                                 {/* <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>{} - {}</Typography> */}
                             </Grid>
