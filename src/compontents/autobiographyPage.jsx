@@ -256,6 +256,7 @@ const ContentsRoot = ({ lang, data, handleClickDetailPage }) => {
 // Masonry 효과 적용된 Post 1개의 View
 const PostView = ({ lang, title, content, views, postId, onClick }) => {
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     // 1. 이미지 URL 추출하기
     const imageRegex = /<img.*?src="(.*?)".*?>/; // 이미지 태그에서 src 값을 추출하는 정규식
     const imageMatch = content.match(imageRegex);
@@ -307,8 +308,12 @@ const PostView = ({ lang, title, content, views, postId, onClick }) => {
                     sx={{ marginTop: '1.8vh' }}
                 >
                     <ThemeProvider theme={theme} >
-                        <Grid container sx={{ marginBottom: isMobile && lang === 'Kr' ? '10px' : '0px' }}>
-                            <Typography sx={{ fontSize: isMobile ? '20px' : '22.5px', fontWeight: 600, color: '#474747' }}>
+                        <Grid container sx={{ marginBottom: isMobile && lang === 'Kr' ? '10px' : '5px' }}>
+                            <Typography align='justify'
+                                sx={{
+                                    fontSize: isMobile ? '20px' : isLgTablet && lang === 'En' ? '17px' : isLgTablet && lang === 'Kr' ? '16px' : '18px',
+                                    fontWeight: 600, color: '#474747', lineHeight: isLgTablet ? '18px' : '20px'
+                                }}>
                                 {title}
                             </Typography>
                         </Grid>

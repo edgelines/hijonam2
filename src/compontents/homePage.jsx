@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Grid, Typography, Box, Stack } from '@mui/material';
+import { Grid, Typography, Box, Stack, Modal, Button } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { generateTheme } from './util.jsx';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -13,6 +13,7 @@ export default function HomePage({ lang }) {
     const isMobile = useMediaQuery('(max-width:600px)');
     const isTablet = useMediaQuery('(max-width:1200px)');
     const isLgTablet = useMediaQuery('(max-width:1366px)');
+    const [modalOpen, setModalOpen] = useState(true);
     const [imgData, setImgData] = useState([]);
     const [exhibition, setExhibition] = useState([]);
     const [autobiographyContent, setAutobiographyContent] = useState([]);
@@ -131,9 +132,32 @@ export default function HomePage({ lang }) {
     }, []);
     // 모바일 스타일링
     const mobileHomeClockStyle = { fontSize: '12px', lineHeight: '14px' }
-
+    const handleModalClose = () => { setModalOpen(false); }
     return (
         <>
+            <Modal
+                open={modalOpen}
+                onClose={handleModalClose}  // 닫기 버튼 또는 모달 외부를 클릭하면 모달이 닫힙니다.
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+            >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 400,
+                        bgcolor: 'background.paper',
+                        border: '2px solid #000',
+                        boxShadow: 24,
+                        p: 4,
+                    }}
+                >
+                    <p id="modal-description">THE NEW WEBSITE IS STILL UNDER CONSTRUCTION. TAKE FEW MORE DAYS TO COMPLETE.</p>
+                    <Button onClick={handleModalClose}>Close</Button>
+                </Box>
+            </Modal>
             {isMobile ? (
                 <Grid container sx={{ padding: 3, mt: '3px' }} >
                     {/* 시계 */}
@@ -442,6 +466,7 @@ export default function HomePage({ lang }) {
 
                             {/* Autobiography & Catalogue */}
                             <Grid container textAlign='start' sx={{ mt: isTablet ? '20px' : '30px', height: '100%' }}>
+                                {/* Autobiography */}
                                 <Grid item xs={5.8}>
                                     <Grid container>
                                         <Grid item xs={7} sx={{ borderBottom: '1px solid black' }}>
@@ -629,7 +654,7 @@ const AutobiographyContentComponent = ({ lang, title, content, postId, onClick }
                                     alignItems="flex-start"
                                 >
                                     <ThemeProvider theme={theme} >
-                                        <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#474747' }}>
+                                        <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#474747', lineHeight: '15px' }}>
                                             {title}
                                         </Typography>
                                         <Typography textAlign='start' sx={{ fontSize: lang === 'En' ? '12px' : '11.3px', color: '#474747', marginBottom: '15px', lineHeight: fontStyle() }}>
@@ -667,16 +692,18 @@ const AutobiographyContentComponent = ({ lang, title, content, postId, onClick }
                                     alignItems="flex-start"
                                 >
                                     <ThemeProvider theme={theme} >
-                                        <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#474747' }}>
+                                        <Typography align='justify' sx={{ fontSize: lang === 'Kr' ? '12px' : isLgTablet ? '13px' : '14px', fontWeight: 600, color: '#474747', lineHeight: '15px' }}>
                                             {title}
                                         </Typography>
-                                        <Typography textAlign='start'
-                                            sx={{
-                                                fontSize: lang === 'En' ? '12px' : '11.3px', color: '#474747', marginBottom: '15px',
-                                                lineHeight: fontStyle()
-                                            }}>
-                                            {snippet()}...
-                                        </Typography>
+                                        {isLgTablet ? <></> :
+                                            <Typography textAlign='start'
+                                                sx={{
+                                                    fontSize: lang === 'En' ? '12px' : '11.3px', color: '#474747', marginBottom: '15px',
+                                                    lineHeight: fontStyle()
+                                                }}>
+                                                {snippet()}...
+                                            </Typography>
+                                        }
                                     </ThemeProvider>
                                 </Stack>
                             </Grid>

@@ -12,6 +12,8 @@
     delete 파일삭제 코드 작성중 >> Admin>photos
     put 부분 수정해야함
 - Admin Upcoming Add Bug >> save가 안됨
+- Admin 전체적 수정
+- Autobiography 이미지 안뜸
 - 11" 패드에서 전체 12px
 
 ### 2023.10.10

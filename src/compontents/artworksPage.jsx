@@ -151,7 +151,7 @@ export default function ArtworksPage() {
                                 <SwiperSlide key={item.id}>
                                     <Grid item container direction="column" alignItems="center" style={{ textAlign: 'center' }} className="mx-auto" onClick={() => handleSelectedGenres(item.genres)}>
                                         <Grid item direction="column" alignItems="center" style={{ width: '100%' }}>
-                                            <img src={`/img/artworks/${item.fileName}`} style={{ width: '100%', objectFit: 'cover', aspectRatio: '1/1', }} loading="lazy"
+                                            <img src={`/img/artworks/${item.fileName[0]}`} style={{ width: '100%', objectFit: 'cover', aspectRatio: '1/1', }} loading="lazy"
                                                 className='rounded-3 mx-auto' />
                                             <div className="swiper-lazy-preloader"></div>
                                         </Grid>
@@ -205,7 +205,8 @@ export default function ArtworksPage() {
                                     <SwiperSlide key={item.id}>
                                         <Grid item container direction="column" alignItems="center" onClick={() => handleSeletedImg(item)} sx={{ mb: 1 }}>
                                             <Grid item direction="column" alignItems="center" style={{ width: '100%' }}>
-                                                <img src={`/img/Artworks/${item.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`}
+                                                {/* <img src={`/img/Artworks/${item.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`} */}
+                                                <img src={`/img/Artworks/${item.fileName[0]}`}
                                                     className={`rounded-3 mx-auto`} loading="lazy"
                                                     style={{
                                                         width: '100%',
@@ -309,7 +310,7 @@ export default function ArtworksPage() {
                         {genres.map((item) => (
                             <Grid item xs={1} container direction="column" alignItems="center" style={{ textAlign: 'center' }} className="mx-auto" key={item.id} onClick={() => handleSelectedGenres(item.genres)}>
                                 <Grid item direction="column" alignItems="center" style={{ width: '100%' }}>
-                                    <img src={`/img/artworks/${item.fileName}`} style={{ width: '8vw', objectFit: 'cover', aspectRatio: '1/1', }} className='rounded-3 mx-auto' />
+                                    <img src={`/img/artworks/${item.fileName[0]}`} style={{ width: '8vw', objectFit: 'cover', aspectRatio: '1/1', }} className='rounded-3 mx-auto' />
                                 </Grid>
                                 <Grid item direction="column" alignItems="center" style={{ width: '100%' }}>
                                     <Typography align="center" sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
