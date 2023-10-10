@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-    Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, Typography, Select, MenuItem,
-    Tab, Table, TableHead, TableBody, TableCell, TableContainer, TableRow, FormControl, FormControlLabel, RadioGroup, FormLabel, Radio,
-} from '@mui/material';
+import { Grid, TextField, Typography, MenuItem, Tab, FormControlLabel, RadioGroup, FormLabel, Radio, } from '@mui/material';
 import { TabContext, TabPanel, TabList } from '@mui/lab';
-// import { VisuallyHiddenInput, AntSwitch } from '../util.jsx';
-// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-// import { ReactSortable } from "react-sortablejs";
-// import CssStyle from './artworks.module.css'
 import { Chart, CombinationsChart } from './highcharts.jsx'
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
@@ -31,9 +24,7 @@ export default function ArtworksPage({ loadDataUrl }) {
     // Tab 변경 
     const handleChange = (event, newValue) => { setTabValue(newValue); };
     // 기간별 Chart 
-    const handlePageChange = (event) => {
-        setCurrentPage(event.target.value);
-    }
+    const handlePageChange = (event) => { setCurrentPage(event.target.value); }
 
     // FetchData
     const fetchData = async () => {
@@ -58,9 +49,6 @@ export default function ArtworksPage({ loadDataUrl }) {
             var set = new Set(executed);
             var newArr = [...set];
             setExecutedList(newArr);
-
-            filterByPeriod();
-
         }).catch((error) => {
             // setSeverity('error')
             console.error("Error fetching artworks:", error);
@@ -196,9 +184,8 @@ export default function ArtworksPage({ loadDataUrl }) {
             case '년도별':
                 periodData = filterDataByPeriod('year');
                 break;
-            case '장르별기준':
+            case '년도별기준':
                 periodData = createHighchartsData();
-                console.log(periodData);
                 break;
             default:
                 periodData = filterDataByPeriod('month');
@@ -273,41 +260,99 @@ export default function ArtworksPage({ loadDataUrl }) {
         // }
         // return sortedGroupedData;
     }
-    const createHighchartsData = () => {
-        // 장르와 년도별로 데이터 그룹화
-        const groupedData = groupDataByGenreAndYear();
 
-        console.log('groupedData', groupedData);
-        // Highcharts에서 사용할 카테고리와 시리즈 데이터 생성
-        const categories = Object.keys(groupedData).sort((a, b) => a.localeCompare(b)); // 정렬
-        // const categories = Object.keys(groupedData);
+    // const createHighchartsData = () => {
+    //     // 장르와 년도별로 데이터 그룹화
+    //     const groupedData = groupDataByGenreAndYear();
+
+    //     console.log('groupedData', groupedData);
+    //     // Highcharts에서 사용할 카테고리와 시리즈 데이터 생성
+    //     const categories = Object.keys(groupedData).sort((a, b) => a.localeCompare(b)); // 정렬
+    //     // const categories = Object.keys(groupedData);
+    //     let seriesData = [];
+    //     let pieData = [];
+
+    //     // 년도별로 데이터를 그룹화하기 위한 객체
+    //     let yearGroupedData = {};
+
+    //     categories.forEach(category => {
+    //         for (let year in groupedData[category]) {
+    //             if (!yearGroupedData[year]) {
+    //                 yearGroupedData[year] = [];
+    //             }
+    //             yearGroupedData[year].push(groupedData[category][year]);
+
+    //             // Pie chart data
+    //             pieData.push({
+    //                 name: category,
+    //                 y: groupedData[category][year]
+    //             });
+    //         }
+    //     });
+
+    //     // 년도별로 column 데이터 생성
+    //     for (let year in yearGroupedData) {
+    //         seriesData.push({
+    //             type: 'column',
+    //             name: year,
+    //             data: yearGroupedData[year]
+    //         });
+    //     }
+
+    //     // Pie chart data 추가
+    //     seriesData.push({
+    //         type: 'pie',
+    //         id: 'pie',
+    //         data: pieData,
+    //         center: [100, 80],
+    //         size: 100,
+    //         innerSize: '70%',
+    //         showInLegend: false,
+    //         dataLabels: {
+    //             enabled: false
+    //         }
+    //     });
+
+    //     return {
+    //         categories: categories,
+    //         series: seriesData
+    //     };
+    // }
+
+    // 년도 -> 장르
+    const createHighchartsData = () => {
+        // 원본 데이터를 장르와 년도별로 그룹화
+        let groupedData = groupDataByGenreAndYear();
+        // 모든 년도를 찾아서 categories 배열 생성
+        let allYears = new Set();
+        for (let genre in groupedData) {
+            for (let year in groupedData[genre]) {
+                allYears.add(year);
+            }
+        }
+        let categories = Array.from(allYears).sort((a, b) => a - b);  // 년도별로 정렬
+
+        // Highcharts에서 사용할 수 있는 형태로 데이터 변환
         let seriesData = [];
         let pieData = [];
 
-        // 년도별로 데이터를 그룹화하기 위한 객체
-        let yearGroupedData = {};
+        for (let genre in groupedData) {
+            let data = categories.map(year => ({
+                name: year,
+                y: groupedData[genre][year] || 0  // 해당 년도에 데이터가 없으면 0으로 설정
+            }));
 
-        categories.forEach(category => {
-            for (let year in groupedData[category]) {
-                if (!yearGroupedData[year]) {
-                    yearGroupedData[year] = [];
-                }
-                yearGroupedData[year].push(groupedData[category][year]);
-
-                // Pie chart data
-                pieData.push({
-                    name: category,
-                    y: groupedData[category][year]
-                });
-            }
-        });
-
-        // 년도별로 column 데이터 생성
-        for (let year in yearGroupedData) {
             seriesData.push({
                 type: 'column',
-                name: year,
-                data: yearGroupedData[year]
+                name: genre,
+                data: data
+            });
+
+            // 각 장르별 판매 총액 계산
+            let genreTotalSales = Object.values(groupedData[genre]).reduce((sum, sales) => sum + sales, 0);
+            pieData.push({
+                name: genre,
+                y: genreTotalSales
             });
         }
 
@@ -316,7 +361,7 @@ export default function ArtworksPage({ loadDataUrl }) {
             type: 'pie',
             id: 'pie',
             data: pieData,
-            center: [100, 80],
+            center: [80, 80],
             size: 100,
             innerSize: '70%',
             showInLegend: false,
@@ -361,7 +406,7 @@ export default function ArtworksPage({ loadDataUrl }) {
                                     <FormControlLabel value="월별" control={<Radio />} label="월별" />
                                     <FormControlLabel value="분기별" control={<Radio />} label="분기별" />
                                     <FormControlLabel value="년도별" control={<Radio />} label="년도별" />
-                                    <FormControlLabel value="장르별기준" control={<Radio />} label="장르별기준 년도별" />
+                                    <FormControlLabel value="년도별기준" control={<Radio />} label="년도별기준 장르" />
                                 </RadioGroup>
                             </Grid>
                             <Grid item xs={10}>
@@ -374,7 +419,6 @@ export default function ArtworksPage({ loadDataUrl }) {
                     </TabPanel>
                     <TabPanel value="holder" sx={{ minWidth: '80vw' }}>
                         <BuyerHolderTable selectedData={selectedData} Cols={holderCols} />
-                        {/* <HolderTable holderData={holderData} /> */}
                     </TabPanel>
                     <TabPanel value="serial" sx={{ minWidth: '80vw' }}>
                         <SerialTable genresList={genresList} executedList={executedList}
@@ -491,12 +535,12 @@ const SerialTable = ({ genresList, executedList, selectedData, handleChangeGenre
 const ContentsComponent = ({ currentPage, data }) => {
     switch (currentPage) {
         case '분기별':
-            return <Chart data={data} height={480} Select={'Period'} />
+            return <Chart data={data} height={480} Select={'Period'} currentPage={currentPage} />
         case '년도별':
-            return <Chart data={data} height={480} Select={'Period'} />
-        case '장르별기준':
+            return <Chart data={data} height={480} Select={'Period'} currentPage={currentPage} />
+        case '년도별기준':
             return <CombinationsChart data={data} height={480} />;
         default: // 월별 기본
-            return <Chart data={data} height={480} Select={'Period'} />
+            return <Chart data={data} height={480} Select={'Period'} currentPage={currentPage} />
     }
 }

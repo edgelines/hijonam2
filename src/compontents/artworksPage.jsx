@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
-import { Container, Grid, Chip, Divider, Box, Tab, Switch, Stack, Typography, Paper, Slider, Skeleton } from '@mui/material';
-import styledComponents from 'styled-components';
+import { ThemeProvider } from '@mui/material/styles';
+import { Grid, Typography, Slider, Skeleton } from '@mui/material';
+// import styledComponents from 'styled-components';
 import axios from 'axios';
-import DoneIcon from '@mui/icons-material/Done';
-import { AntSwitch, generateTheme, MarginPictures } from './util.jsx';
+// import DoneIcon from '@mui/icons-material/Done';
+import { generateTheme, MarginPictures } from './util.jsx';
 
 // import SimpleSlider from './slickCarousel';
 import styledCSS from './artworksPage.module.css';
@@ -19,6 +19,7 @@ import { FreeMode, Pagination } from 'swiper/modules';
 
 export default function ArtworksPage() {
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     const [originData, setOrignData] = useState([]);
     const [selectedData, setSelectedData] = useState([]);
     const [selectedDataFiltered, setSelectedDataFiltered] = useState([]) // 장르선택시 Work Year Filter State
@@ -377,14 +378,14 @@ export default function ArtworksPage() {
 
                     {/* Show */}
                     <Grid container sx={{ mt: '1.5vh' }}>
-                        <Grid item xs={2} sx={{ paddingLeft: 12.2, mt: -0.5 }}>
+                        <Grid item xs={isLgTablet ? 2.9 : 2.4} sx={{ paddingLeft: isLgTablet ? 6 : 7.2, mt: -0.5 }}>
                             {selectedImg && selectedImg.title ?
                                 <>
                                     <Grid container direction="column" alignItems="start">
-                                        <h5 style={{ fontFamily: 'Helvetica', fontWeight: 700 }}>{selectedImg.title}</h5>
+                                        <h5 style={{ textAlign: 'start', fontFamily: 'Helvetica', fontWeight: 700 }}>{selectedImg.title}</h5>
                                     </Grid>
                                     <Grid container direction="column" alignItems="start">
-                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                                        <Typography align='start' sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
                                             {selectedImg.material}
                                         </Typography>
                                     </Grid>
@@ -421,7 +422,7 @@ export default function ArtworksPage() {
                             }
 
                         </Grid>
-                        <Grid item xs={6.8}>
+                        <Grid item xs={isLgTablet ? 5.9 : 6.4}>
                             {
                                 selectedImg && selectedImg.fileName ?
                                     <img src={`/img/Artworks/${selectedImg.fileName[0]}`} loading="lazy" style={{ width: `${imgSize}%` }} />

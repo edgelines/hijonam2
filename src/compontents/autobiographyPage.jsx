@@ -19,6 +19,8 @@ import "./Admin/autobiography.css";
 export default function AutobiographyPage({ lang }) {
     const componentRef = useRef();
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isTablet = useMediaQuery('(max-width:1200px)');
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState('Post')
     const [clickData, setClickData] = useState({});
@@ -106,23 +108,43 @@ export default function AutobiographyPage({ lang }) {
                     <Grid item xs={6} sx={{ backgroundColor: currentPage === 'Post' ? '#f4f4f4' : 'white', paddingLeft: 1, paddingRight: 1 }}>
                         <Grid container ref={componentRef} className={`${StyledCSS.printContent}`}>
                             {/* Logo & Box */}
-                            <Grid container>
-                                <Grid item xs={8.7} textAlign='start' container>
-                                    <img src={logo} style={{ width: "6.5vw", marginTop: '2vh', marginBottom: '0.5vh' }} className={`${StyledCSS.printLogo}`} />
-                                </Grid>
-                                <Grid item xs={3.3} container direction='column' justifyContent='flex-end' alignContent='center' >
-                                    <Grid container sx={{ border: '1px solid grey', borderRadius: '5px', height: '70px' }}
-                                        className={`${StyledCSS.printLogoRightBox}`}
-                                        direction='column' justifyContent='center' alignContent='center' >
-                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '11px' }}>
-                                            ALL THE CONTENTS ARE EDITED
-                                        </Typography>
-                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '11px' }}>
-                                            BY HIJO COMPANY & AOX
-                                        </Typography>
+                            {isLgTablet ?
+                                <Grid container>
+                                    <Grid item xs={7.5} textAlign='start' container>
+                                        <img src={logo} style={{ width: "6.5vw", marginTop: '2vh', marginBottom: '0.5vh' }} className={`${StyledCSS.printLogo}`} />
+                                    </Grid>
+                                    <Grid item xs={4.5} container direction='column' justifyContent='flex-end' alignContent='center' >
+                                        <Grid container sx={{ border: '1px solid grey', borderRadius: '5px', height: isTablet ? '55px' : '65px' }}
+                                            className={`${StyledCSS.printLogoRightBox}`}
+                                            direction='column' justifyContent='center' alignContent='center' >
+                                            <Typography sx={{ fontFamily: 'Helvetica', fontSize: '11px' }}>
+                                                ALL THE CONTENTS ARE EDITED
+                                            </Typography>
+                                            <Typography sx={{ fontFamily: 'Helvetica', fontSize: '11px' }}>
+                                                BY HIJO COMPANY & AOX
+                                            </Typography>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
-                            </Grid>
+                                :
+                                <Grid container>
+                                    <Grid item xs={8.7} textAlign='start' container>
+                                        <img src={logo} style={{ width: "6.5vw", marginTop: '2vh', marginBottom: '0.5vh' }} className={`${StyledCSS.printLogo}`} />
+                                    </Grid>
+                                    <Grid item xs={3.3} container direction='column' justifyContent='flex-end' alignContent='center' >
+                                        <Grid container sx={{ border: '1px solid grey', borderRadius: '5px', height: '70px' }}
+                                            className={`${StyledCSS.printLogoRightBox}`}
+                                            direction='column' justifyContent='center' alignContent='center' >
+                                            <Typography sx={{ fontFamily: 'Helvetica', fontSize: '11px' }}>
+                                                ALL THE CONTENTS ARE EDITED
+                                            </Typography>
+                                            <Typography sx={{ fontFamily: 'Helvetica', fontSize: '11px' }}>
+                                                BY HIJO COMPANY & AOX
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            }
 
                             {/* favicon & Title & 뒤로가기 */}
                             <Grid item xs={12} sx={{ borderBottom: '2px solid grey', padding: '5px' }} textAlign='start'>
@@ -427,10 +449,10 @@ export const PostDetailView = ({ history, location, match, lang, componentRef })
                     <ThemeProvider theme={theme}>
                         <Grid item xs={12} textAlign='start'>
                             <Grid container>
-                                <Grid item xs={9}>
+                                <Grid item container direction='column' justifyContent="center" xs={8}>
                                     <Typography variant='h5' sx={{ fontWeight: 600 }}>{post.title}</Typography>
                                 </Grid>
-                                <Grid item xs={3} textAlign='end'>
+                                <Grid item xs={4} textAlign='end'>
                                     <Share currentUrl={`http://hijonam.com/bio/autobiography/${postId}`}
                                         kakaoTitle={data.title_kr} kakaoDescription={shareData.snippet} kakaoImage={`http://hijonam.com/${shareData.imageUrl}`}
                                         componentRef={componentRef}
@@ -441,7 +463,7 @@ export const PostDetailView = ({ history, location, match, lang, componentRef })
                         <Grid item xs={12} textAlign='start' sx={{ mt: 1 }}>
                             <Typography variant='span' className={`${StyledCSS.printView}`}>{lang === 'En' ? `Views : ${view}` : `조회수 : ${view}`}</Typography>
                         </Grid>
-                        <Grid item xs={12} textAlign='start' sx={{ mt: 2 }}>
+                        <Grid item xs={12} textAlign='justify' sx={{ mt: 2 }}>
                             {Parser(post.content || "")}
                         </Grid>
                     </ThemeProvider>

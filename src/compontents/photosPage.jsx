@@ -134,6 +134,7 @@ export default function PhotosPage({ lang, setSubTitle }) {
 
 const PhotosDetail = ({ lang, value }) => {
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     const [originData, setOriginData] = useState([]);
     const [data, setData] = useState([]);
     const [selectedImg, setSelectedImg] = useState([]);
@@ -302,70 +303,135 @@ const PhotosDetail = ({ lang, value }) => {
                 // NonMobile
                 <Grid container spacing={1} sx={{ width: '100%' }} >
                     <Grid item xs={8.3} sx={{ mt: '87px' }}>
-                        <Grid container spacing={5} sx={{ height: '100%' }}>
-                            {/* <Grid item xs={3} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}> */}
-                            <Grid item xs={0.61}></Grid>
-                            <Grid item xs={3} sx={{ paddingLeft: 1 }} >
-                                {/* Logo */}
-                                <Grid container>
-                                    <img src={logo} style={{ width: "5vw", marginBottom: '1.5vh', marginLeft: '-0.3vw' }} />
-                                </Grid>
-
-                                {/* Subtitle */}
-                                <Grid container sx={{ borderBottom: '1px solid gray' }}>
-                                    <Grid item xs={12} textAlign='start'>
-                                        <Typography sx={{ fontFamily: 'Hevetica', fontWeight: 600, fontSize: '22.4px' }}>
-                                            <img src={favicon} style={{ width: '21px', padding: 1, marginTop: '-4px', marginRight: '10px' }} />
-                                            {value.toUpperCase()}
-                                        </Typography>
+                        {isLgTablet ?
+                            <Grid container spacing={5} sx={{ height: '100%' }}>
+                                <Grid item xs={0.61}></Grid>
+                                <Grid item xs={3.5} sx={{ paddingLeft: 1 }} >
+                                    {/* Logo */}
+                                    <Grid container>
+                                        <img src={logo} style={{ width: "5vw", marginBottom: '1.5vh', marginLeft: '-0.3vw' }} />
                                     </Grid>
-                                </Grid>
 
-                                {/* Content */}
-                                <Grid container sx={{ marginTop: '1.5vh' }}>
-                                    {selectedImg ?
-                                        <Grid container rowSpacing={2} >
-                                            <Grid item xs={12} textAlign='start'>
-                                                {selectedImg.memo || selectedImg.memo_kr ?
-                                                    <>
-                                                        {lang === 'En' ?
-                                                            <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
-                                                                {selectedImg.memo}
-                                                            </Typography>
-                                                            :
-                                                            <Typography sx={{ fontFamily: 'Bitgoeul_Medium', fontSize: '13px' }}>
-                                                                {selectedImg.memo_kr}
-                                                            </Typography>
-                                                        }
+                                    {/* Subtitle */}
+                                    <Grid container sx={{ borderBottom: '1px solid gray' }}>
+                                        <Grid item xs={12} textAlign='start'>
+                                            <Typography sx={{ fontFamily: 'Hevetica', fontWeight: 600, fontSize: '22.4px' }}>
+                                                <img src={favicon} style={{ width: '21px', padding: 1, marginTop: '-4px', marginRight: '10px' }} />
+                                                {value.toUpperCase()}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
 
-                                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px', textAlign: 'start', mt: '12px' }}>
+                                    {/* Content */}
+                                    <Grid container sx={{ marginTop: '1.5vh' }}>
+                                        {selectedImg ?
+                                            <Grid container rowSpacing={2} >
+                                                <Grid item xs={12} textAlign='start'>
+                                                    {selectedImg.memo || selectedImg.memo_kr ?
+                                                        <>
+                                                            {lang === 'En' ?
+                                                                <Typography align='justify' sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                                                                    {selectedImg.memo}
+                                                                </Typography>
+                                                                :
+                                                                <Typography sx={{ fontFamily: 'Bitgoeul_Medium', fontSize: '13px' }}>
+                                                                    {selectedImg.memo_kr}
+                                                                </Typography>
+                                                            }
+
+                                                            <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px', textAlign: 'start', mt: '12px' }}>
+                                                                {selectedImg.year ? `${selectedImg.year},` : ''} {selectedImg.month ? `${selectedImg.month},` : ''} {selectedImg.title ? selectedImg.title : ''}
+                                                            </Typography>
+                                                        </>
+                                                        :
+                                                        <Typography sx={{ fontFamily: 'Helvetica', textAlign: 'start', fontSize: '13px' }}>
                                                             {selectedImg.year ? `${selectedImg.year},` : ''} {selectedImg.month ? `${selectedImg.month},` : ''} {selectedImg.title ? selectedImg.title : ''}
                                                         </Typography>
-                                                    </>
-                                                    :
-                                                    <Typography sx={{ fontFamily: 'Helvetica', textAlign: 'start', fontSize: '13px' }}>
-                                                        {selectedImg.year ? `${selectedImg.year},` : ''} {selectedImg.month ? `${selectedImg.month},` : ''} {selectedImg.title ? selectedImg.title : ''}
-                                                    </Typography>
-                                                }
+                                                    }
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
-                                        : <Skeleton variant="rectangular" />
+                                            : <Skeleton variant="rectangular" />
+                                        }
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={7.89}>
+                                    {selectedImg ?
+                                        <img src={`/img/Photos/${selectedImg.folderName}/${selectedImg.fileName}`} style={{
+                                            width: '92%',
+                                            maxWidth: '43vw',
+                                            textAlign: 'center',
+                                            // height: '70%',
+                                            // objectFit: 'cover'
+                                        }} /> :
+                                        <Skeleton variant="rectangular" />
                                     }
                                 </Grid>
                             </Grid>
-                            <Grid item xs={8.39}>
-                                {selectedImg ?
-                                    <img src={`/img/Photos/${selectedImg.folderName}/${selectedImg.fileName}`} style={{
-                                        width: '92%',
-                                        maxWidth: '43vw',
-                                        textAlign: 'center',
-                                        // height: '70%',
-                                        // objectFit: 'cover'
-                                    }} /> :
-                                    <Skeleton variant="rectangular" />
-                                }
+                            :
+                            <Grid container spacing={5} sx={{ height: '100%' }}>
+                                <Grid item xs={0.61}></Grid>
+                                <Grid item xs={3} sx={{ paddingLeft: 1 }} >
+                                    {/* Logo */}
+                                    <Grid container>
+                                        <img src={logo} style={{ width: "5vw", marginBottom: '1.5vh', marginLeft: '-0.3vw' }} />
+                                    </Grid>
+
+                                    {/* Subtitle */}
+                                    <Grid container sx={{ borderBottom: '1px solid gray' }}>
+                                        <Grid item xs={12} textAlign='start'>
+                                            <Typography sx={{ fontFamily: 'Hevetica', fontWeight: 600, fontSize: '22.4px' }}>
+                                                <img src={favicon} style={{ width: '21px', padding: 1, marginTop: '-4px', marginRight: '10px' }} />
+                                                {value.toUpperCase()}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+
+                                    {/* Content */}
+                                    <Grid container sx={{ marginTop: '1.5vh' }}>
+                                        {selectedImg ?
+                                            <Grid container rowSpacing={2} >
+                                                <Grid item xs={12} textAlign='start'>
+                                                    {selectedImg.memo || selectedImg.memo_kr ?
+                                                        <>
+                                                            {lang === 'En' ?
+                                                                <Typography align='justify' sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                                                                    {selectedImg.memo}
+                                                                </Typography>
+                                                                :
+                                                                <Typography sx={{ fontFamily: 'Bitgoeul_Medium', fontSize: '13px' }}>
+                                                                    {selectedImg.memo_kr}
+                                                                </Typography>
+                                                            }
+
+                                                            <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px', textAlign: 'start', mt: '12px' }}>
+                                                                {selectedImg.year ? `${selectedImg.year},` : ''} {selectedImg.month ? `${selectedImg.month},` : ''} {selectedImg.title ? selectedImg.title : ''}
+                                                            </Typography>
+                                                        </>
+                                                        :
+                                                        <Typography sx={{ fontFamily: 'Helvetica', textAlign: 'start', fontSize: '13px' }}>
+                                                            {selectedImg.year ? `${selectedImg.year},` : ''} {selectedImg.month ? `${selectedImg.month},` : ''} {selectedImg.title ? selectedImg.title : ''}
+                                                        </Typography>
+                                                    }
+                                                </Grid>
+                                            </Grid>
+                                            : <Skeleton variant="rectangular" />
+                                        }
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={8.39}>
+                                    {selectedImg ?
+                                        <img src={`/img/Photos/${selectedImg.folderName}/${selectedImg.fileName}`} style={{
+                                            width: '92%',
+                                            maxWidth: '43vw',
+                                            textAlign: 'center',
+                                            // height: '70%',
+                                            // objectFit: 'cover'
+                                        }} /> :
+                                        <Skeleton variant="rectangular" />
+                                    }
+                                </Grid>
                             </Grid>
-                        </Grid>
+                        }
                     </Grid>
                     <Grid item xs={3.35}>
                         <Grid container>

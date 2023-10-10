@@ -25,6 +25,7 @@ import { AntSwitch } from './util.jsx';
 import logo from '../assets/hijonam_logo.png'
 export default function NavbarComponent({ handleSwitchChange }) {
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     const [collapse, setCollapse] = useState(true);
     const [navbarOpen, setNavbarOpen] = useState(false);
 
@@ -148,16 +149,16 @@ const handleMenuClick = () => {
             ) : (
                 <>
                 <Collapse in={collapse} timeout={1000} collapsedSize={10}>
-                <Box>
-                    <img src={HomeImg} style={{
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '780px',
-                        objectFit: 'cover'
-                    }} />
-                </Box>
-            </Collapse>
+                    <Box>
+                        <img src={HomeImg} style={{
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: isLgTablet ? '75svh' : '780px',
+                            objectFit: 'cover'
+                        }} />
+                    </Box>
+                </Collapse>
                 <Navbar expand="lg" className="justify-content-between">
                     <StyledNavbarBrand as={Link} to="/" style={{ marginLeft: '5vw', marginRight: '-5vw', zIndex: 999 }} >HIJO NAM</StyledNavbarBrand>
 

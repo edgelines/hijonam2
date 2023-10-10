@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
-import { Container, Grid, Chip, Divider, Box, Tab, Switch, Stack, Typography, Paper, TextField, Button } from '@mui/material';
+import { Grid, TextField, Button } from '@mui/material';
 import { generateTheme } from '../util.jsx';
 
 function AdminLogin() {
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -50,7 +52,7 @@ function AdminLogin() {
     return (
         <div className="admin-login">
             <Grid container sx={{ height: '60vh' }} justifyContent="center" alignItems="center">
-                <Grid item xs={2} container direction="column" justifyContent="center" textAlign='center' sx={{ border: '1px solid #c8ccd0', borderRadius: 3, padding: 3 }}>
+                <Grid item xs={isLgTablet ? 4 : 2} container direction="column" justifyContent="center" textAlign='center' sx={{ border: '1px solid #c8ccd0', borderRadius: 3, padding: 3 }}>
                     <h3 className="mb-5" style={{ fontWeight: 600 }}>
                         L O G I N
                     </h3>

@@ -296,8 +296,8 @@ const StyledTypography = styledComponents(Typography)`
     line-height: calc(var(--base-space) * 6) !important;
     margin-top: calc(var(--base-space) * 1) !important;
 
-    @media (min-width : 960px) and (max-width : 1280px) {
-        font-size: 2.5rem !important;
+    @media (min-width : 960px) and (max-width : 1366px) {
+        font-size: 50px !important;
         font-weight: 900 !important;
         color: rgb(196, 196, 196) !important;
         line-height: calc(var(--base-space) * 6) !important;

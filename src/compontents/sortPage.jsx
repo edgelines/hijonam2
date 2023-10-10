@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Grid, Typography, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Radio, RadioGroup, FormControlLabel, FormControl, Tooltip, tooltipClasses } from '@mui/material';
+import { Grid, Typography, Button, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Radio, RadioGroup, FormControlLabel, FormControl, Tooltip, tooltipClasses } from '@mui/material';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
-import { TextField, Button, Snackbar } from '@mui/material';
-import FormLabel from '@mui/material/FormLabel';
 import axios from 'axios';
 import { AntSwitch, MarginPictures } from './util.jsx';
 import styles from './sortPage.module.css';
 import jsPDF from "jspdf";
-import logo from '../assets/hijonam_logo.png'
+// import logo from '../assets/hijonam_logo.png'
 import html2canvas from "html2canvas";
 import * as XLSX from 'xlsx'
 const theme = createTheme({
@@ -24,6 +22,8 @@ const theme = createTheme({
 });
 
 export default function SortPage() {
+    const isTablet = useMediaQuery('(max-width:1200px)');
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     // Img Data State
     const [orignData, setOrignData] = useState([]);
     const [genresData, setGenresData] = useState([]);
@@ -73,13 +73,8 @@ export default function SortPage() {
             console.error('Error fetching data:', error)
         }
     }
-    useEffect(() => {
-        fetchData();
-    }, [])
-
-    useEffect(() => {
-        filterByGenre();
-    }, [selectedGenre, orignData]);
+    useEffect(() => { fetchData(); }, [])
+    useEffect(() => { filterByGenre(); }, [selectedGenre, orignData]);
 
     const filterByGenre = () => {
         // originalArtworks 배열에서 selected.data 배열에 없는 아이템들만 필터링합니다.
@@ -177,13 +172,14 @@ export default function SortPage() {
         <>
             <div>
                 <MarginPictures title='SORT' />
+                {/* Tltle */}
                 <Grid container sx={{ mt: '2vh' }}>
-                    <Grid item xs={10.05} textAlign='start'>
+                    <Grid item xs={isTablet ? 9 : isLgTablet ? 9.5 : 10.05} textAlign='start'>
                         <Typography sx={{ fontFamily: 'Helvetica', fontSize: '30px', paddingLeft: 2.7, paddingTop: 1.5, color: 'rgb(196, 196, 196)', fontWeight: 600 }}>
                             This page is designed to select artworks by genre and create a list of works
                         </Typography>
                     </Grid>
-                    <Grid item xs={1.95} textAlign='end'>
+                    <Grid item xs={isTablet ? 3 : isLgTablet ? 2.5 : 1.95} textAlign='end'>
                         <ThemeProvider theme={theme}>
                             <Grid container>
                                 <Grid item xs={6}>
@@ -224,6 +220,7 @@ export default function SortPage() {
                     </Grid>
                 </Grid>
 
+                {/* Selected Img / Table */}
                 <Grid container >
                     <Grid item xs={0.1}></Grid>
                     <Grid item xs={6.5}>

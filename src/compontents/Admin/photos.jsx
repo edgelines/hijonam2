@@ -159,7 +159,7 @@ export default function GenresPage({ loadDataUrl }) {
         const confirmDelete = window.confirm("이 항목을 삭제 할까요?");
         if (confirmDelete) {
             try {
-                await axios.delete(`${url}${loadDataUrl}/${deleteID.id}`);
+                await axios.delete(`${url}${loadDataUrl}/${deleteID.folderName}/${deleteID.id}`);
                 fetchData();
                 setSnackbar(true);
                 setSeverity('success');

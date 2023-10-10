@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
-import { Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, Typography, FormControl, MenuItem } from '@mui/material';
-
+import { Grid, Button, Snackbar, Alert, Tab, Dialog, DialogContent, DialogContentText, TextField, DialogActions, Typography, FormControl, MenuItem } from '@mui/material';
+import { TabContext, TabPanel, TabList } from '@mui/lab';
 // import { Editor, EditorState, convertToRaw, RichUtils } from 'draft-js';
 // import { Editor } from 'react-draft-wysiwyg';
 // import draftToHtml from 'draftjs-to-html';
@@ -209,7 +209,7 @@ export default function AutobiographyPage({ loadDataUrl }) {
 
 const EditorForm = ({ form, saveBtn, edit }) => {
     const [localFormState, setLocalFormState] = useState(form);
-    const [value, setValue] = useState();
+    const [tabValue, setTabValue] = useState('Kr');
     const quillRef = useRef(null);
     const quillRef_kr = useRef(null);
 
@@ -219,7 +219,7 @@ const EditorForm = ({ form, saveBtn, edit }) => {
             toolbar: [
                 [{ font: Font.whitelist }],
                 [{ size: Size.whitelist }], // custom dropdown
-                [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                // [{ header: [1, 2, 3, 4, 5, 6, false] }],
                 [{ color: [] }, { background: [] }], // dropdown with defaults from theme
                 ["bold", "italic", "underline", "strike", "blockquote"],
                 [
@@ -230,7 +230,7 @@ const EditorForm = ({ form, saveBtn, edit }) => {
                 ],
                 [{ align: [] }],
                 ["link", "image"],
-                ["clean"],
+                // ["clean"],
             ],
             imageResize: {
                 modules: ['Resize']
@@ -246,7 +246,7 @@ const EditorForm = ({ form, saveBtn, edit }) => {
             toolbar: [
                 [{ font: Font.whitelist }],
                 [{ size: Size.whitelist }], // custom dropdown
-                [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                // [{ header: [1, 2, 3, 4, 5, 6, false] }],
                 [{ color: [] }, { background: [] }], // dropdown with defaults from theme
                 ["bold", "italic", "underline", "strike", "blockquote"],
                 [
@@ -257,7 +257,7 @@ const EditorForm = ({ form, saveBtn, edit }) => {
                 ],
                 [{ align: [] }],
                 ["link", "image"],
-                ["clean"],
+                // ["clean"],
             ],
             imageResize: {
                 modules: ['Resize']
@@ -270,7 +270,7 @@ const EditorForm = ({ form, saveBtn, edit }) => {
     }, []);
 
     const formats = [
-        "font", "size", "header", "color", "background", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "indent", "link", "image", "align",
+        "font", "size", "color", "background", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "indent", "link", "image", "align",
     ];
 
     // Handler
@@ -312,7 +312,6 @@ const EditorForm = ({ form, saveBtn, edit }) => {
             ...prevState,
             content_kr: content // content는 ReactQuill에서 제공하는 onChange의 첫 번째 인자입니다.
         }));
-        console.log(content);
     }
     const handleSave = () => {
         saveBtn({
@@ -320,6 +319,7 @@ const EditorForm = ({ form, saveBtn, edit }) => {
             // content: value
         });
     };
+    const handleChange = (event, newValue) => { setTabValue(newValue); };
     useEffect(() => {
         const quill = quillRef.current;
         const quill_kr = quillRef_kr.current;
@@ -411,44 +411,74 @@ const EditorForm = ({ form, saveBtn, edit }) => {
     }, [edit]);
 
     return (
-        <Grid container sx={{ marginTop: '2vh' }}>
-            <Grid container sx={{ marginBottom: '2vh' }}>
-                <TextField label='제목 (영어)' variant='standard' fullWidth value={localFormState.title} name="title" onChange={handleEdior} />
+        <>
+            <Grid container sx={{ marginTop: '2vh' }}>
+                <Grid item xs={5.9}>
+                    <Grid container sx={{ marginBottom: '2vh' }}>
+                        <TextField label='제목 (한글)' variant='standard' fullWidth value={localFormState.title_kr} name="title_kr" onChange={handleEdior} />
+                    </Grid>
+                    <Grid container sx={{ textAlign: 'start' }} >
+                        <ReactQuill
+                            style={{ height: "65svh", }}
+                            ref={quillRef_kr}
+                            theme="snow"
+                            value={localFormState.content_kr}
+                            modules={modules_kr}
+                            formats={formats}
+                            onChange={handleQuillChangeKR}
+                            placeholder="내용을 입력하세요."
+                            preserveWhitespace
+                        />
+                    </Grid>
+
+                </Grid>
+                <Grid item xs={0.2}>
+
+                </Grid>
+                <Grid item xs={5.9}>
+                    <Grid container sx={{ marginBottom: '2vh' }}>
+                        <TextField label='제목 (영어)' variant='standard' fullWidth value={localFormState.title} name="title" onChange={handleEdior} />
+                    </Grid>
+                    <Grid container sx={{ textAlign: 'start' }} >
+                        <ReactQuill
+                            style={{ height: "65svh" }}
+                            ref={quillRef}
+                            theme="snow"
+                            value={localFormState.content}
+                            modules={modules}
+                            formats={formats}
+                            onChange={handleQuillChange}
+                            placeholder="내용을 영어로 입력하세요."
+                            preserveWhitespace
+                        />
+                    </Grid>
+                </Grid>
+                {/* <TabContext value={tabValue}>
+                    <TabList onChange={handleChange} aria-label="lab API tabs" >
+                        <Tab label="한글" value="Kr" />
+                        <Tab label="영어" value="En" />
+                    </TabList>
+                    
+                    <Grid container>
+                            
+                        <TabPanel value="En" sx={{ minWidth: '80vw' }}>
+                        </TabPanel>
+                        <TabPanel value="Kr" sx={{ minWidth: '80vw' }}>
+                            
+                            
+
+                        </TabPanel>
+                    </Grid>
+                </TabContext> */}
+
             </Grid>
-            <Grid item xs={12} sx={{ textAlign: 'start' }} >
-                <ReactQuill
-                    style={{ height: "50vh" }}
-                    ref={quillRef}
-                    theme="snow"
-                    value={localFormState.content}
-                    modules={modules}
-                    formats={formats}
-                    onChange={handleQuillChange}
-                    placeholder="내용을 영어로 입력하세요."
-                    preserveWhitespace
-                />
+            <Grid container sx={{ marginTop: '6svh' }}>
+                <Grid item xs={12} textAlign='end'>
+                    <Button sx={{ mt: '10px' }} size="small" variant="contained" onClick={handleSave}>Save</Button>
+                </Grid>
             </Grid>
 
-            <Grid container sx={{ marginTop: '5vh', marginBottom: '2vh' }}>
-                <TextField label='제목 (한글)' variant='standard' fullWidth value={localFormState.title_kr} name="title_kr" onChange={handleEdior} />
-            </Grid>
-            <Grid item xs={12} sx={{ textAlign: 'start' }} >
-                <ReactQuill
-                    style={{ height: "50vh", }}
-                    ref={quillRef_kr}
-                    theme="snow"
-                    value={localFormState.content_kr}
-                    modules={modules_kr}
-                    formats={formats}
-                    onChange={handleQuillChangeKR}
-                    placeholder="내용을 입력하세요."
-                    preserveWhitespace
-                />
-            </Grid>
-            <Grid item xs={12} textAlign='end'>
-                <Button sx={{ mt: '5vh' }} size="small" variant="contained" onClick={handleSave}>Save</Button>
-            </Grid>
-        </Grid>
+        </>
     );
 };
 
