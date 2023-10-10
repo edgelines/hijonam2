@@ -13,7 +13,6 @@ export default function HomePage({ lang }) {
     const isMobile = useMediaQuery('(max-width:600px)');
     const isTablet = useMediaQuery('(max-width:1200px)');
     const isLgTablet = useMediaQuery('(max-width:1366px)');
-    const [modalOpen, setModalOpen] = useState(true);
     const [imgData, setImgData] = useState([]);
     const [exhibition, setExhibition] = useState([]);
     const [autobiographyContent, setAutobiographyContent] = useState([]);
@@ -132,32 +131,8 @@ export default function HomePage({ lang }) {
     }, []);
     // 모바일 스타일링
     const mobileHomeClockStyle = { fontSize: '12px', lineHeight: '14px' }
-    const handleModalClose = () => { setModalOpen(false); }
     return (
         <>
-            <Modal
-                open={modalOpen}
-                onClose={handleModalClose}  // 닫기 버튼 또는 모달 외부를 클릭하면 모달이 닫힙니다.
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
-            >
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: 400,
-                        bgcolor: 'background.paper',
-                        border: '2px solid #000',
-                        boxShadow: 24,
-                        p: 4,
-                    }}
-                >
-                    <p id="modal-description">THE NEW WEBSITE IS STILL UNDER CONSTRUCTION. TAKE FEW MORE DAYS TO COMPLETE.</p>
-                    <Button onClick={handleModalClose}>Close</Button>
-                </Box>
-            </Modal>
             {isMobile ? (
                 <Grid container sx={{ padding: 3, mt: '3px' }} >
                     {/* 시계 */}
@@ -227,7 +202,7 @@ export default function HomePage({ lang }) {
                                 Exhibition
                             </Grid>
                             <Grid item xs={2} textAlign='end' sx={{ borderBottom: '1px solid black' }}>
-                                <Link to={`/exhibition/upcoming/`} style={{ color: 'black', textDecoration: 'none' }}>
+                                <Link to={`/Exhibition/upcoming/`} style={{ color: 'black', textDecoration: 'none' }}>
                                     See All
                                 </Link>
                             </Grid>
@@ -311,7 +286,7 @@ export default function HomePage({ lang }) {
             ) : (
                 <Grid container>
                     <Grid item xs={5} sx={{ paddingLeft: isLgTablet ? 7 : 8, paddingRight: isLgTablet ? 7 : 8 }} >
-                        <Grid container rowSpacing={3} sx={{ mt: '-3vh' }} >
+                        <Grid container rowSpacing={3} sx={{ mt: '-30px' }} >
                             <Grid item xs={12} textAlign='start'>
                                 <img src={logo} style={{ width: isTablet ? "20vw" : isLgTablet ? "29vw" : "17vw" }} />
                             </Grid>
@@ -439,7 +414,7 @@ export default function HomePage({ lang }) {
                                         Exhibition
                                     </Grid>
                                     <Grid item xs={2} textAlign='end' sx={{ borderBottom: '1px solid black' }}>
-                                        <Link to={`/exhibition/upcoming/`} style={{ color: 'black', textDecoration: 'none' }}>
+                                        <Link to={`/Exhibition/upcoming/`} style={{ color: 'black', textDecoration: 'none' }}>
                                             See All
                                         </Link>
                                     </Grid>

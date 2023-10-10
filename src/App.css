@@ -18,7 +18,8 @@
 /*  --bs-gutter-x: 0; 추가 */
 
 /* 모바일 쿼리 */
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
+/* @media (max-width: 768px) { */
   :root {
     --font-size: 12px !important;
     font-family: 'Helvetica', 'Nanum Gothic', 'Baguet', 'Crimson Text', serif, Avenir, Arial, sans-serif;

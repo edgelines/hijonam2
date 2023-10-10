@@ -344,7 +344,7 @@ export const PostDetailView = ({ history, location, match, lang, componentRef })
 
     const fetchData = async () => {
         try {
-            const res = await axios.get(`http://hijonam.com/img/autobiography/${postId}`);
+            const res = await axios.get(`http://hijonam.com/img/autobiography/post/${postId}`);
             console.log(res.data);
             setData(res.data);
             setPost({

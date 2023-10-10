@@ -6,15 +6,14 @@
     - npm run build: "webpack --config webpack.prod.js"
   
 ### TodoList || Bug Report
-- Tablet.Ver Pre-Style
 - Tablet 12.9" 11" Sort Export PDF
 - imgTableJS -> 
     delete 파일삭제 코드 작성중 >> Admin>photos
     put 부분 수정해야함
 - Admin Upcoming Add Bug >> save가 안됨
 - Admin 전체적 수정
-- Autobiography 이미지 안뜸
-- 11" 패드에서 전체 12px
+- Admin 한글 파일 업로드시 자동제외 
+
 
 ### 2023.10.10
 {dev-tablet}
@@ -22,7 +21,10 @@
 {dev-meeting} : 삼성동
 - PC/Teblet -> Autobiography 추가, 스타일링 완료
 - Catalogue Page 준비중
-
+{main}
+- Autobiography 이미지 안뜸 => get autobiography/post/:id 로 변경 <=> img/Autobiography/img.jpg와 충돌 해결
+- Artworks Genres 이미지 안뜸 => img 폴더명 대문자 오타 수정
+- 11" 패드에서 전체 12px
 
 ### 2023.10.09
 {dev-tablet}
