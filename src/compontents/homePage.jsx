@@ -281,89 +281,18 @@ export default function HomePage({ lang }) {
                                 ))}
                             </Grid>
                         </Grid>
-                        {/* <Grid item xs={12} sx={{ marginTop: '1vh' }} >
-                            <Grid container spacing={2}>
-                                <Grid item xs={3}>
-                                    <div style={{ position: 'relative', paddingBottom: '75%' }}>
-                                        {photos.exhibition && photos.exhibition.fileName &&
-                                            <img src={`/img/Photos/${photos.exhibition.folderName}/${photos.exhibition.fileName[0]}`}
-                                                // <img src={`/img/Photos/${photos.exhibition.folderName}/${photos.exhibition.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`}
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: 0,
-                                                    left: 0,
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    objectFit: 'cover'
-                                                }}
-                                            />
-                                        }
-
-                                    </div>
-                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.exhibition.title}</p>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <div style={{ position: 'relative', paddingBottom: '75%' }} >
-                                        {photos.studioUS && photos.studioUS.fileName &&
-                                            <img src={`/img/Photos/${photos.studioUS.folderName}/${photos.studioUS.fileName[0]}`} style={{
-                                                // <img src={`/img/Photos/${photos.studioUS.folderName}/${photos.studioUS.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`} style={{
-                                                position: 'absolute',
-                                                top: 0,
-                                                left: 0,
-                                                width: '100%',
-                                                height: '100%',
-                                                objectFit: 'cover'
-                                            }} />
-                                        }
-                                    </div>
-                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.studioUS.title}</p>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <div style={{ position: 'relative', paddingBottom: '75%' }} >
-                                        {photos.studioKorea && photos.studioKorea.fileName &&
-                                            <img src={`/img/Photos/${photos.studioKorea.folderName}/${photos.studioKorea.fileName[0]}`} style={{
-                                                // <img src={`/img/Photos/${photos.studioKorea.folderName}/${photos.studioKorea.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`} style={{
-                                                position: 'absolute',
-                                                top: 0,
-                                                left: 0,
-                                                width: '100%',
-                                                height: '100%',
-                                                objectFit: 'cover'
-                                            }} />
-                                        }
-                                    </div>
-                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.studioKorea.title}</p>
-                                </Grid>
-                                <Grid item xs={3}>
-                                    <div style={{ position: 'relative', paddingBottom: '75%' }} >
-                                        {photos.other && photos.other.fileName &&
-                                            <img src={`/img/Photos/${photos.other.folderName}/${photos.other.fileName[0]}`} style={{
-                                                // <img src={`/img/Photos/${photos.other.folderName}/${photos.other.fileName[0].split('.').slice(0, -1).join('.')}-thumbnail.webp`} style={{
-                                                position: 'absolute',
-                                                top: 0,
-                                                left: 0,
-                                                width: '100%',
-                                                height: '100%',
-                                                objectFit: 'cover'
-                                            }} />
-                                        }
-                                    </div>
-                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photos.other.title}</p>
-                                </Grid>
-                            </Grid>
-                        </Grid> */}
                     </Grid>
 
                 </Grid>
             ) : (
                 <Grid container>
-                    <Grid item xs={5} sx={{ paddingLeft: 8, paddingRight: 8 }} >
+                    <Grid item xs={5} sx={{ paddingLeft: isLgTablet ? 7 : 8, paddingRight: isLgTablet ? 7 : 8 }} >
                         <Grid container rowSpacing={3} sx={{ mt: '-3vh' }} >
                             <Grid item xs={12} textAlign='start'>
-                                <img src={logo} style={{ width: "25vw" }} />
+                                <img src={logo} style={{ width: isTablet ? "20vw" : isLgTablet ? "29vw" : "17vw" }} />
                             </Grid>
                             {/* Clock */}
-                            <Grid item xs={12} sx={{ mt: '1vh' }} >
+                            <Grid item xs={12} sx={{ mt: '1px' }} >
 
                                 {/* Ipad / PC */}
                                 {isLgTablet ?
@@ -384,7 +313,7 @@ export default function HomePage({ lang }) {
                                                 secondHandLength={75}
                                                 secondHandOppositeLength={17}
                                                 secondHandWidth={2}
-                                                size={isTablet ? 90 : 100}
+                                                size={isTablet ? 85 : 100}
                                             />
                                         </Grid>
                                         <Grid item xs={0.3}></Grid>
@@ -415,7 +344,7 @@ export default function HomePage({ lang }) {
                                                 secondHandLength={75}
                                                 secondHandOppositeLength={17}
                                                 secondHandWidth={2}
-                                                size={isTablet ? 90 : 100}
+                                                size={isTablet ? 85 : 100}
                                             />
                                         </Grid>
                                         <Grid item xs={0.3}></Grid>
@@ -443,7 +372,7 @@ export default function HomePage({ lang }) {
                                                 secondHandLength={75}
                                                 secondHandOppositeLength={17}
                                                 secondHandWidth={2}
-                                                size={135}
+                                                size={120}
                                             />
                                         </Grid>
                                         <Grid item xs={3} container direction="column" justifyContent="flex-end" textAlign='start'>
@@ -466,7 +395,7 @@ export default function HomePage({ lang }) {
                                                 secondHandLength={75}
                                                 secondHandOppositeLength={17}
                                                 secondHandWidth={2}
-                                                size={135}
+                                                size={120}
                                             />
                                         </Grid>
                                         <Grid item xs={3} container direction="column" justifyContent="flex-end" textAlign='start'>
@@ -480,7 +409,7 @@ export default function HomePage({ lang }) {
                             </Grid>
 
                             {/* Exhibition */}
-                            <Grid item xs={12} textAlign='start' sx={{ mt: '1vh' }} >
+                            <Grid item xs={12} textAlign='start' sx={{ mt: isTablet ? '1px' : '10px' }} >
                                 <Grid container>
                                     <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
                                         Exhibition
@@ -492,8 +421,8 @@ export default function HomePage({ lang }) {
                                     </Grid>
                                     {
                                         exhibition.map((item, index) => (
-                                            <Grid container className="border-bottom" key={item.id} sx={{ height: '7vh' }} >
-                                                <Grid item xs={8} sx={{ alignSelf: 'center' }} >
+                                            <Grid container className="border-bottom" key={item.id} sx={{ height: '5svh' }} >
+                                                <Grid item xs={7} sx={{ alignSelf: 'center' }} >
                                                     <tr>
                                                         <td>{item.soloGroup === 0 ? 'Solo Exhibition' : item.soloGroup === 1 ?
                                                             'Group Exhibition' : ''}</td>
@@ -502,7 +431,7 @@ export default function HomePage({ lang }) {
                                                         <td>{item.title ? item.title : ''}</td>
                                                     </tr>
                                                 </Grid>
-                                                <Grid item xs={4} textAlign='end' sx={{ alignSelf: 'center' }} >
+                                                <Grid item xs={5} textAlign='end' sx={{ alignSelf: 'center' }} >
                                                     <span> {item.startDate ? `${item.startDate} ~ ${item.endDate}` : ''} </span>
                                                 </Grid>
                                             </Grid>
@@ -511,8 +440,54 @@ export default function HomePage({ lang }) {
                                 </Grid>
                             </Grid>
 
+                            {/* Autobiography & Catalogue */}
+                            <Grid container textAlign='start' sx={{ mt: isTablet ? '20px' : '30px', height: '100%' }}>
+                                <Grid item xs={5.8}>
+                                    <Grid container>
+                                        <Grid item xs={7} sx={{ borderBottom: '1px solid black' }}>
+                                            Autobiography
+                                        </Grid>
+                                        <Grid item xs={5} textAlign='end' sx={{ borderBottom: '1px solid black' }}>
+                                            <Link to={`/bio/autobiography/`} style={{ color: 'black', textDecoration: 'none' }}>
+                                                See All
+                                            </Link>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            {autobiographyContent && autobiographyContent.title ?
+                                                <AutobiographyContentComponent
+                                                    lang={lang} title={lang === 'En' ? autobiographyContent.title : autobiographyContent.title_kr}
+                                                    content={lang === 'En' ? autobiographyContent.content : autobiographyContent.content_kr}
+                                                    postId={autobiographyContent.id} />
+                                                : <div>Loading...</div>
+                                            }
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={0.4}></Grid>
+                                {/* Catalogue */}
+                                <Grid item xs={5.8} sx={{ height: '100%' }}>
+                                    <Grid container>
+                                        <Grid item xs={7} sx={{ borderBottom: '1px solid black' }}>
+                                            Catalogue
+                                        </Grid>
+                                        <Grid item xs={5} textAlign='end' sx={{ borderBottom: '1px solid black' }}>
+                                            <Link to={`/bio/catalogue/`} style={{ color: 'black', textDecoration: 'none' }}>
+                                                See All
+                                            </Link>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container direction='column' justifyContent='center' sx={{ backgroundColor: '#333333', height: '100%', minHeight: isLgTablet ? '5svh' : '10svh' }}>
+                                        <Typography align='center' sx={{ color: 'white', p: 2, fontSize: isTablet ? '11px' : '15px' }}>CURRENTY CATALOGUE PAGE IS WORKING ON PROCESS</Typography>
+                                        {/* <Grid item xs={6} sx={{ border: '1px solid red', height: '100%' }}>
+                                            img</Grid>
+                                        <Grid item xs={6} sx={{ border: '1px solid blue', height: '100%' }}>
+                                            text</Grid> */}
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+
                             {/* Photos */}
-                            <Grid item xs={12} textAlign='start' sx={{ mt: '1vh' }}>
+                            <Grid item xs={12} textAlign='start' sx={{ mt: isTablet ? '1px' : '10px', }}>
                                 <Grid container>
                                     <Grid item xs={10} sx={{ borderBottom: '1px solid black' }}>
                                         Recent Photos Upload
@@ -568,6 +543,9 @@ export default function HomePage({ lang }) {
 
 
 const AutobiographyContentComponent = ({ lang, title, content, postId, onClick }) => {
+    const isMobile = useMediaQuery('(max-width:600px)');
+    const isTablet = useMediaQuery('(max-width:1200px)');
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     // 1. 이미지 URL 추출하기
     const imageRegex = /<img.*?src="(.*?)".*?>/; // 이미지 태그에서 src 값을 추출하는 정규식
     const imageMatch = content.match(imageRegex);
@@ -588,7 +566,19 @@ const AutobiographyContentComponent = ({ lang, title, content, postId, onClick }
         }
     }
     // 첫 번째 이미지 및 <br> 태그만을 포함하지 않는 <p> 태그의 텍스트에서 100자 추출하기
-    const snippet = lang === 'En' ? firstPText.substr(0, 86) : firstPText.substr(0, 60);
+    const snippet = () => {
+        let result;
+        if (isMobile) {
+            result = lang === 'Kr' ? firstPText.substr(0, 60) : firstPText.substr(0, 100);
+        } else if (isTablet) {
+            result = lang === 'Kr' ? firstPText.substr(0, 30) : firstPText.substr(0, 40);
+        } else if (isLgTablet) {
+            result = lang === 'Kr' ? firstPText.substr(0, 45) : firstPText.substr(0, 60);
+        } else {
+            result = lang === 'Kr' ? firstPText.substr(0, 60) : firstPText.substr(0, 86);
+        }
+        return result
+    }
     const someProps = { fontFamily: lang === 'Kr' ? 'Nanum Gothic' : 'Crimson Text', fontSize: 12, }
     const theme = generateTheme(someProps);
     const navigate = useNavigate();
@@ -596,44 +586,105 @@ const AutobiographyContentComponent = ({ lang, title, content, postId, onClick }
     const goToDetailPage = (postId) => {
         navigate(`/bio/autobiography/${postId}`);
     };
+
+    // 페이지별
+    const fontStyle = () => {
+        let result;
+        if (isMobile) {
+            result = lang === 'En' ? '15px' : '17px';
+        } else if (isTablet) {
+            result = lang === 'En' ? '12px' : '17px'
+        } else if (isLgTablet) {
+            result = lang === 'En' ? '15px' : '17px';
+        } else {
+            result = lang === 'En' ? '15px' : '17px';
+        }
+        return result
+    }
     return (
-        <Box sx={{ paddingTop: 1 }}
-            onClick={() => goToDetailPage(String(postId))}
-        >
-            <Grid container>
-                <Grid item xs={7}>
-                    {imageUrl &&
-                        <img src={imageUrl} alt="Post Thumbnail"
-                            loading="lazy"
-                            className='thumbnail thumbnail-img'
-                            style={{
-                                width: '100%',
-                                objectFit: 'cover',
-                                border: '1px solid grey'
-                            }}
-                        />}
-                </Grid>
-                <Grid item xs={0.5}></Grid>
-                <Grid item xs={4.5} >
-                    <Grid item container direction="column" justifyContent="flex-end" sx={{ height: '100%' }}>
-                        <Stack
-                            direction="column"
-                            justifyContent="flex-end"
-                            alignItems="flex-start"
-                        >
-                            <ThemeProvider theme={theme} >
-                                <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#474747' }}>
-                                    {title}
-                                </Typography>
-                                <Typography textAlign='start' sx={{ fontSize: lang === 'En' ? '12px' : '11.3px', color: '#474747', marginBottom: '15px', lineHeight: lang === 'En' ? '15px' : '17px' }}>
-                                    {snippet}...
-                                </Typography>
-                            </ThemeProvider>
-                        </Stack>
+        <>
+            {isMobile ?
+                <Box sx={{ paddingTop: 1 }}
+                    onClick={() => goToDetailPage(String(postId))}
+                >
+                    <Grid container>
+                        <Grid item xs={7}>
+                            {imageUrl &&
+                                <img src={imageUrl} alt="Post Thumbnail"
+                                    loading="lazy"
+                                    className='thumbnail thumbnail-img'
+                                    style={{
+                                        width: '100%',
+                                        objectFit: 'cover',
+                                        border: '1px solid grey'
+                                    }}
+                                />}
+                        </Grid>
+                        <Grid item xs={0.5}></Grid>
+                        <Grid item xs={4.5} >
+                            <Grid item container direction="column" justifyContent="flex-end" sx={{ height: '100%' }}>
+                                <Stack
+                                    direction="column"
+                                    justifyContent="flex-end"
+                                    alignItems="flex-start"
+                                >
+                                    <ThemeProvider theme={theme} >
+                                        <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#474747' }}>
+                                            {title}
+                                        </Typography>
+                                        <Typography textAlign='start' sx={{ fontSize: lang === 'En' ? '12px' : '11.3px', color: '#474747', marginBottom: '15px', lineHeight: fontStyle() }}>
+                                            {snippet()}...
+                                        </Typography>
+                                    </ThemeProvider>
+                                </Stack>
+                            </Grid>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Grid>
-        </Box>
+                </Box>
+                :
+                <Box sx={{ paddingTop: 1 }}
+                    onClick={() => goToDetailPage(String(postId))}
+                >
+                    <Grid container>
+                        <Grid item xs={5.8}>
+                            {imageUrl &&
+                                <img src={imageUrl} alt="Post Thumbnail"
+                                    loading="lazy"
+                                    className='thumbnail thumbnail-img'
+                                    style={{
+                                        width: '100%',
+                                        objectFit: 'cover',
+                                        border: '1px solid grey'
+                                    }}
+                                />}
+                        </Grid>
+                        <Grid item xs={0.4}></Grid>
+                        <Grid item xs={5.8} >
+                            <Grid item container direction="column" justifyContent="flex-end" sx={{ height: '100%' }}>
+                                <Stack
+                                    direction="column"
+                                    justifyContent="flex-end"
+                                    alignItems="flex-start"
+                                >
+                                    <ThemeProvider theme={theme} >
+                                        <Typography sx={{ fontSize: '14px', fontWeight: 600, color: '#474747' }}>
+                                            {title}
+                                        </Typography>
+                                        <Typography textAlign='start'
+                                            sx={{
+                                                fontSize: lang === 'En' ? '12px' : '11.3px', color: '#474747', marginBottom: '15px',
+                                                lineHeight: fontStyle()
+                                            }}>
+                                            {snippet()}...
+                                        </Typography>
+                                    </ThemeProvider>
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Box>
+            }
+        </>
         // <Link to={`/bio/autobiography/${String(postId)}`} style={{ color: 'black', textDecoration: 'none' }}>
         // </Link >
     )

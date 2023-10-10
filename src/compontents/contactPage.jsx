@@ -161,7 +161,7 @@ export default function ContactPage() {
             ) : (
                 <>
                     <MarginPictures title='CONTACT' />
-                    <div style={{ marginTop: '7vh', marginLeft: '9vw' }}>
+                    <div style={{ marginTop: '8svh', marginLeft: '9vw', marginBottom: '7svh' }}>
                         {/* <div id={styles.Contact}> */}
                         {/* <Grid container id={styles.title}> */}
                         <Grid container >
@@ -172,7 +172,7 @@ export default function ContactPage() {
 
                         <Grid container>
                             {/* <Grid container id={styles.email}> */}
-                            <Grid item md={10} lg={5} style={{ marginTop: '8vh' }} >
+                            <Grid item md={10} style={{ marginTop: '8vh' }} >
                                 <Grid container>
                                     <Grid item xs={6}>
                                         <TextField

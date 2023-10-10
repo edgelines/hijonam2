@@ -176,7 +176,7 @@ export function CombinationsChart({ data, height }) {
                     />
                 </Grid>
             </Grid>
-            <Grid container>
+            {/* <Grid container>
                 <TableContainer>
                     <Table>
                         <TableHead>
@@ -195,7 +195,7 @@ export function CombinationsChart({ data, height }) {
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Grid>
+            </Grid> */}
 
         </>
     );
