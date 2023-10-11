@@ -13,12 +13,12 @@ import AutobiographyPage from './autobiographyPage.jsx';
 
 export default function BioPage({ lang }) {
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isTablet = useMediaQuery('(max-width:1200px)');
     const navigate = useNavigate();
     const location = useLocation();
-    // const [value, setValue] = useState(location.pathname);
     const [gangeTitle, setGangeTitle] = useState('BIOGRAPHY')
     const [subTitle, setSubTitle] = useState(null);
-    const someProps = { fontFamily: null, fontSize: null }
+    const someProps = { fontFamily: null, fontSize: isTablet ? '12px' : null }
     const theme = generateTheme(someProps);
     const adjustedPath = location.pathname.split('/')[3] ? "/bio/autobiography/" : location.pathname;
     return (
@@ -139,6 +139,7 @@ const Biography = ({ lang }) => {
 
 const TimeLineTable = ({ title, lang, data }) => {
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isTablet = useMediaQuery('(max-width:1200px)');
     const someProps = { fontFamily: lang === 'Kr' ? 'Bitgoeul_Medium' : 'Helvetica', fontSize: lang === 'Kr' ? 12 : 12 }
     const theme = generateTheme(someProps);
     return (
@@ -165,35 +166,6 @@ const TimeLineTable = ({ title, lang, data }) => {
                                 </Grid>
                             </Grid>
                         ))}
-                        {/* <Timeline
-                                    sx={{
-                                        [`& .${timelineOppositeContentClasses.root}`]: {
-                                            flex: 0.2,
-                                        },
-                                        mt: '3vh'
-                                    }}
-                                >
-                                    {data.map((item, index) => (
-                                        <TimelineItem key={item.id} sx={{ height: 'auto', minHeight: 'auto' }} >
-                                            <TimelineOppositeContent>
-                                                <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
-                                                    {item.year}
-                                                </Typography>
-                                            </TimelineOppositeContent>
-
-                                            <TimelineSeparator>
-                                                <TimelineDot sx={TimelineDotStyle} />
-                                                {index < data.length - 1 && <TimelineConnector sx={{ height: 15, ...TimelineDotStyle }} />}
-                                            </TimelineSeparator>
-
-                                            <TimelineContent>
-                                                <Typography sx={{ fontSize: '13px' }}>
-                                                    {lang === 'En' ? item.title : item.title_kr}
-                                                </Typography>
-                                            </TimelineContent>
-                                        </TimelineItem>
-                                    ))}
-                                </Timeline> */}
                     </Grid>
                 </Grid >
                 :
@@ -216,16 +188,14 @@ const TimeLineTable = ({ title, lang, data }) => {
                                     sx={{
                                         [`& .${timelineOppositeContentClasses.root}`]: {
                                             flex: 0.06,
-                                            // flex: title === 'Artistic Engagement' ? 0.06 : 0.03,
                                         },
-                                        // mt: '3vh'
                                         mt: '28px'
                                     }}
                                 >
                                     {data.map((item, index) => (
                                         <TimelineItem key={item.id} sx={{ height: 'auto', minHeight: 'auto' }} >
                                             <TimelineOppositeContent>
-                                                <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
+                                                <Typography sx={{ fontFamily: 'Helvetica', fontSize: isTablet ? '12px' : '13px' }}>
                                                     {item.year}
                                                 </Typography>
                                             </TimelineOppositeContent>
@@ -236,7 +206,7 @@ const TimeLineTable = ({ title, lang, data }) => {
                                             </TimelineSeparator>
 
                                             <TimelineContent>
-                                                <Typography sx={{ fontSize: '13px' }}>
+                                                <Typography sx={{ fontSize: isTablet ? '12px' : '13px' }}>
                                                     {lang === 'En' ? item.title : item.title_kr}
                                                 </Typography>
                                             </TimelineContent>

@@ -9,6 +9,7 @@ import { MarginPictures } from './util.jsx';
 
 export default function ContactPage() {
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     const Contact_title = 'For any inquiries regarding exhibition, price list, image licensing, brand collaborations or anything else, please complete the form below and my manager will be in touch shortly.'
 
     const [form, setForm] = useState({
@@ -161,7 +162,7 @@ export default function ContactPage() {
             ) : (
                 <>
                     <MarginPictures title='CONTACT' />
-                    <div style={{ marginTop: '80px', marginLeft: '9vw', marginBottom: '70px' }}>
+                    <div style={{ marginTop: isLgTablet ? '60px' : '80px', marginLeft: '9vw', marginBottom: '70px' }}>
                         {/* <div id={styles.Contact}> */}
                         {/* <Grid container id={styles.title}> */}
                         <Grid container >

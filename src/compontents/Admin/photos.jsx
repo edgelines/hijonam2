@@ -7,7 +7,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export default function GenresPage({ loadDataUrl }) {
     const [snackbar, setSnackbar] = useState(false);
-    const [severity, setSeverity] = useState(null);
+    const [severity, setSeverity] = useState('success');
     const [data, setData] = useState([]); // Origin Data
     const [selectedData, setSelectedData] = useState([]);
     const [select, setSelect] = useState('All');
@@ -102,20 +102,18 @@ export default function GenresPage({ loadDataUrl }) {
         try {
             // formData에는 file과, fileName, ...form 정보가 같이 담겨서 전송되고, 
             // 여기서 file은 images의 키로 저장했고, multer에서 images에 담긴것들을 서버 디랙토리에 저장함.
-            const response = await axios.post(`${url}${loadDataUrl}/Photos/${newFormData.folderName}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            await axios.post(`${url}${loadDataUrl}/Photos/${newFormData.folderName}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data', },
             });
-            data.push(response.data);
-            setSnackbar(true);
             setSeverity('success');
+            setSnackbar(true);
             setDialog(false);
         } catch (error) {
             setSnackbar(true);
             setSeverity('error');
             console.error(error);
         }
+        fetchData();
     };
 
     const updateDatabase = async (newFormData) => {
@@ -133,19 +131,12 @@ export default function GenresPage({ loadDataUrl }) {
             const fileName = Array.from(newFormData.fileName).map(file => file.name);
             formData.append("fileName", JSON.stringify(fileName));
         }
-
-        // // formData 확인 코드
-        // for (let [key, value] of formData.entries()) {
-        //     console.log(`${key}: ${value}`);
-        // }
         try {
-            const response = await axios.put(`${url}${loadDataUrl}/Photos/${newFormData.folderName}/${newFormData.id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            await axios.put(`${url}${loadDataUrl}/Photos/${newFormData.folderName}/${newFormData.id}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data', },
             });
-            setSnackbar(true);
             setSeverity('success');
+            setSnackbar(true);
             setDialog(false);
         } catch (error) {
             setSnackbar(true);
@@ -157,18 +148,19 @@ export default function GenresPage({ loadDataUrl }) {
 
     const deleteDatabase = async (deleteID) => {
         const confirmDelete = window.confirm("이 항목을 삭제 할까요?");
+        console.log(deleteID);
         if (confirmDelete) {
             try {
                 await axios.delete(`${url}${loadDataUrl}/${deleteID.folderName}/${deleteID.id}`);
-                fetchData();
-                setSnackbar(true);
                 setSeverity('success');
+                setSnackbar(true);
             } catch (error) {
                 setSnackbar(true);
                 setSeverity('error');
                 console.error("Error deleting award:", error);
             }
         }
+        fetchData();
     };
     const handleDialogClose = () => {
         resetForm();
@@ -190,9 +182,7 @@ export default function GenresPage({ loadDataUrl }) {
             console.error("Error fetching artworks:", error);
         });
     }
-    useEffect(() => {
-        fetchData();
-    }, [])
+    useEffect(() => { fetchData(); }, [])
     useEffect(() => {
         let result = [...data]
         if (select !== 'All') {
@@ -317,7 +307,6 @@ const DataTable = ({ rows, editBtn, deleteDatabase }) => {
             <DataGrid rows={rows}
                 hideFooter
                 rowHeight={80}
-                // getRowHeight={() => 'auto'}
                 height={700}
                 columns={columns}
                 sx={{
@@ -338,9 +327,23 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
             const day = new Date();
             const formattedDate = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
             setLocalFormState({ ...form, uploadDate: formattedDate })
+        } else {
+            setLocalFormState({ ...form })
         }
-        // setLocalFormState(form);
     }, [form]);
+    useEffect(() => {
+        let foldername;
+        if (localFormState.subject === 'Studio Korea') { foldername = 'StudioKorea' }
+        else if (localFormState.subject === 'Studio US') { foldername = 'StudioUS' }
+        else if (localFormState.subject === 'Other Moments') { foldername = 'OtherMoments' }
+        else if (localFormState.subject === 'Exhibition') { foldername = 'Exhibition' }
+
+        setLocalFormState(prevState => ({
+            ...prevState,
+            folderName: foldername
+        }));
+    }, [localFormState.subject]);  // localFormState.subject가 변경될 때마다 이 useEffect가 실행됩니다.
+
 
     const handleFormText = (event) => {
         const { name, value } = event.target;
@@ -351,24 +354,19 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
     };
     const handleFilesChange = (event) => {
         const files = event.target.files;
-        let foldername;
-        if (localFormState.subject === 'Studio Korea') { foldername = 'StudioKorea' }
-        else if (localFormState.subject === 'Studio US') { foldername = 'StudioUS' }
-        else if (localFormState.subject === 'Other Moments') { foldername = 'OtherMoments' }
-        else if (localFormState.subject === 'Exhibition') { foldername = 'Exhibition' }
-
-        setLocalFormState({ ...localFormState, folderName: localFormState.subject, fileName: files })
+        const sanitizedFileObjects = Array.from(files).map(file => {
+            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '');
+            return new File([file], sanitizedFileName, { type: file.type });
+        });
+        setLocalFormState({ ...localFormState, fileName: sanitizedFileObjects })
         const imageUrls = Array.from(files).map(file => URL.createObjectURL(file));
         setPreviewImages(imageUrls);
-        // file의 오브젝트를 form.fileName에 전부 담음 ( 파일 속성 전체를 의미함. )
-        // ex lastModified : 1693645952866, lastModifiedDate : Sat Sep 02 2023 18:12:32 GMT+0900 (한국 표준시) {}, name: "KakaoTalk_20230902_181134860.jpg", 
-        // size: 2757612, type: "image/jpeg",webkitRelativePath: "",[[Prototype]]: File
     };
     const handleSave = () => {
         delete localFormState.img;
         console.log(localFormState);
-        // saveBtn(localFormState);
-        // setPreviewImages([]);
+        saveBtn(localFormState);
+        setPreviewImages([]);
     };
 
 
@@ -376,7 +374,7 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
         <Dialog open={dialog} onClose={handleDialogClose}>
             <DialogContent>
                 <DialogContentText>
-                    {editMode ? `${form.title}의 정보를 변경합니다.` : `새로운 연락처를 추가합니다.`}
+                    {editMode ? `${form.title}의 정보를 변경합니다.` : `새로운 사진을 추가합니다.`}
                 </DialogContentText>
                 <Grid container sx={{ mt: 1 }}>
                     {editMode ?
@@ -385,8 +383,6 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
                                 className="rounded-3 mx-auto"
                                 style={{
                                     width: '300px',
-                                    // aspectRatio: '1 / 1',
-                                    // objectFit: 'cover'
                                 }}
                             />
                         </div>

@@ -13,7 +13,7 @@ import CssStyle from './artworks.module.css'
 export default function ArtworksPage({ loadDataUrl }) {
     const [tabValue, setTabValue] = useState('1');
     const [snackbar, setSnackbar] = useState(false);
-    const [severity, setSeverity] = useState(null);
+    const [severity, setSeverity] = useState('success');
 
     const [data, setData] = useState([]); // 오리진데이터
     const [genresList, setGenresList] = useState(['All']); // 장르 리스트

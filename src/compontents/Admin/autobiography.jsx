@@ -1,18 +1,13 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
-import { Grid, Button, Snackbar, Alert, Tab, Dialog, DialogContent, DialogContentText, TextField, DialogActions, Typography, FormControl, MenuItem } from '@mui/material';
-import { TabContext, TabPanel, TabList } from '@mui/lab';
-// import { Editor, EditorState, convertToRaw, RichUtils } from 'draft-js';
-// import { Editor } from 'react-draft-wysiwyg';
-// import draftToHtml from 'draftjs-to-html';
-// import htmlToDraft from 'html-to-draftjs';
-// import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
-// import { VisuallyHiddenInput } from '../util.jsx';
+import { Grid, Button, Snackbar, Alert, TextField } from '@mui/material';
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import ImageResize from '@looop/quill-image-resize-module-react'
-import { ImageDrop } from "quill-image-drop-module";
+// import ImageResize from '@looop/quill-image-resize-module-react'
+// import ImageResize from 'quill-image-resize-module';
+// import { ImageDrop } from "quill-image-drop-module";
+import { ImageActions } from '@xeger/quill-image-actions';
+import { ImageFormats } from '@xeger/quill-image-formats';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import "./autobiography.css";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
@@ -22,12 +17,14 @@ Font.whitelist = ["Helvetica", "Nanum-Gothic", "Roboto", "Raleway", "Montserrat"
 Size.whitelist = ["8px", "9px", "10px", "11px", "12px", "14px", "18px", "24px", "36px"];
 Quill.register(Size, true);
 Quill.register(Font, true);
-Quill.register('modules/imageResize', ImageResize);
-Quill.register("modules/imageDrop", ImageDrop);
+// Quill.register('modules/ImageResize', ImageResize);
+// Quill.register("modules/imageDrop", ImageDrop);
+Quill.register('modules/imageActions', ImageActions);
+Quill.register('modules/imageFormats', ImageFormats);
 
 export default function AutobiographyPage({ loadDataUrl }) {
     const [snackbar, setSnackbar] = useState(false);
-    const [severity, setSeverity] = useState(null);
+    const [severity, setSeverity] = useState('success');
     const [data, setData] = useState([]); // Origin Data
     const [currentPage, setCurrentPage] = useState(null);
 
@@ -36,27 +33,9 @@ export default function AutobiographyPage({ loadDataUrl }) {
     const url = 'http://hijonam.com/img/'
 
     // Form State & Handler
-    const [form, setForm] = useState({
-        regDate: "",
-        title: "",
-        content: "",
-        title_kr: "",
-        content_kr: "",
-        views: ""
-    })
+    const [form, setForm] = useState({ regDate: "", title: "", content: "", title_kr: "", content_kr: "", views: "" })
     // Form
-    const resetForm = () => {
-        setForm({
-            regDate: "",
-            title: "",
-            content: "",
-            title_kr: "",
-            content_kr: "",
-            views: ""
-        });
-    };
-
-
+    const resetForm = () => { setForm({ regDate: "", title: "", content: "", title_kr: "", content_kr: "", views: "" }); };
 
     const editBtn = (content) => {
         // setEditMode(true);
@@ -84,32 +63,32 @@ export default function AutobiographyPage({ loadDataUrl }) {
     // DB CRUD Function
     const saveToDatabase = async (newFormData) => {
         try {
-            const response = await axios.post(`http://hijonam.com/img/autobiography/post`, newFormData);
-            setSnackbar(true);
+            const response = await axios.post(`http://hijonam.com/img/autobiography/save`, newFormData);
             setSeverity('success');
-            fetchData();
+            setSnackbar(true);
             handlePageChange('Cancel')
         } catch (error) {
-            setSnackbar(true);
             setSeverity('error');
+            setSnackbar(true);
             console.error(error);
         }
+        fetchData();
     };
 
     const updateDatabase = async (newFormData) => {
         try {
             // Send the FormData to the server using axios
             // console.log('newFormData : ', newFormData);
-            const response = await axios.put(`http://hijonam.com/img/autobiography/post/${newFormData.id}`, newFormData);
-            setSnackbar(true);
+            const response = await axios.put(`http://hijonam.com/img/autobiography/save/${newFormData.id}`, newFormData);
             setSeverity('success');
-            fetchData();
+            setSnackbar(true);
             handlePageChange('Cancel')
         } catch (error) {
-            setSnackbar(true);
             setSeverity('error');
+            setSnackbar(true);
             console.error(error);
         }
+        fetchData();
     };
 
     const deleteDatabase = async (deleteID) => {
@@ -117,15 +96,16 @@ export default function AutobiographyPage({ loadDataUrl }) {
         if (confirmDelete) {
             try {
                 await axios.delete(`${url}${loadDataUrl}/${deleteID.id}`);
-                fetchData();
-                setSnackbar(true);
                 setSeverity('success');
-            } catch (error) {
                 setSnackbar(true);
+                fetchData();
+            } catch (error) {
                 setSeverity('error');
+                setSnackbar(true);
                 console.error("Error deleting award:", error);
             }
         }
+        fetchData();
     };
 
     const handleClose = (event, reason) => {
@@ -156,9 +136,7 @@ export default function AutobiographyPage({ loadDataUrl }) {
             console.error("Error fetching artworks:", error);
         });
     }
-    useEffect(() => {
-        fetchData();
-    }, [])
+    useEffect(() => { fetchData(); }, [])
 
 
     // Handler
@@ -209,13 +187,14 @@ export default function AutobiographyPage({ loadDataUrl }) {
 
 const EditorForm = ({ form, saveBtn, edit }) => {
     const [localFormState, setLocalFormState] = useState(form);
-    const [tabValue, setTabValue] = useState('Kr');
     const quillRef = useRef(null);
     const quillRef_kr = useRef(null);
 
     // 이미지 삽입시 재랜더링으로 커서를 찾지 못하는 현상 방지
     const modules = useMemo(() => {
         return {
+            imageActions: {},
+            imageFormats: {},
             toolbar: [
                 [{ font: Font.whitelist }],
                 [{ size: Size.whitelist }], // custom dropdown
@@ -232,52 +211,41 @@ const EditorForm = ({ form, saveBtn, edit }) => {
                 ["link", "image"],
                 // ["clean"],
             ],
-            imageResize: {
-                modules: ['Resize']
-            },
-            imageDrop: true,
-            clipboard: {
-                matchVisual: false              // toggle to add extra line breaks when pasting HTML:
-            },
-        }
-    }, []);
-    const modules_kr = useMemo(() => {
-        return {
-            toolbar: [
-                [{ font: Font.whitelist }],
-                [{ size: Size.whitelist }], // custom dropdown
-                // [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-                ["bold", "italic", "underline", "strike", "blockquote"],
-                [
-                    { list: "ordered" },
-                    { list: "bullet" },
-                    { indent: "-1" },
-                    { indent: "+1" },
-                ],
-                [{ align: [] }],
-                ["link", "image"],
-                // ["clean"],
-            ],
-            imageResize: {
-                modules: ['Resize']
-            },
-            imageDrop: true,
-            clipboard: {
-                matchVisual: false              // toggle to add extra line breaks when pasting HTML:
-            },
+            // // 핸들러 설정
+            // handlers: {
+            //     image: imageHandler // 이미지 tool 사용에 대한 핸들러 설정
+            // },
+            // imageResize: {
+            //     displayStyles: {
+            //         backgroundColor: 'black',
+            //         border: 'none',
+            //         color: 'white'
+            //     },
+            //     modules: ['Resize', 'DisplaySize', 'Toolbar']
+            // }
+            // ,
+            // imageDrop: true,
+            // clipboard: {
+            //     matchVisual: false              // toggle to add extra line breaks when pasting HTML:
+            // },
         }
     }, []);
 
     const formats = [
-        "font", "size", "color", "background", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "indent", "link", "image", "align",
+        "font", "size", "color", "background", "bold", "italic", "underline", "strike", "blockquote", "list", "bullet", "indent", "link", "image", "align", 'float', 'height', 'width'
     ];
 
     // Handler
     const actionUploadEditorImage = async (file) => {
+
+        const sanitizedFileName = `${file.name.replace(/[가-힣\s]/g, '')}`;
+
+        // Create a new File object with the new name
+        const newFile = new File([file], sanitizedFileName, { type: file.type });
+
         const formData = new FormData();
-        formData.append("images", file);
-        formData.append("fileName", file.name);
+        formData.append("images", newFile);
+        formData.append("fileName", sanitizedFileName);
         try {
             // formData를 서버에 전송
             const response = await axios.post(
@@ -286,7 +254,6 @@ const EditorForm = ({ form, saveBtn, edit }) => {
             );
 
             // 서버로부터 받은 응답을 반환
-            console.log(response.data);
             return response.data; // 서버에서 반환되는 이미지 URL의 형태에 따라 이 부분을 조정해야 할 수 있습니다.
 
         } catch (error) {
@@ -319,7 +286,7 @@ const EditorForm = ({ form, saveBtn, edit }) => {
             // content: value
         });
     };
-    const handleChange = (event, newValue) => { setTabValue(newValue); };
+
     useEffect(() => {
         const quill = quillRef.current;
         const quill_kr = quillRef_kr.current;
@@ -423,7 +390,7 @@ const EditorForm = ({ form, saveBtn, edit }) => {
                             ref={quillRef_kr}
                             theme="snow"
                             value={localFormState.content_kr}
-                            modules={modules_kr}
+                            modules={modules}
                             formats={formats}
                             onChange={handleQuillChangeKR}
                             placeholder="내용을 입력하세요."
@@ -453,24 +420,6 @@ const EditorForm = ({ form, saveBtn, edit }) => {
                         />
                     </Grid>
                 </Grid>
-                {/* <TabContext value={tabValue}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs" >
-                        <Tab label="한글" value="Kr" />
-                        <Tab label="영어" value="En" />
-                    </TabList>
-                    
-                    <Grid container>
-                            
-                        <TabPanel value="En" sx={{ minWidth: '80vw' }}>
-                        </TabPanel>
-                        <TabPanel value="Kr" sx={{ minWidth: '80vw' }}>
-                            
-                            
-
-                        </TabPanel>
-                    </Grid>
-                </TabContext> */}
-
             </Grid>
             <Grid container sx={{ marginTop: '6svh' }}>
                 <Grid item xs={12} textAlign='end'>
@@ -484,7 +433,6 @@ const EditorForm = ({ form, saveBtn, edit }) => {
 
 
 const DataTable = ({ rows, editBtn, deleteDatabase }) => {
-    // DataGrid Columns
     const columns = [
         { field: 'regDate', headerName: '등록일', width: 130 },
         { field: 'title', headerName: '제목(영어)', width: 130 },
@@ -527,7 +475,6 @@ const DataTable = ({ rows, editBtn, deleteDatabase }) => {
             <DataGrid rows={rows}
                 hideFooter
                 rowHeight={80}
-                // getRowHeight={() => 'auto'}
                 height={700}
                 columns={columns}
                 sx={{

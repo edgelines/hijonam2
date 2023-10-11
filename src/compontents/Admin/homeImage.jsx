@@ -6,7 +6,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export default function HomeImageChagePage({ loadDataUrl }) {
     const [snackbar, setSnackbar] = useState(false);
-    const [severity, setSeverity] = useState(null);
+    const [severity, setSeverity] = useState('success');
     const [data, setData] = useState([]);
     const vertical = 'bottom';
     const horizontal = 'center';
@@ -55,8 +55,15 @@ export default function HomeImageChagePage({ loadDataUrl }) {
 
     const handleFilesChange = (event) => {
         const files = event.target.files;
+        const sanitizedFileObjects = Array.from(files).map(file => {
+            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '');
+            return new File([file], sanitizedFileName, { type: file.type });
+        });
+
+        // console.log('files', sanitizedFileObjects);
         // console.log('files', files);
-        setForm({ ...form, fileName: files })
+        setForm({ ...form, fileName: sanitizedFileObjects });
+        // setForm({ ...form, fileName: files })
         const imageUrls = Array.from(files).map(file => URL.createObjectURL(file));
         setPreviewImages(imageUrls);
         // file의 오브젝트를 form.fileName에 전부 담음 ( 파일 속성 전체를 의미함. )
@@ -86,24 +93,26 @@ export default function HomeImageChagePage({ loadDataUrl }) {
         // for (let [key, value] of formData.entries()) {
         //     console.log(`${key}: ${value}`);
         // }
+        console.log('Severity before setting:', severity);
         try {
             // formData에는 file과, fileName, ...form 정보가 같이 담겨서 전송되고, 
             // 여기서 file은 images의 키로 저장했고, multer에서 images에 담긴것들을 서버 디랙토리에 저장함.
 
-            const response = await axios.post(`${url}${loadDataUrl}/Main`, formData, {
+            await axios.post(`${url}${loadDataUrl}/Main`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            data.push(response.data);
-            setSnackbar(true);
             setSeverity('success');
-            setDialog(false);
-        } catch (error) {
             setSnackbar(true);
+            // setDialog(false);
+        } catch (error) {
             setSeverity('error');
+            setSnackbar(true);
             console.error(error);
         }
+        console.log('Severity after setting:', severity);
+        fetchData();
     };
 
     const updateDatabase = async () => {
@@ -119,16 +128,16 @@ export default function HomeImageChagePage({ loadDataUrl }) {
         formData.append("fileName", JSON.stringify(fileName));
 
         try {
-            const response = await axios.put(`${url}${loadDataUrl}/Main/${form.id}`, formData, {
+            await axios.put(`${url}${loadDataUrl}/Main/${form.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            setSnackbar(true);
             setSeverity('success');
-        } catch (error) {
             setSnackbar(true);
+        } catch (error) {
             setSeverity('error');
+            setSnackbar(true);
             console.error(error);
         }
         fetchData();
@@ -139,15 +148,15 @@ export default function HomeImageChagePage({ loadDataUrl }) {
         if (confirmDelete) {
             try {
                 await axios.delete(`${url}${loadDataUrl}/${deleteID.id}`);
-                fetchData();
-                setSnackbar(true);
                 setSeverity('success');
-            } catch (error) {
                 setSnackbar(true);
+            } catch (error) {
                 setSeverity('error');
+                setSnackbar(true);
                 console.error("Error deleting award:", error);
             }
         }
+        fetchData();
     };
     const handleDialogClose = () => {
         resetForm();
