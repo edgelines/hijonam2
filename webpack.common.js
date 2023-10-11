@@ -60,6 +60,7 @@ const config = {
             inject: true,
             filename: path.resolve(__dirname, './dist/index.html')
         }),
+        // new webpack.ProvidePlugin({ 'window.Quill' : 'quill'}),
     ],
 
 }

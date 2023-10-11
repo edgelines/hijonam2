@@ -10,7 +10,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 export default function ExhibitionPage({ loadDataUrl, name }) {
     const [previewImages, setPreviewImages] = useState([]);
     const [snackbar, setSnackbar] = useState(false);
-    const [severity, setSeverity] = useState(null);
+    const [severity, setSeverity] = useState('success');
     const [data, setData] = useState([]);
     const vertical = 'bottom';
     const horizontal = 'center';

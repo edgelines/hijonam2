@@ -15,7 +15,7 @@ import { TableVirtuoso } from 'react-virtuoso';
 export default function ArtworksHistoryPage({ loadDataUrl }) {
 
     const [snackbar, setSnackbar] = useState(false);
-    const [severity, setSeverity] = useState(null);
+    const [severity, setSeverity] = useState('success');
 
     const [data, setData] = useState([]); // 오리진데이터
     const [genresList, setGenresList] = useState([]); // 장르 리스트

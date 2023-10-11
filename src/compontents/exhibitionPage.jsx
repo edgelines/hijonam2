@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { ThemeProvider, styled } from '@mui/material/styles';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
-import { Grid, Chip, Divider, Box, Tabs, Tab, Stack, Typography, Paper, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Grid, Chip, Divider, Tabs, Tab, Stack, Typography, Paper, Dialog, Button, DialogContent, DialogActions } from '@mui/material';
 import {
-    TabContext, TabList, TabPanel, Timeline, TimelineItem, timelineItemClasses, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot,
+    Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot,
     TimelineOppositeContent, timelineOppositeContentClasses,
 } from '@mui/lab';
-// import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-// import 'react-vertical-timeline-component/style.min.css';
 import styledComponents from 'styled-components';
 import axios from 'axios';
 import DoneIcon from '@mui/icons-material/Done';
@@ -16,15 +14,11 @@ import { TimelineDotStyle, MarginPictures, generateTheme } from './util.jsx';
 import photowall from '../assets/photowall.jpg'
 export default function ExhibitionPage({ lang }) {
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isTablet = useMediaQuery('(max-width:1200px)');
     const navigate = useNavigate();
     const location = useLocation();
-    const [value, setValue] = useState('Past Exhibition');
     const [subTitle, setSubTitle] = useState('PAST EXHIBITION');
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-        setSubTitle(newValue.toUpperCase());
-    };
-    const someProps = { fontFamily: null, fontSize: null }
+    const someProps = { fontFamily: null, fontSize: isTablet ? '12px' : null }
     const theme = generateTheme(someProps);
     return (
         <>
@@ -84,6 +78,7 @@ export default function ExhibitionPage({ lang }) {
 
 const PastExhibition = ({ lang }) => {
     const isMobile = useMediaQuery('(max-width:600px)');
+    const isTablet = useMediaQuery('(max-width:1200px)');
     const [data, setData] = useState([]);
     const [selectedChip, setSelectedChip] = useState('Solo');
 
@@ -115,7 +110,7 @@ const PastExhibition = ({ lang }) => {
         })
     }
     useEffect(() => { btnData('Solo'); }, []);
-    const someProps = { fontFamily: lang === 'Kr' ? 'Bitgoeul_Medium' : 'Helvetica', fontSize: 13 }
+    const someProps = { fontFamily: lang === 'Kr' ? 'Bitgoeul_Medium' : 'Helvetica', fontSize: isTablet ? 12 : 13 }
     const theme = generateTheme(someProps);
     return (
         <>
@@ -124,9 +119,14 @@ const PastExhibition = ({ lang }) => {
                     <Grid item container textAlign='start' sx={{ mt: '30px' }}>
                         <Stack direction="row" spacing={5} >
                             <Chip icon={selectedChip === 'Solo' ? <DoneIcon /> : null}
-                                label="SOLO" onClick={() => btnData('Solo')} style={{ backgroundColor: selectedChip === 'Solo' ? '#eee' : 'transparent' }} />
+                                label="SOLO"
+                                onClick={() => btnData('Solo')} style={{ backgroundColor: selectedChip === 'Solo' ? '#eee' : 'transparent' }}
+                                sx={{ '.MuiChip-label': { fontSize: 11, fontFamily: 'Helvetica' } }}  // 폰트 스타일링 적용
+                            />
                             <Chip icon={selectedChip === 'Group' ? <DoneIcon /> : null}
-                                label="GROUP" onClick={() => btnData('Group')} style={{ backgroundColor: selectedChip === 'Group' ? '#eee' : 'transparent' }} />
+                                label="GROUP" onClick={() => btnData('Group')} style={{ backgroundColor: selectedChip === 'Group' ? '#eee' : 'transparent' }}
+                                sx={{ '.MuiChip-label': { fontSize: 11, fontFamily: 'Helvetica' } }}  // 폰트 스타일링 적용
+                            />
                         </Stack>
                     </Grid>
                     <Grid tiem xs={12} sx={{ mt: '30px' }}>
@@ -149,75 +149,7 @@ const PastExhibition = ({ lang }) => {
                                     </Typography>
                                 </Grid>
                             </Grid>
-                            // <TimelineItem key={item.id} sx={{ height: 'auto', minHeight: 'auto' }} >
-                            //     <TimelineOppositeContent>
-                            //         <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
-                            //             {item.year}
-                            //         </Typography>
-                            //     </TimelineOppositeContent>
-
-                            //     <TimelineSeparator>
-                            //         <TimelineDot sx={TimelineDotStyle} />
-                            //         {index < data.length - 1 && <TimelineConnector sx={{ height: 15, ...TimelineDotStyle }} />}
-                            //     </TimelineSeparator>
-
-                            //     <TimelineContent>
-                            //         <Grid container>
-                            //             <Grid item xs={9}>
-                            //                 <Typography sx={{ fontSize: '13px' }}>
-                            //                     {lang === 'En' ? item.title : item.title_kr}
-                            //                 </Typography>
-                            //             </Grid>
-                            //             <Grid item xs={0.2}></Grid>
-                            //             <Grid item xs={2.8}>
-                            //                 <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
-                            //                     {item.location}
-                            //                 </Typography>
-                            //             </Grid>
-                            //         </Grid>
-                            //     </TimelineContent>
-                            // </TimelineItem>
                         ))}
-                        {/* <Timeline
-                            sx={{
-                                [`& .${timelineOppositeContentClasses.root}`]: {
-                                    flex: 0.13,
-                                },
-                                mt: '5vh',
-                                // maxWidth: '90vw'
-                            }}>
-                            {data.map((item, index) => (
-                                <TimelineItem key={item.id} sx={{ height: 'auto', minHeight: 'auto' }} >
-                                    <TimelineOppositeContent>
-                                        <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
-                                            {item.year}
-                                        </Typography>
-                                    </TimelineOppositeContent>
-
-                                    <TimelineSeparator>
-                                        <TimelineDot sx={TimelineDotStyle} />
-                                        {index < data.length - 1 && <TimelineConnector sx={{ height: 15, ...TimelineDotStyle }} />}
-                                    </TimelineSeparator>
-
-                                    <TimelineContent>
-                                        <Grid container>
-                                            <Grid item xs={9}>
-                                                <Typography sx={{ fontSize: '13px' }}>
-                                                    {lang === 'En' ? item.title : item.title_kr}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item xs={0.2}></Grid>
-                                            <Grid item xs={2.8}>
-                                                <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>
-                                                    {item.location}
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </TimelineContent>
-                                </TimelineItem>
-                            ))}
-                        </Timeline> */}
-
                     </Grid>
 
 
@@ -231,13 +163,15 @@ const PastExhibition = ({ lang }) => {
                             </Grid>
 
                             <Grid item xs={8.5} textAlign='start' sx={{ mt: '28px' }}>
-                                {/* <Grid container textAlign='start' sx={{ border: '1px solid red' }}>
-                            </Grid> */}
                                 <Stack direction="row" spacing={5} sx={{ marginLeft: '0.8vw' }}>
                                     <Chip icon={selectedChip === 'Solo' ? <DoneIcon /> : null}
-                                        label="SOLO" onClick={() => btnData('Solo')} style={{ backgroundColor: selectedChip === 'Solo' ? '#eee' : 'transparent' }} />
+                                        label="SOLO" onClick={() => btnData('Solo')} style={{ backgroundColor: selectedChip === 'Solo' ? '#eee' : 'transparent' }}
+                                        sx={{ '.MuiChip-label': { fontSize: isTablet ? 12 : 13, fontFamily: 'Helvetica' } }}
+                                    />
                                     <Chip icon={selectedChip === 'Group' ? <DoneIcon /> : null}
-                                        label="GROUP" onClick={() => btnData('Group')} style={{ backgroundColor: selectedChip === 'Group' ? '#eee' : 'transparent' }} />
+                                        label="GROUP" onClick={() => btnData('Group')} style={{ backgroundColor: selectedChip === 'Group' ? '#eee' : 'transparent' }}
+                                        sx={{ '.MuiChip-label': { fontSize: isTablet ? 12 : 13, fontFamily: 'Helvetica' } }}
+                                    />
                                 </Stack>
                                 <ThemeProvider theme={theme}>
                                     <Timeline
@@ -304,13 +238,6 @@ const StyledTypography = styledComponents(Typography)`
         margin-top: calc(var(--base-space) * 1) !important;
     }
 
-    // @media (min-width : 1281px) and (max-width : 1920px) {
-    //     font-size: 4rem !important;
-    //     font-weight: 900 !important;
-    //     color: rgb(196, 196, 196) !important;
-    //     line-height: calc(var(--base-space) * 6) !important;
-    //     margin-top: calc(var(--base-space) * 1) !important;
-    // }
 `;
 
 
@@ -318,9 +245,13 @@ const UpcomingExhibition = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
     const [present, setPresent] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
-    const formattedMemo = (item) => {
-        return item.memo ? `${item.memo}` : '';
-    }
+    const [isModalOpen, setIsModalOpen] = useState(false);  // 모달의 열림/닫힘 상태
+    const [currentImage, setCurrentImage] = useState('');
+    const handleImageClick = (imageSrc) => {
+        setCurrentImage(imageSrc);
+        setIsModalOpen(true);
+    };
+    const formattedMemo = (item) => { return item.memo ? `${item.memo}` : ''; }
     const fetchData = async () => {
         const response = await axios.get(`http://hijonam.com/img/upcomingExhibition`)
         const dateFields = ['startDate', 'endDate'];
@@ -334,11 +265,6 @@ const UpcomingExhibition = () => {
             });
             return item;
         });
-        // await axios.get(`http://hijonam.com/img/upcomingExhibition`).then((response) => {
-        // }).catch((error) => {
-        //     console.error("Error fetching upcomingExhibition:", error);
-        // });
-        // console.log(res);
 
         setPresent(res.filter(item => item.state == 1))
         // while (res.length < 4) {
@@ -348,7 +274,9 @@ const UpcomingExhibition = () => {
     }
     useEffect(() => { fetchData(); }, []);
     return (
+
         <>
+            <ImageModal isOpen={isModalOpen} imageSrc={currentImage} onClose={() => setIsModalOpen(false)} />
             {isMobile ?
 
                 <Grid container sx={{ mt: '1vh', padding: 3 }}>
@@ -361,6 +289,7 @@ const UpcomingExhibition = () => {
                                         <Grid container key={item.id} sx={{ mt: '3vh' }}>
                                             <Grid item xs={12}>
                                                 <img src={`/img/Exhibition/${item.fileName[0] === 'Upcoming Exhibition.png' ? 'Upcoming Exhibition.png' : item.fileName[0]}`} className='mx-auto img-td-edit rounded-3 imgBorder'
+                                                    onClick={() => handleImageClick(`/img/Exhibition/${item.fileName[0] === 'Upcoming Exhibition.png' ? 'Upcoming Exhibition.png' : item.fileName[0]}`)}
                                                     style={{
                                                         top: 0,
                                                         left: 0,
@@ -368,6 +297,7 @@ const UpcomingExhibition = () => {
                                                         height: '100%',
                                                         objectFit: 'cover',
                                                         border: '1px solid black',
+                                                        cursor: 'pointer'
                                                         // aspectRatio: '1 / 1',
                                                     }} />
                                             </Grid>
@@ -404,17 +334,20 @@ const UpcomingExhibition = () => {
                                 {upcoming.map((item) => (
                                     <Grid container key={item.id} sx={{ padding: 1, mt: '3vh' }} >
                                         <Grid container>
-                                            <Grid item xs={1}></Grid>
+
                                             <Grid item xs={4}>
                                                 <img src={`/img/Exhibition/${item.fileName[0] === 'Upcoming Exhibition.png' ? 'Upcoming Exhibition.png' : item.fileName[0]}`} className='mx-auto img-td-edit rounded-3 imgBorder'
+                                                    onClick={() => handleImageClick(`/img/Exhibition/${item.fileName[0] === 'Upcoming Exhibition.png' ? 'Upcoming Exhibition.png' : item.fileName[0]}`)}
                                                     style={{
                                                         top: 0,
                                                         left: 0,
-                                                        width: '5vw',
+                                                        width: '25vw',
                                                         objectFit: 'cover',
-                                                        border: '1px solid black'
+                                                        border: '1px solid black',
+                                                        cursor: 'pointer'
                                                     }} />
                                             </Grid>
+                                            <Grid item xs={1}></Grid>
                                             <Grid item xs={7}>
                                                 <Grid container direction="row" justifyContent="start" alignItems="flex-end" style={{ height: '100%' }}>
                                                     <Stack spacing={0}>
@@ -429,8 +362,8 @@ const UpcomingExhibition = () => {
                                         </Grid>
 
                                         <Grid container sx={{ marginTop: '2vh' }}>
-                                            <Grid item xs={1}></Grid>
-                                            <Grid item xs={10}>
+                                            {/* <Grid item xs={1}></Grid> */}
+                                            <Grid item xs={12}>
                                                 <Divider sx={{ borderColor: '#000' }} light={false} />
                                             </Grid>
                                         </Grid>
@@ -460,6 +393,7 @@ const UpcomingExhibition = () => {
                                         <Grid container key={item.id} sx={{ mt: '30px' }}>
                                             <Grid item xs={7}>
                                                 <img src={`/img/Exhibition/${item.fileName[0] === 'Upcoming Exhibition.png' ? 'Upcoming Exhibition.png' : item.fileName[0]}`} className='mx-auto img-td-edit rounded-3 imgBorder'
+                                                    onClick={() => handleImageClick(`/img/Exhibition/${item.fileName[0] === 'Upcoming Exhibition.png' ? 'Upcoming Exhibition.png' : item.fileName[0]}`)}
                                                     style={{
                                                         top: 0,
                                                         left: 0,
@@ -467,6 +401,7 @@ const UpcomingExhibition = () => {
                                                         height: '100%',
                                                         objectFit: 'cover',
                                                         border: '1px solid black',
+                                                        cursor: 'pointer'
                                                         // aspectRatio: '1 / 1',
                                                     }} />
                                             </Grid>
@@ -485,6 +420,7 @@ const UpcomingExhibition = () => {
                                                         left: 0,
                                                         width: '100%',
                                                         objectFit: 'cover',
+                                                        cursor: 'pointer'
                                                     }} />
                                                 </Grid>
                                             </Grid>
@@ -511,11 +447,13 @@ const UpcomingExhibition = () => {
                                         <Grid container>
                                             <Grid item xs={1}></Grid>
                                             <Grid item xs={4}>
-                                                <img src={`/img/Exhibition/${item.fileName[0] === 'Upcoming Exhibition.png' ? 'Upcoming Exhibition.png' : item.fileName[0]}`} className='mx-auto img-td-edit rounded-3 imgBorder'
+                                                <img src={`/img/Exhibition/${item.fileName[0] === 'Upcoming Exhibition.png' ? 'Upcoming Exhibition.png' : item.fileName[0]}`}
+                                                    onClick={() => handleImageClick(`/img/Exhibition/${item.fileName[0] === 'Upcoming Exhibition.png' ? 'Upcoming Exhibition.png' : item.fileName[0]}`)}
+                                                    className='mx-auto img-td-edit rounded-3 imgBorder'
                                                     style={{
                                                         top: 0,
                                                         left: 0,
-                                                        width: '5vw',
+                                                        width: '7vw',
                                                         objectFit: 'cover',
                                                         border: '1px solid black'
                                                     }} />
@@ -563,3 +501,16 @@ const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'start',
     // color: theme.palette.text.secondary,
 }));
+
+const ImageModal = ({ isOpen, imageSrc, onClose }) => {
+    return (
+        <Dialog open={isOpen} onClose={onClose}>
+            <DialogContent>
+                <img src={imageSrc} alt="Enlarged Image" style={{ width: '100%', height: 'auto' }} />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onClose}>Close</Button>
+            </DialogActions>
+        </Dialog>
+    );
+};

@@ -5,7 +5,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 
 export default function ContackBookPage({ loadDataUrl, name }) {
     const [snackbar, setSnackbar] = useState(false);
-    const [severity, setSeverity] = useState(null);
+    const [severity, setSeverity] = useState('success');
     const [data, setData] = useState([]);
     const vertical = 'bottom';
     const horizontal = 'center';

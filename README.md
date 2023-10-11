@@ -14,6 +14,16 @@
 - Admin 전체적 수정
 - Admin 한글 파일 업로드시 자동제외 
 
+### 2023.10.11
+{dev-adminBug}
+- 11" 패드에서 전체 12px : 자잘한 위치 수정
+- MainPage Exhibition 정보 없을경우 맨트 추가
+- Exhibition Current & Upcomming Img >> Modal 
+- ADMIN API fileUPload Fixed
+    - Home Image
+    - Photo 업로드/삭제
+    - Autobiography
+- DataBase >> Artworks & Genres jpg >> Webp 변경
 
 ### 2023.10.10
 {dev-tablet}
