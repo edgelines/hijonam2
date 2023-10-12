@@ -238,8 +238,12 @@ const EditorForm = ({ form, saveBtn, edit }) => {
     // Handler
     const actionUploadEditorImage = async (file) => {
 
-        const sanitizedFileName = `${file.name.replace(/[가-힣\s]/g, '')}`;
-
+        const sanitizedFileName = `${file.name.replace(/[가-힣\s]/g, '').normalize('NFC')}`;
+        if (sanitizedFileName.length <= 4) { // 예: ".jpg" 보다 짧거나 같은 경우
+            const timestamp = new Date().getTime();
+            const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // a-z 사이의 랜덤한 알파벳
+            sanitizedFileName = `${timestamp}_${randomLetter}${sanitizedFileName}`;
+        }
         // Create a new File object with the new name
         const newFile = new File([file], sanitizedFileName, { type: file.type });
 

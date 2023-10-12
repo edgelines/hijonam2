@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions } from '@mui/material';
-import { VisuallyHiddenInput } from '../util.jsx';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Grid, Button, Snackbar, Alert, Typography, Dialog, DialogContent, DialogContentText, Input, DialogActions } from '@mui/material';
+// import { VisuallyHiddenInput } from '../util.jsx';
+// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export default function HomeImageChagePage({ loadDataUrl }) {
+    const fileInputRef = useRef(null);
     const [snackbar, setSnackbar] = useState(false);
     const [severity, setSeverity] = useState('success');
     const [data, setData] = useState([]);
@@ -56,7 +57,13 @@ export default function HomeImageChagePage({ loadDataUrl }) {
     const handleFilesChange = (event) => {
         const files = event.target.files;
         const sanitizedFileObjects = Array.from(files).map(file => {
-            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '');
+            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            // 파일 이름이 너무 짧거나 없는 경우 타임스탬프 추가
+            if (sanitizedFileName.length <= 4) { // 예: ".jpg" 보다 짧거나 같은 경우
+                const timestamp = new Date().getTime();
+                const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // a-z 사이의 랜덤한 알파벳
+                sanitizedFileName = `${timestamp}_${randomLetter}${sanitizedFileName}`;
+            }
             return new File([file], sanitizedFileName, { type: file.type });
         });
 
@@ -70,7 +77,21 @@ export default function HomeImageChagePage({ loadDataUrl }) {
         // ex lastModified : 1693645952866, lastModifiedDate : Sat Sep 02 2023 18:12:32 GMT+0900 (한국 표준시) {}, name: "KakaoTalk_20230902_181134860.jpg", 
         // size: 2757612, type: "image/jpeg",webkitRelativePath: "",[[Prototype]]: File
     };
-
+    const handleFileDrop = (event) => {
+        event.preventDefault();
+        const files = event.dataTransfer.files;
+        handleFilesChange({ target: { files } }); // 기존의 handleFilesChange 함수를 재활용
+    };
+    const handleDialogClose = () => {
+        resetForm();
+        setDialog(false);
+    }
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbar(false);
+    };
     // DB CRUD Function
     const saveToDatabase = async () => {
         var sequence = data[data.length - 1].sequence;
@@ -93,7 +114,6 @@ export default function HomeImageChagePage({ loadDataUrl }) {
         // for (let [key, value] of formData.entries()) {
         //     console.log(`${key}: ${value}`);
         // }
-        console.log('Severity before setting:', severity);
         try {
             // formData에는 file과, fileName, ...form 정보가 같이 담겨서 전송되고, 
             // 여기서 file은 images의 키로 저장했고, multer에서 images에 담긴것들을 서버 디랙토리에 저장함.
@@ -111,7 +131,6 @@ export default function HomeImageChagePage({ loadDataUrl }) {
             setSnackbar(true);
             console.error(error);
         }
-        console.log('Severity after setting:', severity);
         fetchData();
     };
 
@@ -158,16 +177,6 @@ export default function HomeImageChagePage({ loadDataUrl }) {
         }
         fetchData();
     };
-    const handleDialogClose = () => {
-        resetForm();
-        setDialog(false);
-    }
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setSnackbar(false);
-    };
 
     const fetchData = async () => {
         await axios.get(`${url}${loadDataUrl}`).then((response) => {
@@ -177,10 +186,8 @@ export default function HomeImageChagePage({ loadDataUrl }) {
             console.error("Error fetching artworks:", error);
         });
     }
-    useEffect(() => {
-        fetchData();
-    }, [])
-
+    useEffect(() => { fetchData(); }, [])
+    const weeks = ['일', '월', '화', '수', '목', '금', '토'];
     return (
         <Grid container>
             {/* FeedBack SnackBar */}
@@ -213,16 +220,34 @@ export default function HomeImageChagePage({ loadDataUrl }) {
                             />
                         ))}
                     </div>
-                    <Button
-                        component="label"
-                        variant="contained"
-                        startIcon={<CloudUploadIcon />}
-                        href="#file-upload"
-                        sx={{ mb: -3 }}
-                    >
-                        Upload images
-                        <VisuallyHiddenInput type="file" multiple hidden onChange={handleFilesChange} />
-                    </Button>
+                    <Grid container sx={{ mt: '15px' }}>
+                        <div
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={handleFileDrop}
+                            style={{ width: '100%', height: '80px', border: '2px dashed gray' }}
+                        >
+                        </div>
+                        <Grid container>
+                            <Grid item xs={8}>
+                                <Input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    multiple
+                                    onChange={handleFilesChange}
+                                    style={{ display: 'none' }}
+                                />
+                            </Grid>
+                            <Grid item xs={4} container direction='column' justifyContent='end'>
+                                <Button
+                                    size='small'
+                                    variant="contained"
+                                    onClick={() => fileInputRef.current.click()}
+                                >
+                                    파일 선택
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleDialogClose}>Cancel</Button>
@@ -236,8 +261,13 @@ export default function HomeImageChagePage({ loadDataUrl }) {
                 </Grid>
                 <Grid item xs={12}>
                     <Grid container>
-                        {data.map((item) => (
+                        {data.map((item, index) => (
                             <Grid item xs={2} sx={{ padding: 5 }} key={item.id}>
+                                <Grid container>
+                                    <Grid item xs={12}>
+                                        <Typography sx={{ textAlign: 'center' }}>{weeks[index]}요일</Typography>
+                                    </Grid>
+                                </Grid>
                                 <img src={`/img/Main/${item.fileName}`} className="rounded-3 mx-auto"
                                     style={{
                                         width: '100%',

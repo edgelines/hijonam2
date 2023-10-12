@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, Typography } from '@mui/material';
-import { VisuallyHiddenInput } from '../util.jsx';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, Typography, Input } from '@mui/material';
 
 export default function GenresPage({ loadDataUrl }) {
+    const fileInputRef = useRef(null);
     const [snackbar, setSnackbar] = useState(false);
     const [severity, setSeverity] = useState('success');
     const [data, setData] = useState([]);
@@ -16,52 +15,33 @@ export default function GenresPage({ loadDataUrl }) {
     const [previewImages, setPreviewImages] = useState([]);
     const [dialog, setDialog] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const [form, setForm] = useState({
-        fileName: "",
-        genres: "",
-    })
+    const [form, setForm] = useState({ fileName: "", genres: "", })
     // Form
-    const newForm = () => {
-        setEditMode(false);
-        setDialog(true);
-        resetForm();
-    }
-    const resetForm = () => {
-        setForm({
-            fileName: "",
-            genres: "",
-        });
-        setPreviewImages([])
-    };
-    const editBtn = (content) => {
-        setEditMode(true);
-        setForm({
-            ...form,
-            id: content.id,
-            fileName: "",
-            genres: content.genres,
-        });
-        setDialog(true);
-    };
+    const newForm = () => { setEditMode(false); setDialog(true); resetForm(); }
+    const resetForm = () => { setForm({ fileName: "", genres: "", }); setPreviewImages([]) };
+    const editBtn = (content) => { setEditMode(true); setForm({ ...form, id: content.id, fileName: "", genres: content.genres, }); setDialog(true); };
     const saveBtn = () => {
         if (editMode) {
             updateDatabase();
-        } else {
-            saveToDatabase();
-        }
+        } else { saveToDatabase(); }
         setDialog(false);
         resetForm();
     };
 
     const handleFilesChange = (event) => {
         const files = event.target.files;
-        // console.log('files', files);
-        setForm({ ...form, fileName: files })
+        const sanitizedFileObjects = Array.from(files).map(file => {
+            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            if (sanitizedFileName.length <= 4) { // 예: ".jpg" 보다 짧거나 같은 경우
+                const timestamp = new Date().getTime();
+                const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // a-z 사이의 랜덤한 알파벳
+                sanitizedFileName = `${timestamp}_${randomLetter}${sanitizedFileName}`;
+            }
+            return new File([file], sanitizedFileName, { type: file.type });
+        });
+        setForm({ ...form, fileName: sanitizedFileObjects });
         const imageUrls = Array.from(files).map(file => URL.createObjectURL(file));
         setPreviewImages(imageUrls);
-        // file의 오브젝트를 form.fileName에 전부 담음 ( 파일 속성 전체를 의미함. )
-        // ex lastModified : 1693645952866, lastModifiedDate : Sat Sep 02 2023 18:12:32 GMT+0900 (한국 표준시) {}, name: "KakaoTalk_20230902_181134860.jpg", 
-        // size: 2757612, type: "image/jpeg",webkitRelativePath: "",[[Prototype]]: File
     };
 
     // DB CRUD Function
@@ -76,14 +56,6 @@ export default function GenresPage({ loadDataUrl }) {
         const fileName = Array.from(form.fileName).map(file => file.name);
         formData.append("fileName", JSON.stringify(fileName));
 
-
-        // formData.append("fileName", JSON.stringify([form.fileName.name]));
-        // formData.append("images", form.fileName);
-
-        // formData 확인 코드
-        // for (let [key, value] of formData.entries()) {
-        //     console.log(`${key}: ${value}`);
-        // }
         try {
             // formData에는 file과, fileName, ...form 정보가 같이 담겨서 전송되고, 
             // 여기서 file은 images의 키로 저장했고, multer에서 images에 담긴것들을 서버 디랙토리에 저장함.
@@ -92,7 +64,7 @@ export default function GenresPage({ loadDataUrl }) {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            data.push(response.data);
+            // data.push(response.data);
             setSnackbar(true);
             setSeverity('success');
             setDialog(false);
@@ -101,6 +73,7 @@ export default function GenresPage({ loadDataUrl }) {
             setSeverity('error');
             console.error(error);
         }
+        fetchData();
     };
 
     const updateDatabase = async () => {
@@ -136,7 +109,6 @@ export default function GenresPage({ loadDataUrl }) {
         if (confirmDelete) {
             try {
                 await axios.delete(`${url}${loadDataUrl}/${deleteID.id}`);
-                fetchData();
                 setSnackbar(true);
                 setSeverity('success');
             } catch (error) {
@@ -145,6 +117,7 @@ export default function GenresPage({ loadDataUrl }) {
                 console.error("Error deleting award:", error);
             }
         }
+        fetchData();
     };
     const handleDialogClose = () => {
         resetForm();
@@ -160,6 +133,11 @@ export default function GenresPage({ loadDataUrl }) {
         const { name, value } = event.target;
         setForm(prevState => ({ ...prevState, [name]: value }));
     };
+    const handleFileDrop = (event) => {
+        event.preventDefault();
+        const files = event.dataTransfer.files;
+        handleFilesChange({ target: { files } }); // 기존의 handleFilesChange 함수를 재활용
+    };
     const fetchData = async () => {
         await axios.get(`${url}${loadDataUrl}`).then((response) => {
             setData(response.data);
@@ -168,9 +146,7 @@ export default function GenresPage({ loadDataUrl }) {
             console.error("Error fetching artworks:", error);
         });
     }
-    useEffect(() => {
-        fetchData();
-    }, [])
+    useEffect(() => { fetchData(); }, [])
 
     return (
         <Grid container>
@@ -214,16 +190,34 @@ export default function GenresPage({ loadDataUrl }) {
                             />
                         ))}
                     </div>
-                    <Button
-                        component="label"
-                        variant="contained"
-                        startIcon={<CloudUploadIcon />}
-                        href="#file-upload"
-                        sx={{ mb: -3 }}
-                    >
-                        Upload images
-                        <VisuallyHiddenInput type="file" multiple hidden onChange={handleFilesChange} />
-                    </Button>
+                    <Grid container sx={{ mt: '15px' }}>
+                        <div
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={handleFileDrop}
+                            style={{ width: '100%', height: '80px', border: '2px dashed gray' }}
+                        >
+                        </div>
+                        <Grid container>
+                            <Grid item xs={8}>
+                                <Input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    multiple
+                                    onChange={handleFilesChange}
+                                    style={{ display: 'none' }}
+                                />
+                            </Grid>
+                            <Grid item xs={4} container direction='column' justifyContent='end'>
+                                <Button
+                                    size='small'
+                                    variant="contained"
+                                    onClick={() => fileInputRef.current.click()}
+                                >
+                                    파일 선택
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleDialogClose}>Cancel</Button>

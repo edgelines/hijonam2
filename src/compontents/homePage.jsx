@@ -23,8 +23,8 @@ export default function HomePage({ lang }) {
         await axios.get('http://hijonam.com/img/home').then((response) => {
             var tmp = [];
             response.data.forEach((value) => { tmp.push(value.fileName) });
-            setImgData(tmp);
-            // tableData.value = tmp;
+            const dayOfWeek = new Date().getDay();
+            setImgData(tmp[dayOfWeek % tmp.length]);
         }).catch((error) => {
             console.error("Error fetching artworks:", error);
         });
@@ -82,7 +82,6 @@ export default function HomePage({ lang }) {
             console.error("Error fetching upcomingExhibition:", error);
         });
         await axios.get(`http://hijonam.com/img/photos`).then((res) => {
-
             var exhibition = res.data.filter(item => item.subject === 'Exhibition')
             var studioUS = res.data.filter(item => item.subject === 'Studio US')
             var studioKorea = res.data.filter(item => item.subject === 'Studio Korea')
@@ -92,6 +91,7 @@ export default function HomePage({ lang }) {
             studioUS = studioUS.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
             studioKorea = studioKorea.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
             other = other.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
+
             setPhotos({ exhibition: exhibition, studioUS: studioUS, studioKorea: studioKorea, other: other })
         }).catch((error) => {
             console.error("Error fetching upcomingExhibition:", error);
@@ -269,22 +269,24 @@ export default function HomePage({ lang }) {
                         <Grid item xs={12} sx={{ marginTop: '1vh' }}>
                             <Grid container spacing={2}>
                                 {Object.entries(photos).map(([key, photo], index) => (
-                                    <Grid item xs={3} key={key}>
-                                        <div style={{ position: 'relative', paddingBottom: '75%' }}>
-                                            <img
-                                                src={`/img/Photos/${photo.folderName}/${photo.fileName}`}
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: 0,
-                                                    left: 0,
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    objectFit: 'cover'
-                                                }}
-                                            />
-                                        </div>
-                                        <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photo.title}</p>
-                                    </Grid>
+                                    photo ? (
+                                        <Grid item xs={3} key={key}>
+                                            <div style={{ position: 'relative', paddingBottom: '75%' }}>
+                                                <img
+                                                    src={`/img/Photos/${photo.folderName}/${photo.fileName}`}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        left: 0,
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        objectFit: 'cover'
+                                                    }}
+                                                />
+                                            </div>
+                                            <Typography align='center' sx={{ fontSize: '12px', fontFamily: 'Helvetica', marginTop: '0.3vh' }}>{photo.subject}</Typography>
+                                        </Grid>
+                                    ) : <div></div>
                                 ))}
                             </Grid>
                         </Grid>
@@ -461,22 +463,24 @@ export default function HomePage({ lang }) {
                                     <Grid item xs={12} sx={{ marginTop: '1vh' }}>
                                         <Grid container spacing={2}>
                                             {Object.entries(photos).map(([key, photo], index) => (
-                                                <Grid item xs={3} key={key}>
-                                                    <div style={{ position: 'relative', paddingBottom: '75%' }}>
-                                                        <img
-                                                            src={`/img/Photos/${photo.folderName}/${photo.fileName}`}
-                                                            style={{
-                                                                position: 'absolute',
-                                                                top: 0,
-                                                                left: 0,
-                                                                width: '100%',
-                                                                height: '100%',
-                                                                objectFit: 'cover'
-                                                            }}
-                                                        />
-                                                    </div>
-                                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photo.title}</p>
-                                                </Grid>
+                                                photo ? (
+                                                    <Grid item xs={3} key={key}>
+                                                        <div style={{ position: 'relative', paddingBottom: '75%' }}>
+                                                            <img
+                                                                src={`/img/Photos/${photo.folderName}/${photo.fileName}`}
+                                                                style={{
+                                                                    position: 'absolute',
+                                                                    top: 0,
+                                                                    left: 0,
+                                                                    width: '100%',
+                                                                    height: '100%',
+                                                                    objectFit: 'cover'
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photo.subject}</p>
+                                                    </Grid>
+                                                ) : <div></div>
                                             ))}
                                         </Grid>
                                     </Grid>

@@ -5,25 +5,38 @@
     - npm run dev: "webpack --config webpack.dev.js",
     - npm run build: "webpack --config webpack.prod.js"
   
-### TodoList || Bug Report
+### TodoList || Bug Report || Request
 - Tablet 12.9" 11" Sort Export PDF
-- imgTableJS -> 
-    delete 파일삭제 코드 작성중 >> Admin>photos
-    put 부분 수정해야함
-- Admin Upcoming Add Bug >> save가 안됨
-- Admin 전체적 수정
-- Admin 한글 파일 업로드시 자동제외 
+- 간판이미지 7초마다 변경 > Admin작업
+
+### 2023.10.12
+- [x] Home에서 Photos 1개도 없을때 예외
+- [x] Home에서 우측 사진 이미지 요일별로 변경
+- [x] Admin Home Image에서 요일별로 이미지 표기
+- [x] Photos upload이후 Fliter 유지
+- ADMIN API fileUPload Fixed, FileUpload Drag 한글, 띄어쓰기 제거
+    - [x] Home Image
+    - [x] Photo 업로드/삭제
+    - [x] Autobiography
+    - [x] Genres Main Image
+    - [x] Artworks
+    - [x] Exhibition
+    - [x] Upcoming Add, Edit, Delete Bug 
+- [x] PC, Mobile Photos Page 이미지 밑 title -> subject로 변경
+- [x] Tablet 12" Label FontSize 수정
+- 간판이미지 Admin 등록
 
 ### 2023.10.11
 {dev-adminBug}
 - 11" 패드에서 전체 12px : 자잘한 위치 수정
 - MainPage Exhibition 정보 없을경우 맨트 추가
 - Exhibition Current & Upcomming Img >> Modal 
-- ADMIN API fileUPload Fixed
+- ADMIN API fileUPload Fixed, 한글, 띄어쓰기 제거
     - Home Image
     - Photo 업로드/삭제
     - Autobiography
 - DataBase >> Artworks & Genres jpg >> Webp 변경
+- imgTableJS -> delete 파일삭제
 
 ### 2023.10.10
 {dev-tablet}

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, Typography, FormControl, MenuItem } from '@mui/material';
-import { VisuallyHiddenInput } from '../util.jsx';
+import { Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, FormControl, MenuItem, Input } from '@mui/material';
+// import { VisuallyHiddenInput } from '../util.jsx';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-export default function GenresPage({ loadDataUrl }) {
+export default function PhotosPage({ loadDataUrl }) {
     const [snackbar, setSnackbar] = useState(false);
     const [severity, setSeverity] = useState('success');
     const [data, setData] = useState([]); // Origin Data
@@ -113,7 +113,7 @@ export default function GenresPage({ loadDataUrl }) {
             setSeverity('error');
             console.error(error);
         }
-        fetchData();
+        reloadData();
     };
 
     const updateDatabase = async (newFormData) => {
@@ -143,12 +143,11 @@ export default function GenresPage({ loadDataUrl }) {
             setSeverity('error');
             console.error(error);
         }
-        fetchData();
+        reloadData();
     };
 
     const deleteDatabase = async (deleteID) => {
         const confirmDelete = window.confirm("이 항목을 삭제 할까요?");
-        console.log(deleteID);
         if (confirmDelete) {
             try {
                 await axios.delete(`${url}${loadDataUrl}/${deleteID.folderName}/${deleteID.id}`);
@@ -160,7 +159,7 @@ export default function GenresPage({ loadDataUrl }) {
                 console.error("Error deleting award:", error);
             }
         }
-        fetchData();
+        reloadData();
     };
     const handleDialogClose = () => {
         resetForm();
@@ -182,6 +181,14 @@ export default function GenresPage({ loadDataUrl }) {
             console.error("Error fetching artworks:", error);
         });
     }
+    const reloadData = async () => {
+        await axios.get(`${url}${loadDataUrl}`).then((response) => {
+            setData(response.data);
+        }).catch((error) => {
+            setSeverity('error')
+            console.error("Error fetching artworks:", error);
+        });
+    }
     useEffect(() => { fetchData(); }, [])
     useEffect(() => {
         let result = [...data]
@@ -189,7 +196,7 @@ export default function GenresPage({ loadDataUrl }) {
             result = result.filter((item) => item.subject === select)
         }
         setSelectedData(result)
-    }, [select])
+    }, [data, select])
 
     // Handler
     const handleChangeSubject = (event) => { setSelect(event.target.value) }
@@ -320,6 +327,7 @@ const DataTable = ({ rows, editBtn, deleteDatabase }) => {
 }
 
 const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode, saveBtn }) => {
+    const fileInputRef = useRef(null);
     const [localFormState, setLocalFormState] = useState(form);
     const [previewImages, setPreviewImages] = useState([]);
     useEffect(() => {
@@ -355,7 +363,12 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
     const handleFilesChange = (event) => {
         const files = event.target.files;
         const sanitizedFileObjects = Array.from(files).map(file => {
-            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '');
+            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            if (sanitizedFileName.length <= 4) { // 예: ".jpg" 보다 짧거나 같은 경우
+                const timestamp = new Date().getTime();
+                const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // a-z 사이의 랜덤한 알파벳
+                sanitizedFileName = `${timestamp}_${randomLetter}${sanitizedFileName}`;
+            }
             return new File([file], sanitizedFileName, { type: file.type });
         });
         setLocalFormState({ ...localFormState, fileName: sanitizedFileObjects })
@@ -364,14 +377,23 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
     };
     const handleSave = () => {
         delete localFormState.img;
-        console.log(localFormState);
         saveBtn(localFormState);
         setPreviewImages([]);
     };
 
 
+    const handleFileDrop = (event) => {
+        event.preventDefault();
+        const files = event.dataTransfer.files;
+        handleFilesChange({ target: { files } }); // 기존의 handleFilesChange 함수를 재활용
+    };
+    const handleClose = () => {
+        setPreviewImages([]);
+        handleDialogClose();
+    }
+
     return (
-        <Dialog open={dialog} onClose={handleDialogClose}>
+        <Dialog open={dialog} onClose={handleClose}>
             <DialogContent>
                 <DialogContentText>
                     {editMode ? `${form.title}의 정보를 변경합니다.` : `새로운 사진을 추가합니다.`}
@@ -462,20 +484,38 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
                         />
                     </Grid>
                 </Grid>
-
-                <Button
-                    component="label"
-                    variant="contained"
-                    startIcon={<CloudUploadIcon />}
-                    href="#file-upload"
-                    sx={{ mb: -3 }}
-                >
-                    Upload images
-                    <VisuallyHiddenInput type="file" multiple hidden onChange={handleFilesChange} />
-                </Button>
+                {/* DragDrop Upload */}
+                <Grid container sx={{ mt: '15px' }}>
+                    <div
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={handleFileDrop}
+                        style={{ width: '100%', height: '80px', border: '2px dashed gray' }}
+                    >
+                    </div>
+                    <Grid container>
+                        <Grid item xs={8}>
+                            <Input
+                                ref={fileInputRef}
+                                type="file"
+                                multiple
+                                onChange={handleFilesChange}
+                                style={{ display: 'none' }}
+                            />
+                        </Grid>
+                        <Grid item xs={4} container direction='column' justifyContent='end'>
+                            <Button
+                                size='small'
+                                variant="contained"
+                                onClick={() => fileInputRef.current.click()}
+                            >
+                                파일 선택
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleDialogClose}>Cancel</Button>
+                <Button onClick={handleClose}>Cancel</Button>
                 <Button onClick={handleSave}>Save</Button>
             </DialogActions>
         </Dialog>
