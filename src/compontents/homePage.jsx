@@ -284,7 +284,7 @@ export default function HomePage({ lang }) {
                                                     }}
                                                 />
                                             </div>
-                                            <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photo.title}</p>
+                                            <Typography align='center' sx={{ fontSize: '12px', fontFamily: 'Helvetica', marginTop: '0.3vh' }}>{photo.subject}</Typography>
                                         </Grid>
                                     ) : <div></div>
                                 ))}

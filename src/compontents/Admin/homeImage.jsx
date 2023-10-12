@@ -57,7 +57,13 @@ export default function HomeImageChagePage({ loadDataUrl }) {
     const handleFilesChange = (event) => {
         const files = event.target.files;
         const sanitizedFileObjects = Array.from(files).map(file => {
-            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '');
+            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            // 파일 이름이 너무 짧거나 없는 경우 타임스탬프 추가
+            if (sanitizedFileName.length <= 4) { // 예: ".jpg" 보다 짧거나 같은 경우
+                const timestamp = new Date().getTime();
+                const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // a-z 사이의 랜덤한 알파벳
+                sanitizedFileName = `${timestamp}_${randomLetter}${sanitizedFileName}`;
+            }
             return new File([file], sanitizedFileName, { type: file.type });
         });
 
@@ -108,7 +114,6 @@ export default function HomeImageChagePage({ loadDataUrl }) {
         // for (let [key, value] of formData.entries()) {
         //     console.log(`${key}: ${value}`);
         // }
-        console.log('Severity before setting:', severity);
         try {
             // formData에는 file과, fileName, ...form 정보가 같이 담겨서 전송되고, 
             // 여기서 file은 images의 키로 저장했고, multer에서 images에 담긴것들을 서버 디랙토리에 저장함.
@@ -126,7 +131,6 @@ export default function HomeImageChagePage({ loadDataUrl }) {
             setSnackbar(true);
             console.error(error);
         }
-        console.log('Severity after setting:', severity);
         fetchData();
     };
 

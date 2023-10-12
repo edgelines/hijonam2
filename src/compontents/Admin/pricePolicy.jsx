@@ -220,7 +220,7 @@ export default function PricePolicyPage({ loadDataUrl }) {
                 </Alert>
             </Snackbar>
             {/*  */}
-            <Grid container spacing={5}>
+            <Grid container spacing={3}>
                 <Grid item xs={10.5}>
                     {/* 호수, 호당가격, 등급, 환율, 브로커수수료 */}
                     <Grid container spacing={5} sx={{ height: '110px' }}>
@@ -353,7 +353,7 @@ export default function PricePolicyPage({ loadDataUrl }) {
                 </Grid>
 
                 {/* Result : Price, Brokerage Fee %, Form */}
-                <Grid item xs={1.5}>
+                <Grid item xs={1.4}>
                     {/* Price */}
                     <TableContainer>
                         <Table size='small'>
@@ -392,7 +392,7 @@ export default function PricePolicyPage({ loadDataUrl }) {
                     </TableContainer>
 
                     <Grid container sx={{ mt: '3vh' }} rowSpacing={3}>
-                        <Grid item>
+                        <Grid item xs={11}>
                             <TextField label="Painting" variant="standard" name="Painting" value={form.Painting} onChange={handleForm}
                                 InputProps={{
                                     inputComponent: NumericFormatCustom,
@@ -400,7 +400,7 @@ export default function PricePolicyPage({ loadDataUrl }) {
                                 }}
                             />
                         </Grid>
-                        <Grid item>
+                        <Grid item xs={11}>
                             <TextField label="Fabric Collage" variant="standard" name="Fabric Collage" value={form.Fabric} onChange={handleForm}
                                 InputProps={{
                                     inputComponent: NumericFormatCustom,
@@ -408,7 +408,7 @@ export default function PricePolicyPage({ loadDataUrl }) {
                                 }}
                             />
                         </Grid>
-                        <Grid item>
+                        <Grid item xs={11}>
                             <TextField label="Hanji" variant="standard" name="Hanji" value={form.Hanji} onChange={handleForm}
                                 InputProps={{
                                     inputComponent: NumericFormatCustom,
@@ -416,7 +416,7 @@ export default function PricePolicyPage({ loadDataUrl }) {
                                 }}
                             />
                         </Grid>
-                        <Grid item>
+                        <Grid item xs={11}>
                             <TextField label="Patina" variant="standard" name="Patina" value={form.Patina} onChange={handleForm}
                                 InputProps={{
                                     inputComponent: NumericFormatCustom,
@@ -424,7 +424,7 @@ export default function PricePolicyPage({ loadDataUrl }) {
                                 }}
                             />
                         </Grid>
-                        <Grid item>
+                        <Grid item xs={11} textAlign='end'>
                             <Button onClick={saveBtn}>Save</Button>
                         </Grid>
                     </Grid>

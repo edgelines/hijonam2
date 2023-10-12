@@ -60,10 +60,10 @@ export default function PhotosPage({ lang, setSubTitle }) {
         }
     }, [])
     const photoCategories = [
-        { key: 'Exhibition', title: photos.exhibition.title, folderName: photos.exhibition.folderName, fileName: photos.exhibition.fileName },
-        { key: 'Studio US', title: photos.studioUS.title, folderName: photos.studioUS.folderName, fileName: photos.studioUS.fileName },
-        { key: 'Studio Korea', title: photos.studioKorea.title, folderName: photos.studioKorea.folderName, fileName: photos.studioKorea.fileName },
-        { key: 'Other Moments', title: photos.other.title, folderName: photos.other.folderName, fileName: photos.other.fileName },
+        { key: 'Exhibition', subject: photos.exhibition.subject, folderName: photos.exhibition.folderName, fileName: photos.exhibition.fileName },
+        { key: 'Studio US', subject: photos.studioUS.subject, folderName: photos.studioUS.folderName, fileName: photos.studioUS.fileName },
+        { key: 'Studio Korea', subject: photos.studioKorea.subject, folderName: photos.studioKorea.folderName, fileName: photos.studioKorea.fileName },
+        { key: 'Other Moments', subject: photos.other.subject, folderName: photos.other.folderName, fileName: photos.other.fileName },
     ];
 
     const handlePhotoClick = (photoKey) => {
@@ -87,7 +87,7 @@ export default function PhotosPage({ lang, setSubTitle }) {
                                             objectFit: 'cover'
                                         }} />
                                     </div>
-                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photo.subject}</p>
+                                    <Typography align='center' sx={{ fontSize: '12px', fontFamily: 'Helvetica', marginTop: '0.3vh' }}>{photo.subject}</Typography>
                                 </Grid>
                             ))}
                         </Grid>

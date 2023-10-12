@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Grid, FormLabel, FormControlLabel, RadioGroup, Radio, List, ListItem, ListItemText, Badge } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Grid, FormLabel, FormControlLabel, RadioGroup, Radio, List, ListItem, ListItemText } from '@mui/material';
 import HomeImagePage from './homeImage.jsx';
 import BioTablePage from './bioTable.jsx';
 import GenresPage from './genres.jsx';
@@ -15,21 +16,19 @@ import ReportPage from './report.jsx';
 import ContactBookPage from './contactBook.jsx';
 import PhotosPage from './photos.jsx';
 import AutobiographyPage from './autobiography.jsx';
+import RollingImageChagePage from './rollingImage.jsx';
 export default function AdminDashboardPage() {
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     const [currentPage, setCurrentPage] = useState(null);
     const menuStyle = { textAlign: 'start', fontWeight: 600, mt: 1, color: 'black' }
-
+    const labelStyle = { fontSize: isLgTablet ? '13px' : '14px', textAlign: 'start' }
     // handler
-    const openGoogleAnalytics = () => {
-        window.open('https://analytics.google.com/', '_blank')
-    }
-    const handlePageChange = (event) => {
-        setCurrentPage(event.target.value);
-    }
+    const openGoogleAnalytics = () => { window.open('https://analytics.google.com/', '_blank') }
+    const handlePageChange = (event) => { setCurrentPage(event.target.value); }
     return (
         <Grid container>
             <Grid container>
-                <Grid item xs={1.5} sx={{ paddingLeft: 2 }}>
+                <Grid item xs={isLgTablet ? 1.5 : 1.3} sx={{ paddingLeft: 2 }}>
                     <RadioGroup
                         aria-labelledby="radio-buttons-group-label"
                         name="radio-buttons-group"
@@ -37,36 +36,37 @@ export default function AdminDashboardPage() {
                         onChange={handlePageChange} // 페이지 변경 핸들러
                     >
                         <FormLabel sx={{ textAlign: 'start', fontWeight: 600, color: 'black' }}>Home</FormLabel>
-                        <FormControlLabel value="Home Image" control={<Radio />} label="Home Image" />
+                        <FormControlLabel value="Home Image" control={<Radio size='small' />} label="Home Image" sx={{ '.MuiFormControlLabel-label': labelStyle }} margin='dense' />
+                        <FormControlLabel value="Rolling Image" control={<Radio size='small' />} label="Rolling Image" sx={{ '.MuiFormControlLabel-label': labelStyle }} margin='normal' />
 
                         <FormLabel sx={menuStyle}>Biography</FormLabel>
-                        <FormControlLabel value="Awards" control={<Radio />} label="Awards" />
-                        <FormControlLabel value="Published Articles" control={<Radio />} label="Published Articles" />
-                        <FormControlLabel value="Artistic Engagement" control={<Radio />} label="Artistic Engagement" />
-                        <FormControlLabel value="Photos" control={<Radio />} label="Photos" />
-                        <FormControlLabel value="Autobiography" control={<Radio />} label="Autobiography" />
+                        <FormControlLabel value="Awards" control={<Radio size='small' />} label="Awards" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        {/* <FormControlLabel value="Published Articles" control={<Radio size='small' />} label="Published Articles" sx={{ '.MuiFormControlLabel-label': labelStyle }} /> */}
+                        <FormControlLabel value="Artistic Engagement" control={<Radio size='small' />} label="Artistic Engagement" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Photos" control={<Radio size='small' />} label="Photos" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Autobiography" control={<Radio size='small' />} label="Autobiography" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
 
                         <FormLabel sx={menuStyle}>Artworks</FormLabel>
-                        <FormControlLabel value="Genres Main Image" control={<Radio />} label="Genres Main Image" />
-                        <FormControlLabel value="Artworks" control={<Radio />} label="Artworks" />
+                        <FormControlLabel value="Genres Main Image" control={<Radio size='small' />} label="Genres Main Image" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Artworks" control={<Radio size='small' />} label="Artworks" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
 
                         <FormLabel sx={menuStyle}>Exhibition</FormLabel>
-                        <FormControlLabel value="Solo" control={<Radio />} label="Solo" />
-                        <FormControlLabel value="Group" control={<Radio />} label="Group" />
-                        <FormControlLabel value="Upcoming" control={<Radio />} label="Upcoming" />
+                        <FormControlLabel value="Solo" control={<Radio size='small' />} label="Solo" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Group" control={<Radio size='small' />} label="Group" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Upcoming" control={<Radio size='small' />} label="Upcoming" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
 
                         <FormLabel sx={menuStyle}>Admin</FormLabel>
-                        <FormControlLabel value="User Account" control={<Radio />} label="User Account" />
-                        <FormControlLabel value="Check Contact" control={<Radio />} label="Check Contact" />
-                        <FormControlLabel value="Artworks History" control={<Radio />} label="Artworks History" />
-                        <FormControlLabel value="Price List" control={<Radio />} label="Price List" />
-                        <FormControlLabel value="Report" control={<Radio />} label="Report" />
-                        <FormControlLabel value="Price Policy" control={<Radio />} label="Price Policy" />
-                        <FormControlLabel value="Contact Book" control={<Radio />} label="Contact Book" />
-                        <FormControlLabel value="Analytics" control={<Radio />} label="Analytics" onClick={openGoogleAnalytics} />
+                        <FormControlLabel value="User Account" control={<Radio size='small' />} label="User Account" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Check Contact" control={<Radio size='small' />} label="Check Contact" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Artworks History" control={<Radio size='small' />} label="Artworks History" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Price List" control={<Radio size='small' />} label="Price List" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Report" control={<Radio size='small' />} label="Report" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Price Policy" control={<Radio size='small' />} label="Price Policy" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Contact Book" control={<Radio size='small' />} label="Contact Book" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Analytics" control={<Radio size='small' />} label="Analytics" onClick={openGoogleAnalytics} sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                     </RadioGroup>
                 </Grid>
-                <Grid item xs={10.5}>
+                <Grid item xs={isLgTablet ? 10.5 : 10.7}>
                     <ContentsComponent currentPage={currentPage} />
                 </Grid>
 
@@ -80,10 +80,12 @@ const ContentsComponent = ({ currentPage }) => {
     switch (currentPage) {
         case 'Home Image':
             return <HomeImagePage loadDataUrl={'home'} />;
+        case 'Rolling Image':
+            return <RollingImageChagePage loadDataUrl={'rollingImage'} />;
         case 'Awards':
             return <BioTablePage loadDataUrl={'awards'} name={currentPage} />;
-        case 'Published Articles':
-            return <BioTablePage loadDataUrl={'articles'} name={currentPage} />;
+        // case 'Published Articles':
+        //     return <BioTablePage loadDataUrl={'articles'} name={currentPage} />;
         case 'Artistic Engagement':
             return <BioTablePage loadDataUrl={'experiences'} name={currentPage} />;
         case 'Genres Main Image':
@@ -121,10 +123,10 @@ const ContentsComponent = ({ currentPage }) => {
 
 const AdminHome = () => {
     const items = [
-        { id: 0, title: 'Home Sliding Image', subtitle: '첫 화면의 이미지를 추가, 변경, 삭제, 순서변경' },
-        { id: 1, title: 'Awards', subtitle: 'BIO에서 Awards 추가, 변경, 삭제' },
-        { id: 2, title: 'Published Articles', subtitle: 'BIO에서 Published Articles 추가, 변경, 삭제' },
-        { id: 3, title: 'Work Experiences', subtitle: 'BIO에서 Work Experiences 추가, 변경, 삭제' },
+        { id: 0, title: 'Home Sliding Image', subtitle: 'PC & Tablet의 첫 화면의 이미지를 요일별로 등록합니다.' },
+        { id: 2, title: 'Rolling Image', subtitle: '메뉴바 위의 이미지를 추가, 변경, 삭제' },
+        { id: 1, title: 'Awards', subtitle: 'BIOGRAPHY - Awards 추가, 변경, 삭제' },
+        { id: 3, title: 'Artistic Engagement', subtitle: 'BIOGRAPHY - Artistic Engagement 추가, 변경, 삭제' },
         { id: 4, title: 'Genres Main Image', subtitle: 'ARTWORKS에서 상단 카테고리 이미지 추가, 변경, 삭제' },
         { id: 5, title: 'Photos', subtitle: 'Biography -> Photos 추가, 변경, 삭제' },
         { id: 6, title: 'Artworks', subtitle: '작품 등록/변경/삭제' },
@@ -162,3 +164,4 @@ const AdminHome = () => {
         </Grid>
     )
 }
+

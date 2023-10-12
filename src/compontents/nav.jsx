@@ -1,45 +1,57 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Grid, Box, Tab, IconButton, Typography, Stack, Collapse } from '@mui/material';
-import { styled } from '@mui/material/styles'
+import { Grid, Box, Tab, IconButton, Typography, Stack, Collapse, Skeleton } from '@mui/material';
+// import { styled } from '@mui/material/styles'
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import styledComponents from 'styled-components';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import SettingsIcon from '@mui/icons-material/Settings';
-import HomeImg from '../assets/test.webp'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { AntSwitch } from './util.jsx';
+import axios from 'axios';
 import logo from '../assets/hijonam_logo.png'
 export default function NavbarComponent({ handleSwitchChange }) {
     const isMobile = useMediaQuery('(max-width:600px)');
     const isLgTablet = useMediaQuery('(max-width:1366px)');
+    const [data, setData] = useState(null);
     const [collapse, setCollapse] = useState(true);
     const [navbarOpen, setNavbarOpen] = useState(false);
 
-    const onClickInstagram = () => {
-        window.open("https://www.instagram.com/hijonam.official/", "_blank");
-    }
+    const onClickInstagram = () => { window.open("https://www.instagram.com/hijonam.official/", "_blank"); }
+    const handleMenuClick = () => { setNavbarOpen(false); };
 
-    const handleMenuClick = () => {
-        setNavbarOpen(false);
-    };
+    const url = 'http://hijonam.com/img/'
+    const fetchData = async () => {
+        await axios.get(`${url}rollingImage`).then((response) => {
+            var tmp = [];
+            response.data.forEach((value) => { tmp.push(value.fileName) });
+            setData(tmp);
+        }).catch((error) => {
+            setSeverity('error')
+            console.error("Error fetching artworks:", error);
+        });
+    }
+    useEffect(() => { fetchData(); }, [])
     return (
         <>
             {isMobile ? (
                 <>
                     <Collapse in={collapse} timeout={1000} collapsedSize={10} sx={{ width: '100vw' }}>
                         <Box sx={{ width: '100vw' }}>
-                            <img src={HomeImg} style={{
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: '35vh',
-                                objectFit: 'cover'
-                            }} />
+                            {data ?
+                                <img src={`/img/Rolling/${data[0]}`} style={{
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: '35vh',
+                                    objectFit: 'cover'
+                                }} />
+                                : <Skeleton variant="rectangular" width={'100%'} height={'35vh'} />
+                            }
                         </Box>
                     </Collapse>
                     <Navbar expand="lg" className="justify-content-between">
@@ -82,13 +94,16 @@ export default function NavbarComponent({ handleSwitchChange }) {
                 <>
                     <Collapse in={collapse} timeout={1000} collapsedSize={10}>
                         <Box>
-                            <img src={HomeImg} style={{
-                                top: 0,
-                                left: 0,
-                                width: '100%',
-                                height: isLgTablet ? '75svh' : '780px',
-                                objectFit: 'cover'
-                            }} />
+                            {data ?
+                                <img src={`/img/Rolling/${data[0]}`} style={{
+                                    top: 0,
+                                    left: 0,
+                                    width: '100%',
+                                    height: isLgTablet ? '75svh' : '780px',
+                                    objectFit: 'cover'
+                                }} />
+                                : <Skeleton variant="rectangular" width={'100%'} height={isLgTablet ? '75svh' : '780px'} />
+                            }
                         </Box>
                     </Collapse>
                     <Navbar expand="lg" className="justify-content-between">

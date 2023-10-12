@@ -7,10 +7,6 @@
   
 ### TodoList || Bug Report || Request
 - Tablet 12.9" 11" Sort Export PDF
-- Admin Upcoming Add Bug >> save가 안됨
-- Admin 전체적 수정
-- FileUpload Drag
-- Admin 한글 파일 업로드시 자동제외 
 - 간판이미지 7초마다 변경 > Admin작업
 
 ### 2023.10.12
@@ -24,9 +20,11 @@
     - [x] Autobiography
     - [x] Genres Main Image
     - [x] Artworks
-    - [x] Exhibition 완료
-    - [x] 
+    - [x] Exhibition
+    - [x] Upcoming Add, Edit, Delete Bug 
 - [x] PC, Mobile Photos Page 이미지 밑 title -> subject로 변경
+- [x] Tablet 12" Label FontSize 수정
+- 간판이미지 Admin 등록
 
 ### 2023.10.11
 {dev-adminBug}

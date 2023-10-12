@@ -3,8 +3,7 @@ import axios from 'axios';
 import {
     Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, MenuItem,
     Table, TableBody, TableCell, TableContainer, TableRow, FormControlLabel, InputAdornment,
-    RadioGroup, Radio, FormLabel,
-    Badge,
+    RadioGroup, Radio, FormLabel, Badge,
 } from '@mui/material';
 import { NumericFormat } from 'react-number-format';
 
@@ -161,9 +160,9 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
     };
 
     // Handler
-    const [filterByArtGenre, setFilterByArtGenre] = useState(null);
+    // const [filterByArtGenre, setFilterByArtGenre] = useState(null);
     const handleFilterByArtGenre = (event) => {
-        setFilterByArtGenre(event.target.value);
+        // setFilterByArtGenre(event.target.value);
         setGenre(event.target.value)
     }
     // 장르리스트에서 장르 선택
@@ -216,10 +215,7 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
         });
     }
 
-    useEffect(() => {
-        fetchData();
-    }, [])
-
+    useEffect(() => { fetchData(); }, [])
     useEffect(() => {
         let filtered = [...data];
         if (genre !== 'All') {
@@ -263,7 +259,7 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
             {/* Content */}
             <Grid container>
                 {/* RadioGroup */}
-                <Grid item xs={2}>
+                <Grid item xs={1.5}>
                     <RadioGroup
                         aria-labelledby="radio-buttons-group-label"
                         name="radio-buttons-group"
@@ -292,7 +288,7 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
                 </Grid>
 
                 {/* History Table */}
-                <Grid item xs={10}>
+                <Grid item xs={10.3}>
                     <MemoizedTable selectedData={selectedData} editBtn={editBtn} />
                 </Grid>
             </Grid>
@@ -951,7 +947,6 @@ const DialogComponent = React.memo(({ dialog, data, form, handleDialogClose, sav
         </Dialog>
     )
 })
-
 
 
 const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(

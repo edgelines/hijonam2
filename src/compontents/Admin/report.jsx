@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
 import { Grid, TextField, Typography, MenuItem, Tab, FormControlLabel, RadioGroup, FormLabel, Radio, } from '@mui/material';
 import { TabContext, TabPanel, TabList } from '@mui/lab';
@@ -7,6 +8,7 @@ import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
 export default function ArtworksPage({ loadDataUrl }) {
     const url = 'http://hijonam.com/img/'
+    const isLgTablet = useMediaQuery('(max-width:1366px)');
     const [tabValue, setTabValue] = useState('period');
     const [currentPage, setCurrentPage] = useState('월별');
     const [data, setData] = useState([]); // 오리진데이터
@@ -375,7 +377,7 @@ export default function ArtworksPage({ loadDataUrl }) {
             series: seriesData
         };
     }
-
+    const labelStyle = { fontSize: isLgTablet ? '13px' : '14px', textAlign: 'start' }
     return (
         <Grid container>
 
@@ -403,10 +405,10 @@ export default function ArtworksPage({ loadDataUrl }) {
                                     onChange={handlePageChange} // 페이지 변경 핸들러
                                 >
                                     <FormLabel sx={{ textAlign: 'start', fontWeight: 580, color: 'black' }}>Revenue by Period</FormLabel>
-                                    <FormControlLabel value="월별" control={<Radio />} label="월별" />
-                                    <FormControlLabel value="분기별" control={<Radio />} label="분기별" />
-                                    <FormControlLabel value="년도별" control={<Radio />} label="년도별" />
-                                    <FormControlLabel value="년도별기준" control={<Radio />} label="년도별기준 장르" />
+                                    <FormControlLabel value="월별" control={<Radio size="small" />} label="월별" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                                    <FormControlLabel value="분기별" control={<Radio size="small" />} label="분기별" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                                    <FormControlLabel value="년도별" control={<Radio size="small" />} label="년도별" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                                    <FormControlLabel value="년도별기준" control={<Radio size="small" />} label="년도별기준 장르" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                                 </RadioGroup>
                             </Grid>
                             <Grid item xs={10}>
