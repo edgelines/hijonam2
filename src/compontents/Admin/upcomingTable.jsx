@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import {
-    Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, MenuItem,
+    Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, MenuItem, Input,
     Table, TableHead, TableBody, TableCell, TableContainer, TableRow
 } from '@mui/material';
 import { VisuallyHiddenInput } from '../util.jsx';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export default function ExhibitionPage({ loadDataUrl, name }) {
+    const fileInputRef = useRef(null);
     const [previewImages, setPreviewImages] = useState([]);
     const [snackbar, setSnackbar] = useState(false);
     const [severity, setSeverity] = useState('success');
@@ -20,107 +21,82 @@ export default function ExhibitionPage({ loadDataUrl, name }) {
     // Form State & Handler
     const [dialog, setDialog] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const [form, setForm] = useState({
-        startDate: "",
-        endDate: "",
-        title: "",
-        title_kr: "",
-        location: "",
-        soloGroup: "",
-        fileName: [],
-        memo: ''
-    })
+    const [form, setForm] = useState({ startDate: "", endDate: "", title: "", title_kr: "", location: "", soloGroup: "", fileName: [], memo: '' })
     const [errors, setErrors] = useState({ startDate: '', endDate: '' });
     // Form
-    const newForm = () => {
-        setEditMode(false);
-        setDialog(true);
-        resetForm();
-    }
+    const newForm = () => { setEditMode(false); setDialog(true); resetForm(); }
     const resetForm = () => {
-        setForm({
-            startDate: "",
-            endDate: "",
-            title: "",
-            title_kr: "",
-            location: "",
-            soloGroup: "",
-            fileName: [],
-            memo: ''
-        });
+        setForm({ startDate: "", endDate: "", title: "", title_kr: "", location: "", soloGroup: "", fileName: [], memo: '' });
         setPreviewImages([]);
         setErrors({ startDate: '', endDate: '' });
     };
     const editBtn = (content) => {
         setEditMode(true);
-        setForm({
-            id: content.id,
-            startDate: content.startDate,
-            endDate: content.endDate,
-            title: content.title,
-            title_kr: content.title_kr,
-            location: content.location,
-            soloGroup: content.soloGroup,
-        });
+        setForm({ id: content.id, startDate: content.startDate, endDate: content.endDate, title: content.title, title_kr: content.title_kr, location: content.location, soloGroup: content.soloGroup, memo: content.memo });
         setDialog(true);
     };
     const saveBtn = () => {
         if (editMode) {
             updateDatabase();
-        } else {
-            saveToDatabase();
-        }
+        } else { console.log(form); saveToDatabase(); }
         setDialog(false);
         resetForm();
     };
 
-
     // DB CRUD Function
     const saveToDatabase = async () => {
         const formData = new FormData();
-        formData.append("genres", form.genres);
-
-        // form에 담긴 파일 정보를 풀어서 fileName을 별도로 저장함
-        for (const file of form.fileName) {
-            formData.append("images", file);
-        }
-        const fileName = Array.from(form.fileName).map(file => file.name);
-        formData.append("fileName", JSON.stringify(fileName));
+        Object.keys(form).forEach((key) => {
+            if (key !== "fileName") {
+                formData.append(key, form[key]);
+            }
+        });
+        // 파일 배열 처리
+        if (form.fileName) {
+            for (const file of form.fileName) {
+                formData.append("images", file);
+            }
+            const fileName = Array.from(form.fileName).map(file => file.name);
+            formData.append("fileName", JSON.stringify(fileName));
+        } else { formData.append("fileName", JSON.stringify('Upcoming Exhibition.png')); }
 
         try {
             const response = await axios.post(`${url}${loadDataUrl}/Exhibition`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+                headers: { 'Content-Type': 'multipart/form-data', },
             });
-            if (response.status === 200) {
-                data.push(response.data);
-                setSnackbar(true);
-                setSeverity('success');
-                setDialog(false);
-            }
+            setSnackbar(true);
+            setSeverity('success');
+            setDialog(false);
         } catch (error) {
             setSnackbar(true);
             setSeverity('error');
             console.error(error);
         }
+        fetchData();
     };
     const updateDatabase = async () => {
         const formData = new FormData();
-        formData.append("genres", form.genres);
+        Object.keys(form).forEach((key) => {
+            if (key !== "fileName") {
+                formData.append(key, form[key]);
+            }
+        });
+        // 파일 배열 처리
+        if (form.fileName) {
+            for (const file of form.fileName) {
+                formData.append("images", file);
+            }
+            const fileName = Array.from(form.fileName).map(file => file.name);
+            formData.append("fileName", JSON.stringify(fileName));
+        } else { formData.append("fileName", JSON.stringify('Upcoming Exhibition.png')); }
 
-        // form에 담긴 파일 정보를 풀어서 fileName을 별도로 저장함
-        for (const file of form.fileName) {
-            formData.append("images", file);
+        // formData 확인 코드
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
         }
-        const fileName = Array.from(form.fileName).map(file => file.name);
-        formData.append("fileName", JSON.stringify(fileName));
-
         try {
-            const response = await axios.put(`${url}${loadDataUrl}/Main/${form.id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            const response = await axios.put(`${url}${loadDataUrl}/Exhibition/${form.id}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data', },
             });
             setSnackbar(true);
             setSeverity('success');
@@ -138,7 +114,6 @@ export default function ExhibitionPage({ loadDataUrl, name }) {
         if (confirmDelete) {
             try {
                 await axios.delete(`${url}${loadDataUrl}/${deleteID.id}`);
-                fetchData();
                 setSnackbar(true);
                 setSeverity('success');
                 setDialog(false);
@@ -148,43 +123,45 @@ export default function ExhibitionPage({ loadDataUrl, name }) {
                 console.error("Error deleting award:", error);
             }
         }
+        fetchData();
     };
 
     const handleDialogClose = () => { resetForm(); setDialog(false); }
     const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
+        if (reason === 'clickaway') { return; }
         setSnackbar(false);
     };
-    // const handleFormText = (event) => {
-    //     const { name, value } = event.target;
-    //     setForm(prevState => ({ ...prevState, [name]: value }));
-    // };
     const handleFormText = useCallback((event) => {
         const { name, value } = event.target;
         setForm(prevState => ({ ...prevState, [name]: value }));
     }, []);
     const handleDateChange = (e) => {
         const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
         if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
             setErrors((prev) => ({ ...prev, [name]: 'YYYY-MM-DD 형식이어야 합니다.' }));
         } else {
             setErrors((prev) => ({ ...prev, [name]: '' }));
         }
+        setForm((prev) => ({ ...prev, [name]: String(value) }));
     };
     const handleFilesChange = (event) => {
         const files = event.target.files;
-        // console.log('files', files);
-        setForm({ ...form, fileName: files })
+        const sanitizedFileObjects = Array.from(files).map(file => {
+            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '');
+            return new File([file], sanitizedFileName, { type: file.type });
+        });
+        setForm({ ...form, fileName: sanitizedFileObjects })
         const imageUrls = Array.from(files).map(file => URL.createObjectURL(file));
         setPreviewImages(imageUrls);
         // file의 오브젝트를 form.fileName에 전부 담음 ( 파일 속성 전체를 의미함. )
         // ex lastModified : 1693645952866, lastModifiedDate : Sat Sep 02 2023 18:12:32 GMT+0900 (한국 표준시) {}, name: "KakaoTalk_20230902_181134860.jpg", 
         // size: 2757612, type: "image/jpeg",webkitRelativePath: "",[[Prototype]]: File
     };
-
+    const handleFileDrop = (event) => {
+        event.preventDefault();
+        const files = event.dataTransfer.files;
+        handleFilesChange({ target: { files } }); // 기존의 handleFilesChange 함수를 재활용
+    };
     const fetchData = async () => {
         await axios.get(`${url}${loadDataUrl}`).then((response) => {
             const dateFields = ['startDate', 'endDate'];
@@ -204,9 +181,7 @@ export default function ExhibitionPage({ loadDataUrl, name }) {
             console.error("Error fetching artworks:", error);
         });
     }
-    useEffect(() => {
-        fetchData();
-    }, [name])
+    useEffect(() => { fetchData(); }, [name])
 
     return (
         <Grid container>
@@ -306,16 +281,35 @@ export default function ExhibitionPage({ loadDataUrl, name }) {
                                 value={form.memo}
                             /></Grid>
                     </Grid>
-                    <Button
-                        component="label"
-                        variant="contained"
-                        startIcon={<CloudUploadIcon />}
-                        href="#file-upload"
-                        sx={{ mb: -3 }}
-                    >
-                        Upload images
-                        <VisuallyHiddenInput type="file" multiple hidden onChange={handleFilesChange} />
-                    </Button>
+                    {/* DragDrop Upload */}
+                    <Grid container sx={{ mt: '15px' }}>
+                        <div
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={handleFileDrop}
+                            style={{ width: '100%', height: '80px', border: '2px dashed gray' }}
+                        >
+                        </div>
+                        <Grid container>
+                            <Grid item xs={8}>
+                                <Input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    multiple
+                                    onChange={handleFilesChange}
+                                    style={{ display: 'none' }}
+                                />
+                            </Grid>
+                            <Grid item xs={4} container direction='column' justifyContent='end'>
+                                <Button
+                                    size='small'
+                                    variant="contained"
+                                    onClick={() => fileInputRef.current.click()}
+                                >
+                                    파일 선택
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </DialogContent>
                 <div>
                     {previewImages.map((url, index) => (

@@ -87,7 +87,7 @@ export default function PhotosPage({ lang, setSubTitle }) {
                                             objectFit: 'cover'
                                         }} />
                                     </div>
-                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photo.title}</p>
+                                    <p style={{ textAlign: 'center', marginTop: '0.3vh' }}>{photo.subject}</p>
                                 </Grid>
                             ))}
                         </Grid>
@@ -134,7 +134,6 @@ export default function PhotosPage({ lang, setSubTitle }) {
 
 const PhotosDetail = ({ lang, value }) => {
     const isMobile = useMediaQuery('(max-width:600px)');
-    const isTablet = useMediaQuery('(max-width:1200px)');
     const isLgTablet = useMediaQuery('(max-width:1366px)');
     const [originData, setOriginData] = useState([]);
     const [data, setData] = useState([]);

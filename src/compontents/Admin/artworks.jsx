@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import {
-    Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, Typography, Select, MenuItem,
+    Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, Input, MenuItem,
     Tab, Table, TableHead, TableBody, TableCell, TableContainer, TableRow, FormControl, FormControlLabel
 } from '@mui/material';
 import { TabContext, TabPanel, TabList } from '@mui/lab';
-import { VisuallyHiddenInput, AntSwitch } from '../util.jsx';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { AntSwitch } from '../util.jsx';
 import { ReactSortable } from "react-sortablejs";
 import CssStyle from './artworks.module.css'
 
@@ -97,7 +96,7 @@ export default function ArtworksPage({ loadDataUrl }) {
         try {
             // formData에는 file과, fileName, ...form 정보가 같이 담겨서 전송되고, 
             // 여기서 file은 images의 키로 저장했고, multer에서 images에 담긴것들을 서버 디랙토리에 저장함.
-            const response = await axios.post(`${url}${loadDataUrl}/Main`, formData, {
+            const response = await axios.post(`${url}${loadDataUrl}/Artworks`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -129,20 +128,12 @@ export default function ArtworksPage({ loadDataUrl }) {
             formData.append("fileName", JSON.stringify(fileName));
         }
 
-        // // form에 담긴 파일 정보를 풀어서 fileName을 별도로 저장함
-        // for (const file of newFormData.fileName) {
-        //     formData.append("images", file);
-        // }
-        // const fileName = Array.from(newFormData.fileName).map(file => file.name);
-        // formData.append("fileName", JSON.stringify(fileName));
-
         try {
-            const response = await axios.put(`${url}${loadDataUrl}/Main/${newFormData.id}`, formData, {
+            const response = await axios.put(`${url}${loadDataUrl}/Artworks/${newFormData.id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
             setSnackbar(true);
             setSeverity('success');
             setDialog(false);
@@ -159,7 +150,6 @@ export default function ArtworksPage({ loadDataUrl }) {
         if (confirmDelete) {
             try {
                 await axios.delete(`${url}${loadDataUrl}/${deleteID.id}`);
-                fetchData();
                 setSnackbar(true);
                 setSeverity('success');
             } catch (error) {
@@ -168,6 +158,7 @@ export default function ArtworksPage({ loadDataUrl }) {
                 console.error("Error deleting award:", error);
             }
         }
+        fetchData();
     };
 
     const updateShowArtworks = async (item) => {
@@ -249,9 +240,7 @@ export default function ArtworksPage({ loadDataUrl }) {
         });
     }
 
-    useEffect(() => {
-        fetchData();
-    }, [])
+    useEffect(() => { fetchData(); }, [])
 
     useEffect(() => {
         if (genre === 'All') {
@@ -260,7 +249,7 @@ export default function ArtworksPage({ loadDataUrl }) {
             const d = data.filter(item => item.genres === genre);
             setSelectedData(d);
         }
-    }, [genre])
+    }, [data, genre])
 
     return (
         <Grid container>
@@ -376,10 +365,8 @@ export default function ArtworksPage({ loadDataUrl }) {
                                 animation={200}
                                 className={`${CssStyle.grid}`}
                                 ghostClass='blue-background-class'
-                            // style={{ display: 'grid', gridGap: '16px', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gridAutoRows: '200px', border: '1px solid red' }}
                             >
                                 {selectedData.map((item) => (
-                                    // <GridItem key={item.id} item={item} />
                                     <div key={item.id} className={`${CssStyle.grid_item} ${CssStyle.listGroupitem}`}>
                                         <img src={`/img/Artworks/${item.fileName[0]}`} className="rounded-3 mx-auto"
                                             style={{
@@ -402,6 +389,7 @@ export default function ArtworksPage({ loadDataUrl }) {
 }
 
 const DialogComponent = React.memo(({ dialog, form, data, handleDialogClose, editMode, saveBtn, genresList }) => {
+    const fileInputRef = useRef(null);
     const [localFormState, setLocalFormState] = useState(form);
     const [previewImages, setPreviewImages] = useState([]);
 
@@ -437,23 +425,33 @@ const DialogComponent = React.memo(({ dialog, form, data, handleDialogClose, edi
     };
     const handleFilesChange = (event) => {
         const files = event.target.files;
-        // console.log('files', files);
-        setLocalFormState({ ...localFormState, fileName: files })
+        const sanitizedFileObjects = Array.from(files).map(file => {
+            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '');
+            return new File([file], sanitizedFileName, { type: file.type });
+        });
+        setLocalFormState({ ...localFormState, fileName: sanitizedFileObjects })
         const imageUrls = Array.from(files).map(file => URL.createObjectURL(file));
         setPreviewImages(imageUrls);
-        // file의 오브젝트를 form.fileName에 전부 담음 ( 파일 속성 전체를 의미함. )
-        // ex lastModified : 1693645952866, lastModifiedDate : Sat Sep 02 2023 18:12:32 GMT+0900 (한국 표준시) {}, name: "KakaoTalk_20230902_181134860.jpg", 
-        // size: 2757612, type: "image/jpeg",webkitRelativePath: "",[[Prototype]]: File
+    };
+    const handleFileDrop = (event) => {
+        event.preventDefault();
+        const files = event.dataTransfer.files;
+        handleFilesChange({ target: { files } }); // 기존의 handleFilesChange 함수를 재활용
     };
     const handleSave = () => {
+        delete localFormState.img;
         saveBtn(localFormState);
         setPreviewImages([]);
     };
+    const handleClose = () => {
+        setPreviewImages([]);
+        handleDialogClose();
+    }
 
     return (
         <Dialog open={dialog}
             fullWidth={false} maxWidth={'md'}
-            onClose={handleDialogClose}>
+            onClose={handleClose}>
             <DialogContent>
                 <DialogContentText>
                     {editMode ? 'EDIT Artworks' : 'ADD Artworks'}
@@ -558,19 +556,38 @@ const DialogComponent = React.memo(({ dialog, form, data, handleDialogClose, edi
                         />
                     ))}
                 </div>
-                <Button
-                    component="label"
-                    variant="contained"
-                    startIcon={<CloudUploadIcon />}
-                    href="#file-upload"
-                    sx={{ mb: -3 }}
-                >
-                    Upload images
-                    <VisuallyHiddenInput type="file" multiple hidden onChange={handleFilesChange} />
-                </Button>
+                {/* DragDrop Upload */}
+                <Grid container sx={{ mt: '15px' }}>
+                    <div
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={handleFileDrop}
+                        style={{ width: '100%', height: '80px', border: '2px dashed gray' }}
+                    >
+                    </div>
+                    <Grid container>
+                        <Grid item xs={9}>
+                            <Input
+                                ref={fileInputRef}
+                                type="file"
+                                multiple
+                                onChange={handleFilesChange}
+                                style={{ display: 'none' }}
+                            />
+                        </Grid>
+                        <Grid item xs={3} container direction='column' justifyContent='end'>
+                            <Button
+                                size='small'
+                                variant="contained"
+                                onClick={() => fileInputRef.current.click()}
+                            >
+                                파일 선택
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleDialogClose}>Cancel</Button>
+                <Button onClick={handleClose}>Cancel</Button>
                 <Button onClick={handleSave}>Save</Button>
             </DialogActions>
         </Dialog>
