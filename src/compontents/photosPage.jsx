@@ -19,7 +19,7 @@ export default function PhotosPage({ lang, setSubTitle }) {
 
     // Mobile State
     const isMobile = useMediaQuery('(max-width:600px)');
-    const [photos, setPhotos] = useState({ exhibition: {}, studioUS: {}, studioKorea: {}, other: {} })
+    const [photos, setPhotos] = useState({ exhibition: {}, studio: {}, publicArticles: {}, other: {} });
     const [selectedPhoto, setSelectedPhoto] = useState('Exhibition');
 
     const handleChange = (event, newValue) => {
@@ -38,17 +38,17 @@ export default function PhotosPage({ lang, setSubTitle }) {
 
     const fetchData = async () => {
         await axios.get(`http://hijonam.com/img/photos`).then((res) => {
-
             var exhibition = res.data.filter(item => item.subject === 'Exhibition')
-            var studioUS = res.data.filter(item => item.subject === 'Studio US')
-            var studioKorea = res.data.filter(item => item.subject === 'Studio Korea')
+            var studio = res.data.filter(item => item.subject === 'Studio')
+            var publicArticles = res.data.filter(item => item.subject === 'Public Articles')
             var other = res.data.filter(item => item.subject === 'Other Moments')
 
             exhibition = exhibition.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
-            studioUS = studioUS.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
-            studioKorea = studioKorea.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
+            studio = studio.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
+            publicArticles = publicArticles.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
             other = other.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
-            setPhotos({ exhibition: exhibition, studioUS: studioUS, studioKorea: studioKorea, other: other })
+
+            setPhotos({ exhibition: exhibition, studio: studio, publicArticles: publicArticles, other: other })
         }).catch((error) => {
             console.error("Error fetching upcomingExhibition:", error);
         });
@@ -61,8 +61,8 @@ export default function PhotosPage({ lang, setSubTitle }) {
     }, [])
     const photoCategories = [
         { key: 'Exhibition', subject: photos.exhibition.subject, folderName: photos.exhibition.folderName, fileName: photos.exhibition.fileName },
-        { key: 'Studio US', subject: photos.studioUS.subject, folderName: photos.studioUS.folderName, fileName: photos.studioUS.fileName },
-        { key: 'Studio Korea', subject: photos.studioKorea.subject, folderName: photos.studioKorea.folderName, fileName: photos.studioKorea.fileName },
+        { key: 'Studio', subject: photos.studio.subject, folderName: photos.studio.folderName, fileName: photos.studio.fileName },
+        { key: 'Public Articles', subject: photos.publicArticles.subject, folderName: photos.publicArticles.folderName, fileName: photos.publicArticles.fileName },
         { key: 'Other Moments', subject: photos.other.subject, folderName: photos.other.folderName, fileName: photos.other.fileName },
     ];
 
@@ -105,19 +105,19 @@ export default function PhotosPage({ lang, setSubTitle }) {
                             <TabContext value={value} >
                                 <Grid container direction="column" alignItems='center' >
                                     <TabList onChange={handleChange} aria-label="Tab List" >
-                                        <Tab label="Exhibition Photos" value="Exhibition" />
-                                        <Tab label="Studio US Photos" value="Studio US" />
-                                        <Tab label="Studio KOREA Photos" value="Studio Korea" />
+                                        <Tab label="Exhibition" value="Exhibition" />
+                                        <Tab label="Studio" value="Studio" />
+                                        <Tab label="Public Articles" value="Public Articles" />
                                         <Tab label="Other Moments" value="Other Moments" />
                                     </TabList>
                                 </Grid>
                                 <TabPanel value="Exhibition">
                                     <PhotosDetail value={value} lang={lang} />
                                 </TabPanel>
-                                <TabPanel value="Studio US">
+                                <TabPanel value="Studio">
                                     <PhotosDetail value={value} lang={lang} />
                                 </TabPanel>
-                                <TabPanel value="Studio Korea">
+                                <TabPanel value="Public Articles">
                                     <PhotosDetail value={value} lang={lang} />
                                 </TabPanel>
                                 <TabPanel value="Other Moments">

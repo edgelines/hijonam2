@@ -16,7 +16,7 @@ export default function HomePage({ lang }) {
     const [imgData, setImgData] = useState([]);
     const [exhibition, setExhibition] = useState([]);
     const [autobiographyContent, setAutobiographyContent] = useState([]);
-    const [photos, setPhotos] = useState({ exhibition: {}, studioUS: {}, studioKorea: {}, other: {} });
+    const [photos, setPhotos] = useState({ exhibition: {}, studio: {}, publicArticles: {}, other: {} });
     const [worldTime, setWorldTime] = useState({ seoul: new Date(), newYork: new Date() });
 
     const fetchData = async () => {
@@ -83,16 +83,16 @@ export default function HomePage({ lang }) {
         });
         await axios.get(`http://hijonam.com/img/photos`).then((res) => {
             var exhibition = res.data.filter(item => item.subject === 'Exhibition')
-            var studioUS = res.data.filter(item => item.subject === 'Studio US')
-            var studioKorea = res.data.filter(item => item.subject === 'Studio Korea')
+            var studio = res.data.filter(item => item.subject === 'Studio')
+            var publicArticles = res.data.filter(item => item.subject === 'Public Articles')
             var other = res.data.filter(item => item.subject === 'Other Moments')
 
             exhibition = exhibition.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
-            studioUS = studioUS.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
-            studioKorea = studioKorea.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
+            studio = studio.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
+            publicArticles = publicArticles.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
             other = other.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
 
-            setPhotos({ exhibition: exhibition, studioUS: studioUS, studioKorea: studioKorea, other: other })
+            setPhotos({ exhibition: exhibition, studio: studio, publicArticles: publicArticles, other: other })
         }).catch((error) => {
             console.error("Error fetching upcomingExhibition:", error);
         });
@@ -157,7 +157,7 @@ export default function HomePage({ lang }) {
                             />
                         </Grid>
                         <Grid item xs={0.3}></Grid>
-                        <Grid item xs={2.5} container direction="column" justifyContent="flex-end" textAlign='start'>
+                        <Grid item xs={2.6} container direction="column" justifyContent="flex-end" textAlign='start'>
                             <Typography sx={mobileHomeClockStyle}>
                                 NEW YORK
                             </Typography>
@@ -168,7 +168,7 @@ export default function HomePage({ lang }) {
                                 {worldTime.newYork.toLocaleDateString()}
                             </Typography>
                         </Grid>
-                        <Grid item xs={0.4}></Grid>
+                        <Grid item xs={0.2}></Grid>
                         <Grid item xs={3} container direction="column" alignItems="center">
                             <Clock value={worldTime.seoul}
                                 hourHandLength={53}
@@ -188,7 +188,7 @@ export default function HomePage({ lang }) {
                             />
                         </Grid>
                         <Grid item xs={0.3}></Grid>
-                        <Grid item xs={2.5} container direction="column" justifyContent="flex-end" textAlign='start'>
+                        <Grid item xs={2.6} container direction="column" justifyContent="flex-end" textAlign='start'>
                             <Typography sx={mobileHomeClockStyle}>SEOUL</Typography>
                             <Typography sx={mobileHomeClockStyle}>{worldTime.seoul.toLocaleTimeString("en-US")}</Typography>
                             <Typography sx={mobileHomeClockStyle}>{worldTime.seoul.toLocaleDateString()}</Typography>

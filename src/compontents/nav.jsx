@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { css } from "@emotion/react";
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Grid, Box, Tab, IconButton, Typography, Stack, Collapse, Skeleton } from '@mui/material';
@@ -14,11 +15,15 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { AntSwitch } from './util.jsx';
 import axios from 'axios';
 import logo from '../assets/hijonam_logo.png'
+// import './nav.css'
+
 export default function NavbarComponent({ handleSwitchChange }) {
     const isMobile = useMediaQuery('(max-width:600px)');
     const isLgTablet = useMediaQuery('(max-width:1366px)');
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(['1.webp', '2.jpg']);
     const [collapse, setCollapse] = useState(true);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [fade, setFade] = useState(false);
     const [navbarOpen, setNavbarOpen] = useState(false);
 
     const onClickInstagram = () => { window.open("https://www.instagram.com/hijonam.official/", "_blank"); }
@@ -36,19 +41,34 @@ export default function NavbarComponent({ handleSwitchChange }) {
         });
     }
     useEffect(() => { fetchData(); }, [])
+    useEffect(() => {
+        if (data.length > 1) {
+            const timer = setInterval(() => {
+                setFade(true);
+                setTimeout(() => {
+                    setCurrentIndex((prevIndex) => (prevIndex + 1) % data.length);
+                    setFade(false);
+                }, 600); // adjust as needed
+            }, 7000); // adjust as needed
+            console.log('Fade')
+            return () => clearInterval(timer);
+        }
+    }, [data.length]);
     return (
         <>
             {isMobile ? (
                 <>
                     <Collapse in={collapse} timeout={1000} collapsedSize={10} sx={{ width: '100vw' }}>
                         <Box sx={{ width: '100vw' }}>
-                            {data ?
-                                <img src={`/img/Rolling/${data[0]}`} style={{
+                            {data.length > 0 ?
+                                <img src={`/img/Rolling/${data[currentIndex]}`} style={{
                                     top: 0,
                                     left: 0,
                                     width: '100%',
                                     height: '35vh',
-                                    objectFit: 'cover'
+                                    objectFit: 'cover',
+                                    transition: 'opacity 5s ease',
+                                    opacity: fade ? 0 : 1
                                 }} />
                                 : <Skeleton variant="rectangular" width={'100%'} height={'35vh'} />
                             }
@@ -93,15 +113,20 @@ export default function NavbarComponent({ handleSwitchChange }) {
             ) : (
                 <>
                     <Collapse in={collapse} timeout={1000} collapsedSize={10}>
-                        <Box>
+                        <Box sx={{ width: '100vw' }}>
                             {data ?
-                                <img src={`/img/Rolling/${data[0]}`} style={{
-                                    top: 0,
-                                    left: 0,
-                                    width: '100%',
-                                    height: isLgTablet ? '75svh' : '780px',
-                                    objectFit: 'cover'
-                                }} />
+                                <img src={`/img/Rolling/${data[currentIndex]}`}
+                                    style={{
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: isLgTablet ? '75svh' : '780px',
+                                        objectFit: 'cover',
+                                        transition: 'opacity 5s ease',
+                                        // transition: 'opacity 1s cubic-bezier(0.32, 0.35, 0.58, 1.0)',
+                                        // transition: 'opacity 1s ease-in-out',
+                                        opacity: fade ? 0 : 1
+                                    }} />
                                 : <Skeleton variant="rectangular" width={'100%'} height={isLgTablet ? '75svh' : '780px'} />
                             }
                         </Box>
@@ -176,3 +201,4 @@ const StyledNavLink = styledComponents(Nav.Link)`
         margin-bottom : 1.5vh;
     }
 `;
+
