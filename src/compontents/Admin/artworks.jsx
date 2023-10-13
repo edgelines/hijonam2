@@ -47,7 +47,8 @@ export default function ArtworksPage({ loadDataUrl }) {
             sizeW: "",
             sizeH: "",
             executed: "",
-            sequence: ""
+            sequence: "",
+            showArtworks: ""
         });
     };
     const editBtn = (content) => {
@@ -62,6 +63,7 @@ export default function ArtworksPage({ loadDataUrl }) {
             sizeH: content.sizeH,
             executed: content.executed,
             sequence: content.sequence,
+            showArtworks: content.showArtworks,
             fileName: "",
         });
         setDialog(true);

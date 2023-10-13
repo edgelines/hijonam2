@@ -7,6 +7,9 @@
   
 ### TodoList || Bug Report || Request
 - Catalogue PDF Upload
+- Admin artworks All에서 전체 안나옴.
+- Home에서 SeeAll 눌렀을때 간지에 마킹 재대로
+- 맥에서 Artworks 이미지 추가/변경/삭제 
 
 ### 2023.10.13
 {main}
@@ -19,6 +22,7 @@
 - Mobile Date Font 2줄되는거 수정
 {main}
 - Present exhibition => Current exhibition으로 호칭이 변경
+- Admin Artworks Edit시 ShowArtworks Null되는 부분 처리
 
 ### 2023.10.12
 - [x] Home에서 Photos 1개도 없을때 예외
