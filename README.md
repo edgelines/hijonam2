@@ -17,6 +17,8 @@
 - Tablet 12.9" 11" Sort Export PDF
 - 간판이미지 7초마다 변경 ( 2개 이상일 경우 )
 - Mobile Date Font 2줄되는거 수정
+{main}
+- Present exhibition => Current exhibition으로 호칭이 변경
 
 ### 2023.10.12
 - [x] Home에서 Photos 1개도 없을때 예외

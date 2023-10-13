@@ -33,8 +33,8 @@ export default function ExhibitionPage({ lang }) {
                                     aria-label="basic tabs example">
                                     <Tab value="/exhibition" label="Past Exhibition"
                                         onClick={() => { setSubTitle('PAST EXHIBITION'); }} />
-                                    <Tab value="/exhibition/upcoming/" label="Present & Upcoming Exhibition"
-                                        onClick={() => { setSubTitle('PRESENT & UPCOMING EXHIBITION'); }} />
+                                    <Tab value="/exhibition/upcoming/" label="CURRENT & Upcoming Exhibition"
+                                        onClick={() => { setSubTitle('CURRENT & UPCOMING EXHIBITION'); }} />
                                 </Tabs>
                             </Grid>
                         </ThemeProvider>
@@ -56,8 +56,8 @@ export default function ExhibitionPage({ lang }) {
                                 <Tabs value={location.pathname} onChange={(event, newValue) => navigate(newValue)} aria-label="basic tabs example">
                                     <Tab value="/exhibition" label="Past Exhibition"
                                         onClick={() => { setSubTitle('PAST EXHIBITION'); }} />
-                                    <Tab value="/exhibition/upcoming/" label="Present & Upcoming Exhibition"
-                                        onClick={() => { setSubTitle('PRESENT & UPCOMING EXHIBITION'); }} />
+                                    <Tab value="/exhibition/upcoming/" label="CURRENT & Upcoming Exhibition"
+                                        onClick={() => { setSubTitle('CURRENT & UPCOMING EXHIBITION'); }} />
                                 </Tabs>
                             </Grid>
 
@@ -281,7 +281,7 @@ const UpcomingExhibition = () => {
 
                 <Grid container sx={{ mt: '1vh', padding: 3 }}>
                     <Grid item xs={12} textAlign='center' >
-                        <Typography sx={{ mb: '4vh', fontSize: '22.4px' }}>PRESENT EXHIBITION</Typography>
+                        <Typography sx={{ mb: '4vh', fontSize: '22.4px' }}>CURRENT EXHIBITION</Typography>
                         {present && present.length > 0 ?
                             <>
                                 {
@@ -320,7 +320,7 @@ const UpcomingExhibition = () => {
                             <>
                                 <Grid container sx={{ height: '40vh' }} justifyContent="center" alignItems="center">
                                     <Typography justifyContent="center" alignItems="center" sx={{ fontSize: '13px' }} >
-                                        "No upcoming exhibition plans at the moment"
+                                        "No current exhibition plans at the moment"
                                     </Typography>
                                 </Grid>
                             </>
@@ -385,7 +385,7 @@ const UpcomingExhibition = () => {
                 <Grid container sx={{ mt: '10px' }}>
                     <Grid item xs={1}></Grid>
                     <Grid item xs={6} textAlign='center' sx={{ height: '100%' }}  >
-                        <Typography sx={{ mb: '40px', fontSize: '22.4px' }}>PRESENT EXHIBITION</Typography>
+                        <Typography sx={{ mb: '40px', fontSize: '22.4px' }}>CURRENT EXHIBITION</Typography>
                         {present && present.length > 0 ?
                             <>
                                 {
@@ -431,7 +431,7 @@ const UpcomingExhibition = () => {
                             <>
                                 <Grid container sx={{ height: '50vh' }} justifyContent="center" alignItems="center">
                                     <Typography justifyContent="center" alignItems="center" sx={{ fontSize: '13px' }} >
-                                        "No upcoming exhibition plans at the moment"
+                                        "No current exhibition plans at the moment"
                                     </Typography>
                                 </Grid>
                             </>
