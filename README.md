@@ -9,6 +9,11 @@
 - Tablet 12.9" 11" Sort Export PDF
 - 간판이미지 7초마다 변경 > Admin작업
 
+### 2023.10.13
+{main}
+- TEST : Mac에서 한글로만된 파일 업로드 => 파일깨짐 => multer 1.4.4로 변경.
+- Admin Rolling-Image 폴더명 변경 (Main -> Rolling)
+
 ### 2023.10.12
 - [x] Home에서 Photos 1개도 없을때 예외
 - [x] Home에서 우측 사진 이미지 요일별로 변경

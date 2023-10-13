@@ -247,7 +247,7 @@ export default function RollingImageChagePage({ loadDataUrl }) {
                     <Grid container>
                         {data.map((item) => (
                             <Grid item xs={2} sx={{ padding: 5 }} key={item.id}>
-                                <img src={`/img/Main/${item.fileName}`} className="rounded-3 mx-auto"
+                                <img src={`/img/Rolling/${item.fileName}`} className="rounded-3 mx-auto"
                                     style={{
                                         width: '100%',
                                         aspectRatio: '1 / 1',

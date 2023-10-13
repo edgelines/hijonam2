@@ -279,6 +279,7 @@ const EditorForm = ({ form, saveBtn, edit }) => {
         }));
     }
     const handleQuillChangeKR = (content) => {
+        // console.log(content);
         setLocalFormState(prevState => ({
             ...prevState,
             content_kr: content // content는 ReactQuill에서 제공하는 onChange의 첫 번째 인자입니다.
