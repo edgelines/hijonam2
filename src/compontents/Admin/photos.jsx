@@ -233,7 +233,7 @@ export default function PhotosPage({ loadDataUrl }) {
                                     variant='standard'
                                     select
                                     onChange={handleChangeSubject}>
-                                    {['All', 'Exhibition', 'Studio Korea', 'Studio US', 'Other Moments'].map((item) => (
+                                    {['All', 'Exhibition', 'Studio', 'Public Articles', 'Other Moments'].map((item) => (
                                         <MenuItem value={item} key={item}>{item}</MenuItem>
                                     ))}
                                 </TextField>
@@ -341,8 +341,8 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
     }, [form]);
     useEffect(() => {
         let foldername;
-        if (localFormState.subject === 'Studio Korea') { foldername = 'StudioKorea' }
-        else if (localFormState.subject === 'Studio US') { foldername = 'StudioUS' }
+        if (localFormState.subject === 'Studio') { foldername = 'Studio' }
+        else if (localFormState.subject === 'Public Articles') { foldername = 'PublicArticles' }
         else if (localFormState.subject === 'Other Moments') { foldername = 'OtherMoments' }
         else if (localFormState.subject === 'Exhibition') { foldername = 'Exhibition' }
 
@@ -431,7 +431,7 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
                             onChange={handleFormText}
                             value={localFormState.subject}
                         >
-                            {['Exhibition', 'Studio Korea', 'Studio US', 'Other Moments'].map((item) => (
+                            {['Exhibition', 'Studio', 'Public Articles', 'Other Moments'].map((item) => (
                                 <MenuItem value={item} key={item}>{item}</MenuItem>
                             ))}
                         </TextField>

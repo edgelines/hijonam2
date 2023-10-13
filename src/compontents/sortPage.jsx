@@ -117,7 +117,7 @@ export default function SortPage() {
                 img.src = imgData;
                 img.onload = function () {
                     const imgWidth = 210 - 20; // A4 dimensions minus margins
-                    const pageHeight = 295 - 19;
+                    const pageHeight = isTablet ? 295 - 17 : isLgTablet ? 295 - 19 : 295 - 19;
                     const imgHeight = canvas.height * imgWidth / canvas.width;
                     let heightLeft = imgHeight;
 
@@ -174,12 +174,12 @@ export default function SortPage() {
                 <MarginPictures title='SORT' />
                 {/* Tltle */}
                 <Grid container sx={{ mt: '2vh' }}>
-                    <Grid item xs={isTablet ? 6.6 : isLgTablet ? 6.6 : 10.05} textAlign='start'>
+                    <Grid item xs={isTablet ? 6.6 : isLgTablet ? 6 : 10.05} textAlign='start'>
                         <Typography sx={{ fontFamily: 'Helvetica', fontSize: '30px', paddingLeft: 2.7, paddingTop: 1.5, color: 'rgb(196, 196, 196)', fontWeight: 600 }}>
                             This page is designed to select artworks by genre and create a list of works
                         </Typography>
                     </Grid>
-                    <Grid item xs={isTablet ? 2.4 : isLgTablet ? 2.9 : 0} ></Grid>
+                    <Grid item xs={isTablet ? 2.4 : isLgTablet ? 3.5 : 0} ></Grid>
                     <Grid item xs={isTablet ? 3 : isLgTablet ? 2.5 : 1.95} textAlign='end'>
                         <ThemeProvider theme={theme}>
                             <Grid container>
@@ -224,7 +224,7 @@ export default function SortPage() {
                 {/* Selected Img / Table */}
                 <Grid container >
                     <Grid item xs={0.1}></Grid>
-                    <Grid item xs={6.5}>
+                    <Grid item xs={isTablet ? 11.8 : isLgTablet ? 5.9 : 6.5}>
                         <Grid container textAlign='start' sx={{ mt: '2vh', paddingLeft: 0.8 }}>
                             <ThemeProvider theme={theme}>
                                 <FormControl>
@@ -265,14 +265,14 @@ export default function SortPage() {
                         </Grid>
                     </Grid>
 
-                    <Grid item xs={5} className='mx-auto' id="tableToExport">
+                    <Grid item xs={isTablet ? 7 : isLgTablet ? 5.9 : 5} className='mx-auto' id="tableToExport">
                         <h4 style={{ mb: '10px' }}>Artworks List</h4>
-                        <Grid container direction="column" textAlign='right' sx={{ mt: '3px', mb: '14.5px' }}>
+                        <Grid container direction="column" textAlign='right' sx={{ mt: '3px', mb: isTablet ? '15.5px' : isLgTablet ? '10px' : '14.5px' }}>
                             <ul style={{ fontSize: '12px' }}>Date : {dateString}</ul>
                         </Grid>
                         <ThemeProvider theme={theme}>
                             <TableContainer component={Paper} elevation={0}>
-                                <Table sx={{ minWidth: 650 }} size="small" aria-label="simple table">
+                                <Table sx={{ minWidth: 650, maxWidth: isLgTablet ? 900 : 1500 }} size="small" aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
                                             <TableCell align="center" style={{ width: 100 }} >Img</TableCell>
@@ -280,15 +280,15 @@ export default function SortPage() {
                                             <TableCell align="center" style={{ width: 250 }}>Material</TableCell>
                                             {heightWidth ?
                                                 <>
-                                                    <TableCell align="center" style={{ width: 100 }}>Height {inchCm ? '(inch)' : '(cm)'} </TableCell>
-                                                    <TableCell align="center" style={{ width: 100 }}>Width {inchCm ? '(inch)' : '(cm)'} </TableCell>
+                                                    <TableCell align="center" style={{ width: isTablet ? 100 : isLgTablet ? 85 : 100 }}>Height {inchCm ? '(inch)' : '(cm)'} </TableCell>
+                                                    <TableCell align="center" style={{ width: isTablet ? 100 : isLgTablet ? 85 : 100 }}>Width {inchCm ? '(inch)' : '(cm)'} </TableCell>
                                                 </> :
                                                 <>
-                                                    <TableCell align="center" style={{ width: 100 }}>Width {inchCm ? '(inch)' : '(cm)'} </TableCell>
-                                                    <TableCell align="center" style={{ width: 100 }}>Height {inchCm ? '(inch)' : '(cm)'} </TableCell>
+                                                    <TableCell align="center" style={{ width: isTablet ? 100 : isLgTablet ? 85 : 100 }}>Width {inchCm ? '(inch)' : '(cm)'} </TableCell>
+                                                    <TableCell align="center" style={{ width: isTablet ? 100 : isLgTablet ? 85 : 100 }}>Height {inchCm ? '(inch)' : '(cm)'} </TableCell>
                                                 </>
                                             }
-                                            <TableCell align="center" style={{ width: 90 }}>Executed </TableCell>
+                                            <TableCell align="center" style={{ width: isTablet ? 90 : isLgTablet ? 85 : 90 }}>Executed </TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -300,25 +300,25 @@ export default function SortPage() {
                                                         style={{
                                                             top: 0,
                                                             left: 0,
-                                                            width: '60.13px',
-                                                            height: '60.13px',
+                                                            width: isTablet ? '60.13px' : isLgTablet ? '57.11px' : '60.13px',
+                                                            height: isTablet ? '60.13px' : isLgTablet ? '57.11px' : '60.13px',
                                                             // height: '100%',
                                                             objectFit: 'cover',
                                                             border: '0.1px solid grey'
                                                         }} />
                                                 </TableCell>
-                                                <TableCell align="center">{row.title}</TableCell>
-                                                <TableCell align="center">{row.material}</TableCell>
+                                                <TableCell align="center" sx={{ fontSize: isTablet ? 12 : isLgTablet ? 11.5 : 12 }}>{row.title}</TableCell>
+                                                <TableCell align="center" sx={{ fontSize: isTablet ? 12 : isLgTablet ? 11.5 : 12 }}>{row.material}</TableCell>
                                                 {heightWidth ?
                                                     <>
-                                                        <TableCell align="center">{inchCm ? parseInt(row.sizeH * 0.393701) : row.sizeH}</TableCell>
-                                                        <TableCell align="center">{inchCm ? parseInt(row.sizeW * 0.393701) : row.sizeW}</TableCell>
+                                                        <TableCell align="center" sx={{ fontSize: isTablet ? 12 : isLgTablet ? 11.5 : 12 }}>{inchCm ? parseInt(row.sizeH * 0.393701) : row.sizeH}</TableCell>
+                                                        <TableCell align="center" sx={{ fontSize: isTablet ? 12 : isLgTablet ? 11.5 : 12 }}>{inchCm ? parseInt(row.sizeW * 0.393701) : row.sizeW}</TableCell>
                                                     </> : <>
-                                                        <TableCell align="center">{inchCm ? parseInt(row.sizeW * 0.393701) : row.sizeW}</TableCell>
-                                                        <TableCell align="center">{inchCm ? parseInt(row.sizeH * 0.393701) : row.sizeH}</TableCell>
+                                                        <TableCell align="center" sx={{ fontSize: isTablet ? 12 : isLgTablet ? 11.5 : 12 }}>{inchCm ? parseInt(row.sizeW * 0.393701) : row.sizeW}</TableCell>
+                                                        <TableCell align="center" sx={{ fontSize: isTablet ? 12 : isLgTablet ? 11.5 : 12 }}>{inchCm ? parseInt(row.sizeH * 0.393701) : row.sizeH}</TableCell>
                                                     </>
                                                 }
-                                                <TableCell align="center">{row.executed}</TableCell>
+                                                <TableCell align="center" sx={{ fontSize: isTablet ? 12 : isLgTablet ? 11.5 : 12 }}>{row.executed}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
@@ -328,6 +328,7 @@ export default function SortPage() {
                     </Grid>
                 </Grid>
             </div >
+
 
         </>
     );

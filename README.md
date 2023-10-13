@@ -6,13 +6,17 @@
     - npm run build: "webpack --config webpack.prod.js"
   
 ### TodoList || Bug Report || Request
-- Tablet 12.9" 11" Sort Export PDF
-- 간판이미지 7초마다 변경 > Admin작업
+- Catalogue PDF Upload
 
 ### 2023.10.13
 {main}
 - TEST : Mac에서 한글로만된 파일 업로드 => 파일깨짐 => multer 1.4.4로 변경.
 - Admin Rolling-Image 폴더명 변경 (Main -> Rolling)
+- Photos -> Studio Korea + US , Public Articles 추가
+{dev-talbet-PDF}
+- Tablet 12.9" 11" Sort Export PDF
+- 간판이미지 7초마다 변경 ( 2개 이상일 경우 )
+- Mobile Date Font 2줄되는거 수정
 
 ### 2023.10.12
 - [x] Home에서 Photos 1개도 없을때 예외
