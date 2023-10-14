@@ -1,4 +1,5 @@
 import React, { FC, useState, forwardRef, useEffect, useMemo } from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
 import {
     Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, MenuItem,
@@ -12,13 +13,13 @@ import { NumericFormat } from 'react-number-format';
 import { TableVirtuoso } from 'react-virtuoso';
 
 export default function ArtworksHistoryPage({ loadDataUrl }) {
-
+    const isLgTablet = useMediaQuery('(max-width:1400px)');
     const [snackbar, setSnackbar] = useState(false);
     const [severity, setSeverity] = useState('success');
 
     const [data, setData] = useState([]); // 오리진데이터
     const [genresList, setGenresList] = useState([]); // 장르 리스트
-    const [genre, setGenre] = useState('All'); // Selected Genres
+    const [genre, setGenre] = useState(''); // Selected Genres
     const [sales, setSales] = useState('All');
     const [selectedData, setSelectedData] = useState([]); // Table Data
     const [locationList, setLocationList] = useState([]);
@@ -198,12 +199,13 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
 
             setData(res);
             setSelectedData(res);
-            var tmp = ['All'], location = [];
+            var tmp = [], location = [];
             res.forEach((value) => { tmp.push(value.genres); location.push(value.location); });
+            tmp.push('All');
             var set = new Set(tmp);
             var newArr = [...set];
             setGenresList(newArr);
-            // setGenre(newArr[1]);
+            setGenre(newArr[1]);
 
             // 작품 보관 위치 
             var set = new Set(location);
@@ -238,7 +240,7 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
         }
         setSelectedData(filtered);
     }, [genre, sales])
-
+    const labelStyle = { fontSize: isLgTablet ? '13px' : '14px', textAlign: 'start' }
     return (
         <Grid container>
             {/* FeedBack SnackBar */}
@@ -269,7 +271,7 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
                     >
                         <FormLabel sx={{ textAlign: 'start', fontWeight: 660, color: 'black' }}>Filter by Art Genre</FormLabel>
                         {genresList.map((item) => (
-                            <FormControlLabel value={item} control={<Radio />} label={item} key={item} />
+                            <FormControlLabel value={item} control={<Radio size='small' />} label={item} key={item} sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         ))}
                     </RadioGroup>
                     <RadioGroup
@@ -282,7 +284,7 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
                     >
                         <FormLabel sx={{ textAlign: 'start', fontWeight: 660, color: 'black' }}>Filter by Artwork Status</FormLabel>
                         {['All', 'Available', 'Reservation', 'Sold', 'On Rent', 'One-off', 'Installments'].map((item) => (
-                            <FormControlLabel value={item} control={<Radio />} label={item} key={item} />
+                            <FormControlLabel value={item} control={<Radio size='small' />} label={item} key={item} sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         ))}
                     </RadioGroup>
                 </Grid>

@@ -239,6 +239,7 @@ const CataloguePage = ({ lang }) => {
                     </Grid>
                 </Grid>
                 <Grid item xs={3}></Grid>
+                <Grid container sx={{ mb: '500px' }}></Grid>
             </Grid>
         </>
     )

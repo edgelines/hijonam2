@@ -93,7 +93,7 @@ export default function AutobiographyPage({ lang }) {
                                 <Grid container direction='column' alignItems="center">
                                     <Routes>
                                         <Route path="/" element={<ContentsRoot lang={lang} data={data} handleClickDetailPage={handleClickDetailPage} />} />
-                                        <Route path="/:postId" element={<PostDetailView lang={lang} clickData={clickData} componentRef={componentRef} />} />
+                                        <Route path="/:postId" element={<PostDetailView lang={lang} clickData={clickData} componentRef={componentRef} setCurrentPage={setCurrentPage} />} />
                                     </Routes>
                                 </Grid>
                             </Grid>
@@ -214,13 +214,14 @@ export default function AutobiographyPage({ lang }) {
                                 <Grid container direction='column' alignItems="center">
                                     <Routes>
                                         <Route path="/" element={<ContentsRoot lang={lang} data={data} handleClickDetailPage={handleClickDetailPage} />} />
-                                        <Route path="/:postId" element={<PostDetailView lang={lang} clickData={clickData} componentRef={componentRef} />} />
+                                        <Route path="/:postId" element={<PostDetailView lang={lang} clickData={clickData} componentRef={componentRef} setCurrentPage={setCurrentPage} />} />
                                     </Routes>
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
                     <Grid item xs={3}></Grid>
+                    <Grid container sx={{ mb: '80px' }}></Grid>
                 </Grid>
             }
         </Grid>
@@ -333,7 +334,7 @@ const PostView = ({ lang, title, content, views, postId, onClick }) => {
 }
 
 // Post를 눌렀을때 상세페이지
-export const PostDetailView = ({ history, location, match, lang, componentRef }) => {
+export const PostDetailView = ({ history, location, match, lang, componentRef, setCurrentPage }) => {
     // export const PostDetailView = ({ history, location, match, clickData, lang, componentRef }) => {
     const isMobile = useMediaQuery('(max-width:600px)');
     const [data, setData] = useState({});
@@ -345,7 +346,6 @@ export const PostDetailView = ({ history, location, match, lang, componentRef })
     const fetchData = async () => {
         try {
             const res = await axios.get(`http://hijonam.com/img/autobiography/post/${postId}`);
-            console.log(res.data);
             setData(res.data);
             setPost({
                 title: lang === 'En' ? res.data.title : res.data.title_kr,
@@ -386,41 +386,15 @@ export const PostDetailView = ({ history, location, match, lang, componentRef })
             console.error("Error updating the views:", error);
         }
     }
-    useEffect(() => { ViewsCount(); fetchData(); }, [])
+    useEffect(() => { ViewsCount(); fetchData(); setCurrentPage('Detail'); }, [])
     useEffect(() => {
         setPost({
             title: lang === 'En' ? data.title : data.title_kr,
             content: lang === 'En' ? data.content : data.content_kr
         })
-        // setPost({
-        //     title: lang === 'En' ? clickData.title : clickData.title_kr,
-        //     content: lang === 'En' ? clickData.content : clickData.content_kr
-        // })
     }, [lang])
     const someProps = { fontFamily: lang === 'Kr' ? 'Nanum Gothic' : null, fontSize: null }
     const theme = generateTheme(someProps);
-
-    // // 카톡 공유를 위한 전처리
-    // const imageRegex = /<img.*?src="(.*?)".*?>/; // 이미지 태그에서 src 값을 추출하는 정규식
-    // const imageMatch = clickData.content_kr.match(imageRegex);
-    // const imageUrl = imageMatch ? imageMatch[1] : null; // 첫 번째 이미지 URL
-
-    // // 모든 <p> 태그의 내용을 추출하는 정규식
-    // const pTagsRegex = /<p.*?>([\s\S]*?)<\/p>/g;
-    // const pTagsMatches = [...clickData.content_kr.matchAll(pTagsRegex)];
-
-    // let firstPText = "";
-
-    // for (let i = 0; i < pTagsMatches.length; i++) {
-    //     const pContent = pTagsMatches[i][1].trim();
-    //     // <img 태그나 <br 태그만을 포함하는 <p> 태그를 건너뜀
-    //     if (!/<img /i.test(pContent) && pContent !== "<br>") {
-    //         firstPText = pContent.replace(/<\/?[^>]+(>|$)/g, "");
-    //         break;
-    //     }
-    // }
-    // // 첫 번째 이미지 및 <br> 태그만을 포함하지 않는 <p> 태그의 텍스트에서 100자 추출하기
-    // const snippet = firstPText.substr(0, 86);
 
     return (
         <>

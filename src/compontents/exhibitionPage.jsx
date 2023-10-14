@@ -41,7 +41,7 @@ export default function ExhibitionPage({ lang }) {
                         <Grid container>
                             <Routes>
                                 <Route path="/" element={<PastExhibition lang={lang} />} />
-                                <Route path="/upcoming" element={<UpcomingExhibition />} />
+                                <Route path="/upcoming" element={<UpcomingExhibition setSubTitle={setSubTitle} />} />
                             </Routes>
                         </Grid>
                     </Grid>
@@ -65,7 +65,7 @@ export default function ExhibitionPage({ lang }) {
                         <Grid container>
                             <Routes>
                                 <Route path="/" element={<PastExhibition lang={lang} />} />
-                                <Route path="/upcoming" element={<UpcomingExhibition />} />
+                                <Route path="/upcoming" element={<UpcomingExhibition setSubTitle={setSubTitle} />} />
                             </Routes>
                         </Grid>
                     </Grid>
@@ -241,7 +241,7 @@ const StyledTypography = styledComponents(Typography)`
 `;
 
 
-const UpcomingExhibition = () => {
+const UpcomingExhibition = ({ setSubTitle }) => {
     const isMobile = useMediaQuery('(max-width:600px)');
     const [present, setPresent] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
@@ -272,7 +272,7 @@ const UpcomingExhibition = () => {
         // }
         setUpcoming(res.filter(item => item.state == 0))
     }
-    useEffect(() => { fetchData(); }, []);
+    useEffect(() => { fetchData(); setSubTitle('CURRENT & UPCOMING EXHIBITION') }, []);
     return (
 
         <>

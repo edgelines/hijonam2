@@ -20,7 +20,7 @@ export default function ContactPage() {
     });
     const [emailError, setEmailError] = useState("");
     const [snackbar, setSnackbar] = useState(false);
-    const [severity, setSeverity] = useState(null);
+    const [severity, setSeverity] = useState('success');
     const vertical = 'bottom';
     const horizontal = 'center';
     const resetForm = () => {

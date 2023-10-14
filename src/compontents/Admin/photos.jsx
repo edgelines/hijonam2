@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
 import { Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, FormControl, MenuItem, Input } from '@mui/material';
 // import { VisuallyHiddenInput } from '../util.jsx';
@@ -6,6 +7,7 @@ import { DataGrid, gridClasses } from '@mui/x-data-grid';
 // import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export default function PhotosPage({ loadDataUrl }) {
+    const isLgTablet = useMediaQuery('(max-width:1400px)');
     const [snackbar, setSnackbar] = useState(false);
     const [severity, setSeverity] = useState('success');
     const [data, setData] = useState([]); // Origin Data
@@ -222,7 +224,7 @@ export default function PhotosPage({ loadDataUrl }) {
             <Grid container>
                 <Grid item xs={6} textAlign='start' sx={{ ml: 5 }}>
                     <Grid container>
-                        <Grid item xs={2}>
+                        <Grid item xs={isLgTablet ? 2.4 : 2}>
                             <Button sx={{ mt: 2 }} size="small" variant="contained" onClick={newForm}>Add Photos</Button>
                         </Grid>
                         <Grid item xs={3}>

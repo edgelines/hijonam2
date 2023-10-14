@@ -7,9 +7,18 @@
   
 ### TodoList || Bug Report || Request
 - Catalogue PDF Upload
-- Admin artworks All에서 전체 안나옴.
-- Home에서 SeeAll 눌렀을때 간지에 마킹 재대로
-- 맥에서 Artworks 이미지 추가/변경/삭제 
+- Contact 확인
+
+### 2023.10.14
+- 하단여백 조절 
+    - Photos, Catalogues, Autobiography
+- Admin artworks 
+    - Show Artworks 작동 안되는 현상 수정.
+    - Mac에서 테스트
+        - Add, Edit, Delete 이상없음.
+    - 첫 랜더링시 All에서 전체 현상 수정
+- Home에서 Exhibition SeeAll 눌렀을때 간지에 현재페이지 상태 표기
+- Autobiography에 다이랙트 링크 들어갔을때 배경 화이트
 
 ### 2023.10.13
 {main}

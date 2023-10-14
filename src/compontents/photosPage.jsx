@@ -128,6 +128,7 @@ export default function PhotosPage({ lang, setSubTitle }) {
                     </Grid>
                 </Grid>
             }
+            <Grid container sx={{ mb: '80px' }}></Grid>
         </>
     );
 }

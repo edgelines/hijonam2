@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
 import {
     Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, Input, MenuItem,
@@ -10,6 +11,7 @@ import { ReactSortable } from "react-sortablejs";
 import CssStyle from './artworks.module.css'
 
 export default function ArtworksPage({ loadDataUrl }) {
+    const isLgTablet = useMediaQuery('(max-width:1400px)');
     const [tabValue, setTabValue] = useState('1');
     const [snackbar, setSnackbar] = useState(false);
     const [severity, setSeverity] = useState('success');
@@ -18,7 +20,6 @@ export default function ArtworksPage({ loadDataUrl }) {
     const [genresList, setGenresList] = useState(['All']); // 장르 리스트
     const [genre, setGenre] = useState(null); // Selected Genres
     const [selectedData, setSelectedData] = useState([]); // Table Data
-
     const vertical = 'bottom';
     const horizontal = 'center';
     const url = 'http://hijonam.com/img/'
@@ -26,46 +27,13 @@ export default function ArtworksPage({ loadDataUrl }) {
     // Form State & Handler
     const [dialog, setDialog] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const [form, setForm] = useState({
-        fileName: "",
-        genres: "",
-        material: "",
-        title: "",
-        sizeW: "",
-        sizeH: "",
-        executed: "",
-        sequence: ""
-    })
+    const [form, setForm] = useState({ fileName: "", genres: "", material: "", title: "", sizeW: "", sizeH: "", executed: "", sequence: "" })
     // Form
     const newForm = () => { setEditMode(false); setDialog(true); resetForm(); }
-    const resetForm = () => {
-        setForm({
-            fileName: "",
-            genres: "",
-            material: "",
-            title: "",
-            sizeW: "",
-            sizeH: "",
-            executed: "",
-            sequence: "",
-            showArtworks: ""
-        });
-    };
+    const resetForm = () => { setForm({ fileName: "", genres: "", material: "", title: "", sizeW: "", sizeH: "", executed: "", sequence: "", showArtworks: "" }); };
     const editBtn = (content) => {
         setEditMode(true);
-        setForm({
-            ...form,
-            id: content.id,
-            genres: content.genres,
-            material: content.material,
-            title: content.title,
-            sizeW: content.sizeW,
-            sizeH: content.sizeH,
-            executed: content.executed,
-            sequence: content.sequence,
-            showArtworks: content.showArtworks,
-            fileName: "",
-        });
+        setForm({ ...form, id: content.id, genres: content.genres, material: content.material, title: content.title, sizeW: content.sizeW, sizeH: content.sizeH, executed: content.executed, sequence: content.sequence, showArtworks: content.showArtworks, fileName: "", });
         setDialog(true);
     };
     const saveBtn = (newFormData) => {
@@ -103,7 +71,7 @@ export default function ArtworksPage({ loadDataUrl }) {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            data.push(response.data);
+            // data.push(response.data);
             setSnackbar(true);
             setSeverity('success');
             setDialog(false);
@@ -112,6 +80,7 @@ export default function ArtworksPage({ loadDataUrl }) {
             setSeverity('error');
             console.error(error);
         }
+        fetchData();
     };
 
     const updateDatabase = async (newFormData) => {
@@ -166,7 +135,7 @@ export default function ArtworksPage({ loadDataUrl }) {
     const updateShowArtworks = async (item) => {
         try {
             const response = await axios.put(`${url}${loadDataUrl}/Artworks/${item.id}`, {
-                showArtworks: item.showArtworks,
+                showArtworks: item.showArtworks === 1 ? 0 : 1,
                 sequence: item.sequence,
                 executed: item.executed,
                 genres: item.genres,
@@ -183,6 +152,7 @@ export default function ArtworksPage({ loadDataUrl }) {
         } catch (error) {
             console.error(error);
         }
+        fetchData();
     }
 
     const updateSequences = async () => {
@@ -229,13 +199,12 @@ export default function ArtworksPage({ loadDataUrl }) {
         await axios.get(`${url}${loadDataUrl}`).then((response) => {
             const res = response.data.sort((a, b) => a.id - b.id)
             setData(res);
-            setSelectedData(res);
             var tmp = ['All'];
             res.forEach((value) => { tmp.push(value.genres); });
             const set = new Set(tmp);
             const newArr = [...set];
             setGenresList(newArr);
-            // setGenre(newArr[1]);
+            setGenre(newArr[0]);
         }).catch((error) => {
             setSeverity('error')
             console.error("Error fetching artworks:", error);
@@ -243,7 +212,6 @@ export default function ArtworksPage({ loadDataUrl }) {
     }
 
     useEffect(() => { fetchData(); }, [])
-
     useEffect(() => {
         if (genre === 'All') {
             setSelectedData(data);
@@ -274,7 +242,7 @@ export default function ArtworksPage({ loadDataUrl }) {
 
             {/* 이미지 Table */}
             <Grid container>
-                <Grid item xs={1} textAlign='start' sx={{ ml: 5 }}>
+                <Grid item xs={isLgTablet ? 1.8 : 1} textAlign='start' sx={{ ml: 5 }}>
                     {tabValue === '1' ?
                         <Button sx={{ mt: 2 }} size="small" variant="contained" onClick={newForm}>Add Genres</Button>
                         : <Button sx={{ mt: 2 }} size="small" variant="contained" onClick={updateSequences}>Save Order</Button>
@@ -324,7 +292,7 @@ export default function ArtworksPage({ loadDataUrl }) {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            {selectedData.map((row) => (
+                                            {selectedData.map((row, index) => (
                                                 <TableRow key={row.id}>
                                                     <TableCell>
                                                         <img src={`/img/Artworks/${row.fileName[0]}`} className="rounded-3 mx-auto"
@@ -346,7 +314,9 @@ export default function ArtworksPage({ loadDataUrl }) {
                                                     </TableCell>
                                                     <TableCell align='center'>
                                                         <FormControlLabel
-                                                            control={<AntSwitch sx={{ m: 1 }} checked={row.showArtworks === 1 ? false : true} onChange={() => updateShowArtworks(row)} />}
+                                                            control={<AntSwitch sx={{ m: 1 }}
+                                                                checked={row.showArtworks === 1 ? false : true}
+                                                                onChange={() => updateShowArtworks(row)} />}
                                                             label={`${row.showArtworks === 1 ? 'Off' : 'On'}`}
                                                         />
                                                     </TableCell>
