@@ -222,7 +222,7 @@ export default function SortPage() {
                 </Grid>
 
                 {/* Selected Img / Table */}
-                <Grid container >
+                <Grid container sx={{ mb: '80px' }} >
                     <Grid item xs={0.1}></Grid>
                     <Grid item xs={isTablet ? 11.8 : isLgTablet ? 5.9 : 6.5}>
                         <Grid container textAlign='start' sx={{ mt: '2vh', paddingLeft: 0.8 }}>
@@ -327,6 +327,7 @@ export default function SortPage() {
                         </ThemeProvider>
                     </Grid>
                 </Grid>
+
             </div >
 
 

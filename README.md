@@ -1,13 +1,56 @@
-# hijonam.com
-
 ## Script
     - npm run start: "webpack-dev-server --config webpack.dev.js",
     - npm run dev: "webpack --config webpack.dev.js",
     - npm run build: "webpack --config webpack.prod.js"
-  
+
+"""
+async function handleInsert(req, res, tableName) {
+    const data = req.body;
+    try {
+        const [results] = await db.query(`INSERT INTO ${tableName} SET ?`, data);
+        const [newData] = await db.query(`SELECT * FROM ${tableName} WHERE id = ?`, results.insertId);
+        res.status(201).json(newData[0]);
+    } catch (error) {
+        console.error(error);
+        console.log('Data to be inserted:', data);
+        console.log('Request body:', req.body);
+        res.status(500).send('Internal Server Error');
+    }
+}
+
+router.post('/:route/:category?/:subCategory?', upload.array('images'), async (req, res) => {
+    const { route, category, subCategory } = req.params;
+    switch (route) {
+        case 'upcomingExhibition':
+            req.body.year = req.body.startDate.slice(0, 4);
+            req.body.state = 0;
+            await handleInsert(req, res, 'upcomingExhibition');
+            break;
+        case 'photos':
+            await handleInsert(req, res, 'photos');
+            break;
+        case 'autobiography':
+            await handleInsert(req, res, 'autobiography');
+            break;
+        default:
+            res.status(400).send('Bad Request');
+    }
+});
+"""
+
 ### TodoList || Bug Report || Request
 - Catalogue PDF Upload
 - Contact 확인
+- Server 
+    - Test DB table 2EA 
+    - Code 합쳐보기 ( Function )
+    - Sharp 적용 테스트
+
+### 2023.10.15
+{main}
+- Autobiography List 한글제목 한포인트 작게
+- Autobiography Detail 줄간격 살짝 넓게
+- SortPage 하단 여백 80px
 
 ### 2023.10.14
 - 하단여백 조절 

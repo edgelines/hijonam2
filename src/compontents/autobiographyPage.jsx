@@ -312,7 +312,7 @@ const PostView = ({ lang, title, content, views, postId, onClick }) => {
                         <Grid container sx={{ marginBottom: isMobile && lang === 'Kr' ? '10px' : '5px' }}>
                             <Typography align='justify'
                                 sx={{
-                                    fontSize: isMobile ? '20px' : isLgTablet && lang === 'En' ? '17px' : isLgTablet && lang === 'Kr' ? '16px' : '18px',
+                                    fontSize: isMobile && lang === 'Kr' ? '18px' : isMobile && lang === 'En' ? '20px' : isLgTablet && lang === 'En' ? '17px' : lang === 'Kr' ? '16px' : '18px',
                                     fontWeight: 600, color: '#474747', lineHeight: isLgTablet ? '18px' : '20px'
                                 }}>
                                 {title}
