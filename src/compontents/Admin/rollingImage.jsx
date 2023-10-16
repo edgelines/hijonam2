@@ -57,7 +57,8 @@ export default function RollingImageChagePage({ loadDataUrl }) {
     const handleFilesChange = (event) => {
         const files = event.target.files;
         const sanitizedFileObjects = Array.from(files).map(file => {
-            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            // const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            let sanitizedFileName = file.name.replace(/[^\w\s.]/g, '').replace(/[가-힣\s]/g, '').normalize('NFC');
             if (sanitizedFileName.length <= 4) { // 예: ".jpg" 보다 짧거나 같은 경우
                 const timestamp = new Date().getTime();
                 const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // a-z 사이의 랜덤한 알파벳

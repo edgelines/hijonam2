@@ -47,7 +47,7 @@ export default function AutobiographyPage({ lang }) {
             //     res = res.concat(res.slice(0, 12 - res.length));
             // }
 
-            setData(res.sort((a, b) => b.id - a.id));
+            setData(res.sort((a, b) => a.sequence - b.sequence));
         }).catch((error) => {
             console.error("Error fetching artworks:", error);
         });

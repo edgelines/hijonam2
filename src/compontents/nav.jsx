@@ -50,7 +50,6 @@ export default function NavbarComponent({ handleSwitchChange }) {
                     setFade(false);
                 }, 600); // adjust as needed
             }, 7000); // adjust as needed
-            console.log('Fade')
             return () => clearInterval(timer);
         }
     }, [data.length]);

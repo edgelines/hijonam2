@@ -86,24 +86,23 @@ export default function HomePage({ lang }) {
             var studio = res.data.filter(item => item.subject === 'Studio')
             var publicArticles = res.data.filter(item => item.subject === 'Public Articles')
             var other = res.data.filter(item => item.subject === 'Other Moments')
-
-            exhibition = exhibition.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
-            studio = studio.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
-            publicArticles = publicArticles.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
-            other = other.sort((a, b) => new Date(a.uploadDate) - new Date(b.uploadDate)).slice(-1)[0]
+            exhibition = exhibition.sort((a, b) => a.sequence - b.sequence).slice(-1)[0]
+            studio = studio.sort((a, b) => a.sequence - b.sequence).slice(-1)[0]
+            publicArticles = publicArticles.sort((a, b) => a.sequence - b.sequence).slice(-1)[0]
+            other = other.sort((a, b) => a.sequence - b.sequence).slice(-1)[0]
 
             setPhotos({ exhibition: exhibition, studio: studio, publicArticles: publicArticles, other: other })
         }).catch((error) => {
             console.error("Error fetching upcomingExhibition:", error);
         });
         await axios.get(`http://hijonam.com/img/autobiography`).then((response) => {
-            const data = response.data[response.data.length - 1]
+
+            const data = response.data.sort((a, b) => a.sequence - b.sequence).slice(-1)[0]
             setAutobiographyContent(data);
         }).catch((error) => {
             console.error("Error fetching artworks:", error);
         });
     }
-
     useEffect(() => {
         fetchData()
         const updateTime = () => {

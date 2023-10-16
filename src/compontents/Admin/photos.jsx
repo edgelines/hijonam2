@@ -1,15 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
-import { Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, FormControl, MenuItem, Input } from '@mui/material';
+import { Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, FormControl, MenuItem, Input, Tab, Typography } from '@mui/material';
+import { TabContext, TabPanel, TabList } from '@mui/lab';
 // import { VisuallyHiddenInput } from '../util.jsx';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { ReactSortable } from "react-sortablejs";
+import CssStyle from './photos.module.css';
 // import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export default function PhotosPage({ loadDataUrl }) {
     const isLgTablet = useMediaQuery('(max-width:1400px)');
     const [snackbar, setSnackbar] = useState(false);
     const [severity, setSeverity] = useState('success');
+    const [tabValue, setTabValue] = useState('1');
     const [data, setData] = useState([]); // Origin Data
     const [selectedData, setSelectedData] = useState([]);
     const [select, setSelect] = useState('All');
@@ -22,56 +26,15 @@ export default function PhotosPage({ loadDataUrl }) {
 
     const [dialog, setDialog] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const [form, setForm] = useState({
-        subject: "",
-        title: "",
-        year: "",
-        month: "",
-        memo: "",
-        memo_kr: "",
-        fileName: "",
-        folderName: "",
-        sequence: "",
-        uploadDate: "",
-        img: ""
-    })
+    const [form, setForm] = useState({ subject: "", title: "", year: "", month: "", memo: "", memo_kr: "", fileName: "", folderName: "", sequence: "", uploadDate: "", img: "" })
     // Form
-    const newForm = () => {
-        setEditMode(false);
-        setDialog(true);
-        resetForm();
-    }
+    const newForm = () => { setEditMode(false); setDialog(true); resetForm(); }
     const resetForm = () => {
-        setForm({
-            subject: "",
-            title: "",
-            year: "",
-            month: "",
-            memo: "",
-            memo_kr: "",
-            fileName: "",
-            folderName: "",
-            sequence: "",
-            uploadDate: "",
-            img: ""
-        });
+        setForm({ subject: "", title: "", year: "", month: "", memo: "", memo_kr: "", fileName: "", folderName: "", sequence: "", uploadDate: "", img: "" });
     };
     const editBtn = (content) => {
         setEditMode(true);
-        setForm({
-            id: content.id,
-            subject: content.subject,
-            title: content.title,
-            year: content.year,
-            month: content.month,
-            memo: content.memo,
-            memo_kr: content.memo_kr,
-            fileName: "",
-            folderName: content.folderName,
-            sequence: content.sequence,
-            uploadDate: content.uploadDate,
-            img: content.fileName
-        });
+        setForm({ id: content.id, subject: content.subject, title: content.title, year: content.year, month: content.month, memo: content.memo, memo_kr: content.memo_kr, fileName: "", folderName: content.folderName, sequence: content.sequence, uploadDate: content.uploadDate, img: content.fileName });
         setDialog(true);
     };
     const saveBtn = (newFormData) => {
@@ -163,6 +126,31 @@ export default function PhotosPage({ loadDataUrl }) {
         }
         reloadData();
     };
+    const updateSequences = async () => {
+        for (let i = selectedData.length - 1; i >= 0; i--) {
+            const item = selectedData[i];
+            try {
+                const res = await axios.put(`${url}${loadDataUrl}/Photos/${item.folderName}/${item.id}`, {
+                    sequence: i + 1, // Update the sequence based on the order
+                    subject: item.subject,
+                    title: item.title,
+                    year: item.year,
+                    month: item.month,
+                    memo: item.memo,
+                    memo_kr: item.memo_kr,
+                    folderName: item.folderName,
+                    uploadDate: item.uploadDate
+                });
+                if (res.status === 200) {
+                    setSnackbar(true);
+                    setSeverity('success');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        reloadData();
+    }
     const handleDialogClose = () => {
         resetForm();
         setDialog(false);
@@ -173,11 +161,15 @@ export default function PhotosPage({ loadDataUrl }) {
         }
         setSnackbar(false);
     };
-
+    // Tab 변경 
+    const handleChange = (event, newValue) => { setTabValue(newValue); };
     const fetchData = async () => {
         await axios.get(`${url}${loadDataUrl}`).then((response) => {
-            setData(response.data);
-            setSelectedData(response.data);
+            const res = response.data.sort((a, b) => a.sequence - b.sequence)
+            // setData(response.data);
+            // setSelectedData(response.data);
+            setData(res);
+            setSelectedData(res);
         }).catch((error) => {
             setSeverity('error')
             console.error("Error fetching artworks:", error);
@@ -185,7 +177,8 @@ export default function PhotosPage({ loadDataUrl }) {
     }
     const reloadData = async () => {
         await axios.get(`${url}${loadDataUrl}`).then((response) => {
-            setData(response.data);
+            const res = response.data.sort((a, b) => a.sequence - b.sequence)
+            setData(res);
         }).catch((error) => {
             setSeverity('error')
             console.error("Error fetching artworks:", error);
@@ -218,14 +211,17 @@ export default function PhotosPage({ loadDataUrl }) {
 
             {/* Form */}
             <DialogComponent dialog={dialog} form={form} handleDialogClose={handleDialogClose}
-                editMode={editMode} saveBtn={saveBtn}
+                editMode={editMode} saveBtn={saveBtn} data={data}
             />
 
             <Grid container>
                 <Grid item xs={6} textAlign='start' sx={{ ml: 5 }}>
                     <Grid container>
                         <Grid item xs={isLgTablet ? 2.4 : 2}>
-                            <Button sx={{ mt: 2 }} size="small" variant="contained" onClick={newForm}>Add Photos</Button>
+                            {tabValue === '1' ?
+                                <Button sx={{ mt: 2 }} size="small" variant="contained" onClick={newForm}>Add Genres</Button>
+                                : <Button sx={{ mt: 2 }} size="small" variant="contained" onClick={updateSequences}>Save Order</Button>
+                            }
                         </Grid>
                         <Grid item xs={3}>
                             <FormControl size="small" sx={{ width: 200 }}>
@@ -240,13 +236,68 @@ export default function PhotosPage({ loadDataUrl }) {
                                     ))}
                                 </TextField>
                             </FormControl>
-
                         </Grid>
                     </Grid>
                 </Grid>
-                <Grid item xs={11} sx={{ ml: 5 }}>
-                    <DataTable rows={selectedData} editBtn={editBtn} deleteDatabase={deleteDatabase} />
-                </Grid>
+                <TabContext value={tabValue}>
+                    <Grid container direction="column" alignItems='start'>
+                        <TabList onChange={handleChange} aria-label="lab API tabs" >
+                            <Tab label="이미지 추가/삭제/변경" value="1" />
+                            <Tab label="이미지 순서변경" value="2" />
+                        </TabList>
+                    </Grid>
+                    {/* 이미지 추가/삭제/변경 */}
+                    <TabPanel value="1">
+                        <Grid container>
+                            <DataTable rows={selectedData} editBtn={editBtn} deleteDatabase={deleteDatabase} />
+                        </Grid>
+                    </TabPanel>
+
+                    {/* 이미지 순서 변경 */}
+                    <TabPanel value="2">
+                        <Grid container sx={{ mb: '15px' }}>
+                            <Typography align='start' sx={{ fontSize: '14px' }}>순서의 번호가 작을수록 먼저 먼저 보이게 됩니다.</Typography>
+                        </Grid>
+                        <div className={`${CssStyle.grid_container}`} sx={{ width: '80vw' }}>
+                            <ReactSortable list={selectedData} setList={setSelectedData}
+                                animation={200}
+                                className={`${CssStyle.grid}`}
+                                ghostClass='blue-background-class'
+                            >
+                                {selectedData.map((item, index) => (
+                                    <Grid container key={item.id}>
+                                        <Grid item>
+                                            <div className={`${CssStyle.grid_item} ${CssStyle.listGroupitem}`}>
+                                                <img src={`/img/Photos/${item.folderName}/${item.fileName[0]}`} className="rounded-3 mx-auto"
+                                                    style={{
+                                                        width: '100%',
+                                                        aspectRatio: '1 / 1',
+                                                        objectFit: 'cover'
+                                                    }}
+                                                />
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography align='start' sx={{ fontSize: '12px' }}>
+                                                {item.title}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography align='start' sx={{ fontSize: '12px' }}>
+                                                {item.year}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography align='start' sx={{ fontSize: '12px' }}>
+                                                순서 : {index + 1}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                ))}
+                            </ReactSortable>
+                        </div>
+                    </TabPanel>
+                </TabContext>
             </Grid>
 
         </Grid>
@@ -328,7 +379,7 @@ const DataTable = ({ rows, editBtn, deleteDatabase }) => {
     )
 }
 
-const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode, saveBtn }) => {
+const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode, saveBtn, data }) => {
     const fileInputRef = useRef(null);
     const [localFormState, setLocalFormState] = useState(form);
     const [previewImages, setPreviewImages] = useState([]);
@@ -348,12 +399,29 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
         else if (localFormState.subject === 'Other Moments') { foldername = 'OtherMoments' }
         else if (localFormState.subject === 'Exhibition') { foldername = 'Exhibition' }
 
+        if (!editMode) {
+            const d = data.filter(item => item.subject === localFormState.subject);
+            if (d.length > 0) {
+                const maxSequence = Math.max(...d.map(item => item.sequence));
+                const newOrder = maxSequence + 1;
+                setLocalFormState(prevForm => ({
+                    ...prevForm,
+                    sequence: newOrder,
+                    folderName: foldername
+                }));
+            } else {
+                setLocalFormState(prevForm => ({
+                    ...prevForm,
+                    folderName: foldername,
+                    sequence: '',
+                }));
+            }
+        }
         setLocalFormState(prevState => ({
             ...prevState,
             folderName: foldername
         }));
     }, [localFormState.subject]);  // localFormState.subject가 변경될 때마다 이 useEffect가 실행됩니다.
-
 
     const handleFormText = (event) => {
         const { name, value } = event.target;
@@ -365,7 +433,8 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
     const handleFilesChange = (event) => {
         const files = event.target.files;
         const sanitizedFileObjects = Array.from(files).map(file => {
-            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            // const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            let sanitizedFileName = file.name.replace(/[^\w\s.]/g, '').replace(/[가-힣\s]/g, '').normalize('NFC');
             if (sanitizedFileName.length <= 4) { // 예: ".jpg" 보다 짧거나 같은 경우
                 const timestamp = new Date().getTime();
                 const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // a-z 사이의 랜덤한 알파벳

@@ -17,6 +17,7 @@ import ContactBookPage from './contactBook.jsx';
 import PhotosPage from './photos.jsx';
 import AutobiographyPage from './autobiography.jsx';
 import RollingImageChagePage from './rollingImage.jsx';
+import TestPage from './Test/test.jsx';
 export default function AdminDashboardPage() {
     const isLgTablet = useMediaQuery('(max-width:1366px)');
     const [currentPage, setCurrentPage] = useState(null);
@@ -45,6 +46,7 @@ export default function AdminDashboardPage() {
                         <FormControlLabel value="Artistic Engagement" control={<Radio size='small' />} label="Artistic Engagement" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         <FormControlLabel value="Photos" control={<Radio size='small' />} label="Photos" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         <FormControlLabel value="Autobiography" control={<Radio size='small' />} label="Autobiography" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Catalogue" control={<Radio size='small' />} label="Catalogue" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
 
                         <FormLabel sx={menuStyle}>Artworks</FormLabel>
                         <FormControlLabel value="Genres Main Image" control={<Radio size='small' />} label="Genres Main Image" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
@@ -64,6 +66,7 @@ export default function AdminDashboardPage() {
                         <FormControlLabel value="Price Policy" control={<Radio size='small' />} label="Price Policy" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         <FormControlLabel value="Contact Book" control={<Radio size='small' />} label="Contact Book" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         <FormControlLabel value="Analytics" control={<Radio size='small' />} label="Analytics" onClick={openGoogleAnalytics} sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        {/* <FormControlLabel value="Test" control={<Radio size='small' />} label="Test" sx={{ '.MuiFormControlLabel-label': labelStyle }} /> */}
                     </RadioGroup>
                 </Grid>
                 <Grid item xs={isLgTablet ? 10.5 : 10.7}>
@@ -116,31 +119,41 @@ const ContentsComponent = ({ currentPage }) => {
             return <PhotosPage loadDataUrl={'photos'} name={currentPage} />;
         case 'Autobiography':
             return <AutobiographyPage loadDataUrl={'autobiography'} name={currentPage} />;
+        case 'Test':
+            return <TestPage loadDataUrl={'testTable'} name={currentPage} />;
+        case 'Catalogue':
+            return <TestPage loadDataUrl={'testTable'} name={currentPage} />;
         default:
             return <AdminHome />
     }
 }
 
 const AdminHome = () => {
-    const items = [
-        { id: 0, title: 'Home Sliding Image', subtitle: 'PC & Tablet의 첫 화면의 이미지를 요일별로 등록합니다.' },
-        { id: 2, title: 'Rolling Image', subtitle: '메뉴바 위의 이미지를 추가, 변경, 삭제' },
-        { id: 1, title: 'Awards', subtitle: 'BIOGRAPHY - Awards 추가, 변경, 삭제' },
-        { id: 3, title: 'Artistic Engagement', subtitle: 'BIOGRAPHY - Artistic Engagement 추가, 변경, 삭제' },
-        { id: 4, title: 'Genres Main Image', subtitle: 'ARTWORKS에서 상단 카테고리 이미지 추가, 변경, 삭제' },
-        { id: 5, title: 'Photos', subtitle: 'Biography -> Photos 추가, 변경, 삭제' },
-        { id: 6, title: 'Artworks', subtitle: '작품 등록/변경/삭제' },
-        { id: 7, title: 'Solo', subtitle: 'EXHIBITION에서 Solo 부분 추가, 변경, 삭제' },
-        { id: 8, title: 'Group', subtitle: 'EXHIBITION에서 Group 부분 추가, 변경, 삭제' },
-        { id: 9, title: 'Upcoming', subtitle: 'Upcoming EXHIBITION 추가, 변경, 삭제 => 전시회 일정이 시작되면 자동으로 Current, 전시회 일정이 끝나면 자동으로 Past 등록됩니다.' },
-        { id: 10, title: 'User Account', subtitle: '관리자 아이디 비밀번호 추가/삭제/수정' },
-        { id: 11, title: 'Check Contact', subtitle: 'Contact에 저장된 내용들을 확인합니다' },
-        { id: 12, title: 'Artworks History', subtitle: '작품 이력 관리' },
-        { id: 13, title: 'Price List', subtitle: 'Artworks 제출용 List ( 가격 입력폼 )' },
-        { id: 14, title: 'Report', subtitle: 'Artworks Report' },
-        { id: 15, title: 'Contack Book', subtitle: '연락처 관리' },
+    let items = [
+        { title: 'Home Sliding Image', subtitle: 'PC & Tablet의 첫 화면의 이미지를 요일별로 등록합니다.' },
+        { title: 'Rolling Image', subtitle: '메뉴바 위의 이미지를 추가, 변경, 삭제' },
+        { title: 'Awards', subtitle: 'BIOGRAPHY - Awards 추가, 변경, 삭제' },
+        { title: 'Artistic Engagement', subtitle: 'BIOGRAPHY - Artistic Engagement 추가, 변경, 삭제' },
+        { title: 'Genres Main Image', subtitle: 'ARTWORKS에서 상단 카테고리 이미지 추가, 변경, 삭제' },
+        { title: 'Photos', subtitle: 'Biography -> Photos 추가, 변경, 삭제' },
+        { title: 'Catalogue', subtitle: 'Catalogue 파일을 등록, 변경, 삭제' },
+        { title: 'Artworks', subtitle: '작품 등록/변경/삭제' },
+        { title: 'Solo', subtitle: 'EXHIBITION에서 Solo 부분 추가, 변경, 삭제' },
+        { title: 'Group', subtitle: 'EXHIBITION에서 Group 부분 추가, 변경, 삭제' },
+        { title: 'Upcoming', subtitle: 'Upcoming EXHIBITION 추가, 변경, 삭제 => 전시회 일정이 시작되면 자동으로 Current, 전시회 일정이 끝나면 자동으로 Past 등록됩니다.' },
+        { title: 'User Account', subtitle: '관리자 아이디 비밀번호 추가/삭제/수정' },
+        { title: 'Check Contact', subtitle: 'Contact에 저장된 내용들을 확인합니다' },
+        { title: 'Artworks History', subtitle: '작품 이력 관리' },
+        { title: 'Price List', subtitle: 'Artworks 제출용 List ( 가격 입력폼 )' },
+        { title: 'Report', subtitle: 'Artworks Report' },
+        { title: 'Contack Book', subtitle: '연락처 관리' },
     ]
-
+    items = items.map((item, index) => {
+        return {
+            ...item,
+            id: index
+        }
+    })
 
 
     return (

@@ -149,7 +149,7 @@ const PhotosDetail = ({ lang, value }) => {
         // while (tmp.length < 20) {
         //     tmp = tmp.concat(tmp.slice(0, 20 - tmp.length));
         // }
-        const filterData = tmp.sort((a, b) => new Date(b.uploadDate) - new Date(a.uploadDate))
+        const filterData = tmp.sort((a, b) => a.sequence - b.sequence);
         const years = filterData.map(item => item.year);
         const maxYear = Math.max(...years);
         const minYear = Math.min(...years);

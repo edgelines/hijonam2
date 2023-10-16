@@ -57,7 +57,8 @@ export default function HomeImageChagePage({ loadDataUrl }) {
     const handleFilesChange = (event) => {
         const files = event.target.files;
         const sanitizedFileObjects = Array.from(files).map(file => {
-            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            // const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            let sanitizedFileName = file.name.replace(/[^\w\s.]/g, '').replace(/[가-힣\s]/g, '').normalize('NFC');
             // 파일 이름이 너무 짧거나 없는 경우 타임스탬프 추가
             if (sanitizedFileName.length <= 4) { // 예: ".jpg" 보다 짧거나 같은 경우
                 const timestamp = new Date().getTime();

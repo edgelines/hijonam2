@@ -3,7 +3,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
 import {
     Grid, Button, Snackbar, Alert, Dialog, DialogContent, DialogContentText, TextField, DialogActions, Input, MenuItem,
-    Tab, Table, TableHead, TableBody, TableCell, TableContainer, TableRow, FormControl, FormControlLabel
+    Tab, Table, TableHead, TableBody, TableCell, TableContainer, TableRow, FormControl, FormControlLabel, Typography
 } from '@mui/material';
 import { TabContext, TabPanel, TabList } from '@mui/lab';
 import { AntSwitch } from '../util.jsx';
@@ -80,7 +80,7 @@ export default function ArtworksPage({ loadDataUrl }) {
             setSeverity('error');
             console.error(error);
         }
-        fetchData();
+        reloadData();
     };
 
     const updateDatabase = async (newFormData) => {
@@ -113,7 +113,7 @@ export default function ArtworksPage({ loadDataUrl }) {
             setSeverity('error');
             console.error(error);
         }
-        fetchData();
+        reloadData();
     };
 
     const deleteDatabase = async (deleteID) => {
@@ -129,7 +129,7 @@ export default function ArtworksPage({ loadDataUrl }) {
                 console.error("Error deleting award:", error);
             }
         }
-        fetchData();
+        reloadData();
     };
 
     const updateShowArtworks = async (item) => {
@@ -152,11 +152,12 @@ export default function ArtworksPage({ loadDataUrl }) {
         } catch (error) {
             console.error(error);
         }
-        fetchData();
+        reloadData();
     }
 
     const updateSequences = async () => {
-        for (let i = 0; i < selectedData.length; i++) {
+        for (let i = selectedData.length - 1; i >= 0; i--) {
+            // for (let i = 0; i < selectedData.length; i++) {
             const item = selectedData[i];
             try {
                 const res = await axios.put(`${url}${loadDataUrl}/Artworks/${item.id}`, {
@@ -177,7 +178,7 @@ export default function ArtworksPage({ loadDataUrl }) {
                 console.error(error);
             }
         }
-        fetchData();
+        reloadData();
     }
 
     // Handler
@@ -197,7 +198,7 @@ export default function ArtworksPage({ loadDataUrl }) {
     // FetchData
     const fetchData = async () => {
         await axios.get(`${url}${loadDataUrl}`).then((response) => {
-            const res = response.data.sort((a, b) => a.id - b.id)
+            const res = response.data.sort((a, b) => a.sequence - b.sequence)
             setData(res);
             var tmp = ['All'];
             res.forEach((value) => { tmp.push(value.genres); });
@@ -205,6 +206,16 @@ export default function ArtworksPage({ loadDataUrl }) {
             const newArr = [...set];
             setGenresList(newArr);
             setGenre(newArr[0]);
+        }).catch((error) => {
+            setSeverity('error')
+            console.error("Error fetching artworks:", error);
+        });
+    }
+    // FetchData
+    const reloadData = async () => {
+        await axios.get(`${url}${loadDataUrl}`).then((response) => {
+            const res = response.data.sort((a, b) => a.sequence - b.sequence)
+            setData(res);
         }).catch((error) => {
             setSeverity('error')
             console.error("Error fetching artworks:", error);
@@ -331,24 +342,46 @@ export default function ArtworksPage({ loadDataUrl }) {
                             </Grid>
                         </Grid>
                     </TabPanel>
+                    {/* 이미지 순서변경 */}
                     <TabPanel value="2">
+                        <Grid container sx={{ mb: '15px' }}>
+                            <Typography align='start' sx={{ fontSize: '14px' }}>순서의 번호가 작을수록 먼저 먼저 보이게 됩니다.</Typography>
+                        </Grid>
                         <div className={`${CssStyle.grid_container}`} sx={{ width: '80vw' }}>
                             <ReactSortable list={selectedData} setList={setSelectedData}
                                 animation={200}
                                 className={`${CssStyle.grid}`}
                                 ghostClass='blue-background-class'
                             >
-                                {selectedData.map((item) => (
-                                    <div key={item.id} className={`${CssStyle.grid_item} ${CssStyle.listGroupitem}`}>
-                                        <img src={`/img/Artworks/${item.fileName[0]}`} className="rounded-3 mx-auto"
-                                            style={{
-                                                width: '100%',
-                                                aspectRatio: '1 / 1',
-                                                objectFit: 'cover'
-                                            }}
-                                        />
-                                    </div>
-
+                                {selectedData.map((item, index) => (
+                                    <Grid container key={item.id}>
+                                        <Grid item>
+                                            <div className={`${CssStyle.grid_item} ${CssStyle.listGroupitem}`}>
+                                                <img src={`/img/Artworks/${item.fileName[0]}`} className="rounded-3 mx-auto"
+                                                    style={{
+                                                        width: '100%',
+                                                        aspectRatio: '1 / 1',
+                                                        objectFit: 'cover'
+                                                    }}
+                                                />
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography align='start' sx={{ fontSize: '12px' }}>
+                                                {item.title}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography align='start' sx={{ fontSize: '12px' }}>
+                                                {item.executed}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography align='start' sx={{ fontSize: '12px' }}>
+                                                순서 : {index + 1}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
                                 ))}
                             </ReactSortable>
                         </div>
@@ -369,7 +402,7 @@ const DialogComponent = React.memo(({ dialog, form, data, handleDialogClose, edi
     }, [form]);
 
     useEffect(() => {
-        if (localFormState.genres) {
+        if (localFormState.genres && !editMode) {
             const d = data.filter(item => item.genres === localFormState.genres);
             if (d.length > 0) {
                 const maxSequence = Math.max(...d.map(item => item.sequence));
@@ -397,7 +430,8 @@ const DialogComponent = React.memo(({ dialog, form, data, handleDialogClose, edi
     const handleFilesChange = (event) => {
         const files = event.target.files;
         const sanitizedFileObjects = Array.from(files).map(file => {
-            const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            // const sanitizedFileName = file.name.replace(/[가-힣\s]/g, '').normalize('NFC');
+            let sanitizedFileName = file.name.replace(/[^\w\s.]/g, '').replace(/[가-힣\s]/g, '').normalize('NFC');
             if (sanitizedFileName.length <= 4) { // 예: ".jpg" 보다 짧거나 같은 경우
                 const timestamp = new Date().getTime();
                 const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // a-z 사이의 랜덤한 알파벳

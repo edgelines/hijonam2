@@ -48,7 +48,7 @@ export default function ArtworksPage() {
 
     // Genres Click Img Handler
     const handleSelectedGenres = (item) => {
-        const selectedGenre = originData.filter(row => row.genres === item)
+        const selectedGenre = originData.filter(row => row.genres === item).sort((a, b) => a.sequence - b.sequence);
         const years = selectedGenre.map(item => item.executed);
         const maxYear = Math.max(...years);
         const minYear = Math.min(...years);
@@ -341,7 +341,7 @@ export default function ArtworksPage() {
                             </Grid>
                         </Grid>
                         <Grid item xs={3}>
-                            <Grid container sx={{ mb: '2vh' }}>
+                            <Grid container sx={{ mb: '10px' }}>
                                 <Typography sx={{ fontFamily: 'Helvetica', fontSize: '13px' }}>Work Year</Typography>
                             </Grid>
                             <Grid container>
@@ -378,7 +378,7 @@ export default function ArtworksPage() {
                     </Grid>
 
                     {/* Show */}
-                    <Grid container sx={{ mt: '1.5vh' }}>
+                    <Grid container sx={{ mt: '1.5vh', mb: '140px' }}>
                         <Grid item xs={isLgTablet ? 2.9 : 2.4} sx={{ paddingLeft: isLgTablet ? 6 : 7.2, mt: -0.5 }}>
                             {selectedImg && selectedImg.title ?
                                 <>

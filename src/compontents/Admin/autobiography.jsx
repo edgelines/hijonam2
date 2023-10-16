@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
-import { Grid, Button, Snackbar, Alert, TextField } from '@mui/material';
+import { Grid, Button, Snackbar, Alert, TextField, Tab, Typography } from '@mui/material';
+import { TabContext, TabPanel, TabList } from '@mui/lab';
+import { ReactSortable } from "react-sortablejs";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 // import ImageResize from '@looop/quill-image-resize-module-react'
@@ -11,6 +13,7 @@ import { ImageFormats } from '@xeger/quill-image-formats';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import "./autobiography.css";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import CssStyle from './autobiography.module.css';
 const Font = Quill.import("formats/font");
 const Size = Quill.import("formats/size");
 Font.whitelist = ["Helvetica", "Nanum-Gothic", "Roboto", "Raleway", "Montserrat", "Lato", "Rubik"];
@@ -25,6 +28,7 @@ Quill.register('modules/imageFormats', ImageFormats);
 export default function AutobiographyPage({ loadDataUrl }) {
     const [snackbar, setSnackbar] = useState(false);
     const [severity, setSeverity] = useState('success');
+    const [tabValue, setTabValue] = useState('1');
     const [data, setData] = useState([]); // Origin Data
     const [currentPage, setCurrentPage] = useState(null);
 
@@ -74,7 +78,6 @@ export default function AutobiographyPage({ loadDataUrl }) {
         }
         fetchData();
     };
-
     const updateDatabase = async (newFormData) => {
         try {
             // Send the FormData to the server using axios
@@ -90,7 +93,6 @@ export default function AutobiographyPage({ loadDataUrl }) {
         }
         fetchData();
     };
-
     const deleteDatabase = async (deleteID) => {
         const confirmDelete = window.confirm("이 항목을 삭제 할까요?");
         if (confirmDelete) {
@@ -107,7 +109,27 @@ export default function AutobiographyPage({ loadDataUrl }) {
         }
         fetchData();
     };
+    const updateSequences = async () => {
+        for (let i = data.length - 1; i >= 0; i--) {
+            // for (let i = 0; i < data.length; i++) {
+            const item = data[i];
+            try {
+                const res = await axios.put(`${url}${loadDataUrl}/autobiography/save/${item.id}`, {
+                    ...item,
+                    sequence: i + 1 // Update the sequence based on the order
+                });
+                if (res.status === 200) {
+                    setSnackbar(true);
+                    setSeverity('success');
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+        fetchData();
+    }
 
+    // Handler
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -130,7 +152,7 @@ export default function AutobiographyPage({ loadDataUrl }) {
                 });
                 return item;
             })
-            setData(res.sort((a, b) => b.id - a.id));
+            setData(res.sort((a, b) => a.sequence - b.sequence));
         }).catch((error) => {
             setSeverity('error')
             console.error("Error fetching artworks:", error);
@@ -141,6 +163,9 @@ export default function AutobiographyPage({ loadDataUrl }) {
 
     // Handler
     const handlePageChange = (newValue) => { setCurrentPage(newValue); }
+    // Tab 변경 
+    const handleChange = (event, newValue) => { setTabValue(newValue); };
+    const imageRegex = /<img.*?src="(.*?)".*?>/; // 이미지 태그에서 src 값을 추출하는 정규식
     return (
         <Grid container>
             {/* FeedBack SnackBar */}
@@ -170,15 +195,72 @@ export default function AutobiographyPage({ loadDataUrl }) {
                                 </Grid>
                                 :
                                 <Grid item xs={2}>
-                                    <Button sx={{ mt: 2 }} size="small" variant="contained" onClick={() => handlePageChange('Writing')}>Writing</Button>
+                                    {tabValue === '1' ?
+                                        <Button sx={{ mt: 2 }} size="small" variant="contained" onClick={() => handlePageChange('Writing')}>Writing</Button>
+                                        : <Button sx={{ mt: 2 }} size="small" variant="contained" onClick={updateSequences}>Save Order</Button>
+                                    }
                                 </Grid>
                         }
                     </Grid>
                 </Grid>
-                <Grid item xs={11} sx={{ ml: 5 }}>
-                    <ContentsComponent currentPage={currentPage} form={form} data={data} editBtn={editBtn} deleteDatabase={deleteDatabase} saveBtn={saveBtn} />
-                    {/* <DataTable rows={data} editBtn={editBtn} deleteDatabase={deleteDatabase} /> */}
-                </Grid>
+                <TabContext value={tabValue}>
+                    <Grid container direction="column" alignItems='start'>
+                        <TabList onChange={handleChange} aria-label="lab API tabs" >
+                            <Tab label="추가/삭제/변경" value="1" />
+                            <Tab label="순서변경" value="2" />
+                        </TabList>
+                    </Grid>
+                    {/* 추가/삭제/변경 */}
+                    <TabPanel value="1">
+                        <Grid container>
+                            <ContentsComponent currentPage={currentPage} form={form} data={data} editBtn={editBtn} deleteDatabase={deleteDatabase} saveBtn={saveBtn} />
+                        </Grid>
+                    </TabPanel>
+                    {/* 순서변경 */}
+                    <TabPanel value="2">
+                        <Grid container sx={{ mb: '15px' }}>
+                            <Typography align='start' sx={{ fontSize: '14px' }}>순서의 번호가 작을수록 먼저 먼저 보이게 됩니다.</Typography>
+                        </Grid>
+                        <div className={`${CssStyle.grid_container}`} sx={{ width: '80vw' }}>
+                            <ReactSortable list={data} setList={setData}
+                                animation={200}
+                                className={`${CssStyle.grid}`}
+                                ghostClass='blue-background-class'
+                            >
+                                {data.map((item, index) => (
+                                    <Grid container key={item.id}>
+                                        <Grid item>
+                                            <div className={`${CssStyle.grid_item} ${CssStyle.listGroupitem}`}>
+                                                <img src={item.content.match(imageRegex) ? item.content.match(imageRegex)[0] : null} className="rounded-3 mx-auto"
+                                                    style={{
+                                                        width: '100%',
+                                                        aspectRatio: '1 / 1',
+                                                        objectFit: 'cover'
+                                                    }}
+                                                />
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography align='start' sx={{ fontSize: '12px' }}>
+                                                {item.title}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography align='start' sx={{ fontSize: '12px' }}>
+                                                {item.year}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography align='start' sx={{ fontSize: '12px' }}>
+                                                순서 : {index + 1}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                ))}
+                            </ReactSortable>
+                        </div>
+                    </TabPanel>
+                </TabContext>
             </Grid>
 
         </Grid>
@@ -238,7 +320,8 @@ const EditorForm = ({ form, saveBtn, edit }) => {
     // Handler
     const actionUploadEditorImage = async (file) => {
 
-        const sanitizedFileName = `${file.name.replace(/[가-힣\s]/g, '').normalize('NFC')}`;
+        // const sanitizedFileName = `${file.name.replace(/[가-힣\s]/g, '').normalize('NFC')}`;
+        let sanitizedFileName = file.name.replace(/[^\w\s.]/g, '').replace(/[가-힣\s]/g, '').normalize('NFC');
         if (sanitizedFileName.length <= 4) { // 예: ".jpg" 보다 짧거나 같은 경우
             const timestamp = new Date().getTime();
             const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26)); // a-z 사이의 랜덤한 알파벳
