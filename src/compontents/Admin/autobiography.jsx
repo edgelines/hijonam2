@@ -17,7 +17,7 @@ import CssStyle from './autobiography.module.css';
 const Font = Quill.import("formats/font");
 const Size = Quill.import("formats/size");
 Font.whitelist = ["Helvetica", "Nanum-Gothic", "Roboto", "Raleway", "Montserrat", "Lato", "Rubik"];
-Size.whitelist = ["8px", "9px", "10px", "11px", "12px", "14px", "18px", "24px", "36px"];
+Size.whitelist = ["12px", "14px", "18px", "24px", "36px"];
 Quill.register(Size, true);
 Quill.register(Font, true);
 // Quill.register('modules/ImageResize', ImageResize);
@@ -37,9 +37,9 @@ export default function AutobiographyPage({ loadDataUrl }) {
     const url = 'http://hijonam.com/img/'
 
     // Form State & Handler
-    const [form, setForm] = useState({ regDate: "", title: "", content: "", title_kr: "", content_kr: "", views: "" })
+    const [form, setForm] = useState({ regDate: "", title: "", content: "", title_kr: "", content_kr: "", views: "", sequence: "" })
     // Form
-    const resetForm = () => { setForm({ regDate: "", title: "", content: "", title_kr: "", content_kr: "", views: "" }); };
+    const resetForm = () => { setForm({ regDate: "", title: "", content: "", title_kr: "", content_kr: "", views: "", sequence: "" }); };
 
     const editBtn = (content) => {
         // setEditMode(true);
@@ -52,7 +52,8 @@ export default function AutobiographyPage({ loadDataUrl }) {
             content: content.content,
             title_kr: content.title_kr,
             content_kr: content.content_kr,
-            views: content.views
+            views: content.views,
+            sequence: content.sequence,
         });
     };
     const saveBtn = (newFormData) => {
@@ -152,7 +153,7 @@ export default function AutobiographyPage({ loadDataUrl }) {
                 });
                 return item;
             })
-            setData(res.sort((a, b) => a.sequence - b.sequence));
+            setData(res.sort((a, b) => b.sequence - a.sequence));
         }).catch((error) => {
             setSeverity('error')
             console.error("Error fetching artworks:", error);
@@ -162,9 +163,9 @@ export default function AutobiographyPage({ loadDataUrl }) {
 
 
     // Handler
-    const handlePageChange = (newValue) => { setCurrentPage(newValue); }
+    const handlePageChange = (newValue) => { setCurrentPage(newValue); resetForm() };
     // Tab 변경 
-    const handleChange = (event, newValue) => { setTabValue(newValue); };
+    const handleChange = (event, newValue) => { setTabValue(newValue); resetForm() };
     const imageRegex = /<img.*?src="(.*?)".*?>/; // 이미지 태그에서 src 값을 추출하는 정규식
     return (
         <Grid container>
@@ -267,7 +268,7 @@ export default function AutobiographyPage({ loadDataUrl }) {
     )
 }
 
-const EditorForm = ({ form, saveBtn, edit }) => {
+const EditorForm = ({ form, saveBtn, edit, data }) => {
     const [localFormState, setLocalFormState] = useState(form);
     const quillRef = useRef(null);
     const quillRef_kr = useRef(null);
@@ -461,8 +462,23 @@ const EditorForm = ({ form, saveBtn, edit }) => {
         if (!edit) {
             const day = new Date();
             const formattedDate = `${day.getFullYear()}-${String(day.getMonth() + 1).padStart(2, '0')}-${String(day.getDate()).padStart(2, '0')}`;
+            const d = data.filter(item => item.subject === localFormState.subject);
+            if (d.length > 0) {
+                const maxSequence = Math.max(...d.map(item => item.sequence));
+                const newOrder = maxSequence + 1;
+                setLocalFormState(prevForm => ({
+                    ...prevForm,
+                    sequence: newOrder,
+                }));
+            } else {
+                setLocalFormState(prevForm => ({
+                    ...prevForm,
+                    sequence: 1,
+                }));
+            }
             setLocalFormState({ ...localFormState, regDate: formattedDate, views: 0 })
         }
+
     }, [edit]);
 
     return (
@@ -579,9 +595,9 @@ const DataTable = ({ rows, editBtn, deleteDatabase }) => {
 const ContentsComponent = ({ form, currentPage, data, editBtn, deleteDatabase, saveBtn }) => {
     switch (currentPage) {
         case 'Writing':
-            return <EditorForm form={form} saveBtn={saveBtn} edit={false} />;
+            return <EditorForm form={form} saveBtn={saveBtn} edit={false} data={data} />;
         case 'Edit':
-            return <EditorForm form={form} saveBtn={saveBtn} edit={true} />;
+            return <EditorForm form={form} saveBtn={saveBtn} edit={true} data={data} />;
         case 'Cancel':
             return <DataTable rows={data} editBtn={editBtn} deleteDatabase={deleteDatabase} />
         default:

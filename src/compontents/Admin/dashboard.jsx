@@ -17,6 +17,7 @@ import ContactBookPage from './contactBook.jsx';
 import PhotosPage from './photos.jsx';
 import AutobiographyPage from './autobiography.jsx';
 import RollingImageChagePage from './rollingImage.jsx';
+import Catalogues from './catalogues.jsx';
 import TestPage from './Test/test.jsx';
 export default function AdminDashboardPage() {
     const isLgTablet = useMediaQuery('(max-width:1366px)');
@@ -119,9 +120,9 @@ const ContentsComponent = ({ currentPage }) => {
             return <PhotosPage loadDataUrl={'photos'} name={currentPage} />;
         case 'Autobiography':
             return <AutobiographyPage loadDataUrl={'autobiography'} name={currentPage} />;
-        case 'Test':
-            return <TestPage loadDataUrl={'testTable'} name={currentPage} />;
         case 'Catalogue':
+            return <Catalogues loadDataUrl={'catalogue'} name={currentPage} />;
+        case 'Test':
             return <TestPage loadDataUrl={'testTable'} name={currentPage} />;
         default:
             return <AdminHome />

@@ -439,9 +439,10 @@ const DialogComponent = React.memo(({ dialog, form, data, handleDialogClose, edi
             }
             return new File([file], sanitizedFileName, { type: file.type });
         });
-        setLocalFormState({ ...localFormState, fileName: sanitizedFileObjects })
+        const updatedFiles = [...localFormState.fileName, ...sanitizedFileObjects];
+        setLocalFormState({ ...localFormState, fileName: updatedFiles })
         const imageUrls = Array.from(files).map(file => URL.createObjectURL(file));
-        setPreviewImages(imageUrls);
+        setPreviewImages(prevPreviewImages => [...prevPreviewImages, ...imageUrls]);
     };
     const handleFileDrop = (event) => {
         event.preventDefault();

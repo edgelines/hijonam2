@@ -331,3 +331,13 @@ export const Share = ({ currentUrl, kakaoTitle, kakaoDescription, kakaoImage, co
     )
 }
 // 프린터
+
+// 파일 유형 확인 함수
+export const getFileType = (fileName) => {
+    if (fileName.endsWith('.pdf')) {
+        return 'pdf';
+    } else if (fileName.endsWith('.webp')) {
+        return 'image';
+    }
+    return 'unknown';
+};
