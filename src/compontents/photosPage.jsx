@@ -161,7 +161,7 @@ const PhotosDetail = ({ lang, value }) => {
         setData(filterData);
         setSelectedImg(filterData[0])
     }
-    const handleSelectedImg = (item) => { setSelectedImg(item); }
+    const handleSelectedImg = (item) => { setSelectedImg(item); console.log(item); }
     const handleChange2 = (event, newValue, activeThumb) => {
         if (!Array.isArray(newValue)) {
             return;
@@ -256,15 +256,28 @@ const PhotosDetail = ({ lang, value }) => {
                     {/* 선택된 사진 */}
                     <Grid container sx={{ mt: '3vh' }}>
                         <Grid item xs={12}>
-                            {selectedImg ?
-                                <img src={`/img/Photos/${selectedImg.folderName}/${selectedImg.fileName}`} style={{
-                                    width: '100%',
-                                    textAlign: 'center',
-                                    // height: '70%',
-                                    // objectFit: 'cover'
-                                }} /> :
+                            {selectedImg && selectedImg.fileName ?
+                                selectedImg.fileName.length > 1 ? (
+                                    selectedImg.fileName.map((file) => (
+                                        <img key={file} src={`/img/Photos/${selectedImg.folderName}/${file}`} loading="lazy" style={{
+                                            width: '100%',
+                                            textAlign: 'center',
+                                            // height: '70%',
+                                            // objectFit: 'cover'
+                                        }} />
+                                    ))
+                                ) : (
+                                    <img src={`/img/Photos/${selectedImg.folderName}/${selectedImg.fileName[0]}`} loading="lazy" style={{
+                                        width: '100%',
+                                        textAlign: 'center',
+                                        // height: '70%',
+                                        // objectFit: 'cover'
+                                    }} />
+                                )
+                                :
                                 <Skeleton variant="rectangular" />
                             }
+
                         </Grid>
                     </Grid>
 
@@ -420,14 +433,27 @@ const PhotosDetail = ({ lang, value }) => {
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={8.39}>
-                                    {selectedImg ?
-                                        <img src={`/img/Photos/${selectedImg.folderName}/${selectedImg.fileName}`} style={{
-                                            width: '92%',
-                                            maxWidth: '43vw',
-                                            textAlign: 'center',
-                                            // height: '70%',
-                                            // objectFit: 'cover'
-                                        }} /> :
+                                    {selectedImg && selectedImg.fileName ?
+                                        selectedImg.fileName.length > 1 ? (
+                                            selectedImg.fileName.map((file) => (
+                                                <img key={file} src={`/img/Photos/${selectedImg.folderName}/${file}`} loading="lazy" style={{
+                                                    width: '92%',
+                                                    maxWidth: '43vw',
+                                                    textAlign: 'center',
+                                                    // height: '70%',
+                                                    // objectFit: 'cover'
+                                                }} />
+                                            ))
+                                        ) : (
+                                            <img src={`/img/Photos/${selectedImg.folderName}/${selectedImg.fileName[0]}`} loading="lazy" style={{
+                                                width: '92%',
+                                                maxWidth: '43vw',
+                                                textAlign: 'center',
+                                                // height: '70%',
+                                                // objectFit: 'cover'
+                                            }} />
+                                        )
+                                        :
                                         <Skeleton variant="rectangular" />
                                     }
                                 </Grid>
@@ -463,7 +489,7 @@ const PhotosDetail = ({ lang, value }) => {
                                 {
                                     data.map((item) => (
                                         <Grid item xs={3} onClick={() => handleSelectedImg(item)} key={item.id}>
-                                            <img src={`/img/Photos/${item.folderName}/${item.fileName}`}
+                                            <img src={`/img/Photos/${item.folderName}/${item.fileName[0]}`}
                                                 loading="lazy"
                                                 style={{
                                                     width: '100%',

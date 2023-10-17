@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Grid, Typography, Box, Stack, Modal, Button } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import { generateTheme } from './util.jsx';
+import { generateTheme, getFileType } from './util.jsx';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
 import logo from '../assets/hijonam_logo.png'
@@ -16,6 +16,7 @@ export default function HomePage({ lang }) {
     const [imgData, setImgData] = useState([]);
     const [exhibition, setExhibition] = useState([]);
     const [autobiographyContent, setAutobiographyContent] = useState([]);
+    const [catalogue, setCatalogue] = useState({});
     const [photos, setPhotos] = useState({ exhibition: {}, studio: {}, publicArticles: {}, other: {} });
     const [worldTime, setWorldTime] = useState({ seoul: new Date(), newYork: new Date() });
 
@@ -86,25 +87,33 @@ export default function HomePage({ lang }) {
             var studio = res.data.filter(item => item.subject === 'Studio')
             var publicArticles = res.data.filter(item => item.subject === 'Public Articles')
             var other = res.data.filter(item => item.subject === 'Other Moments')
-            exhibition = exhibition.sort((a, b) => a.sequence - b.sequence).slice(-1)[0]
-            studio = studio.sort((a, b) => a.sequence - b.sequence).slice(-1)[0]
-            publicArticles = publicArticles.sort((a, b) => a.sequence - b.sequence).slice(-1)[0]
-            other = other.sort((a, b) => a.sequence - b.sequence).slice(-1)[0]
+            exhibition = exhibition.sort((a, b) => a.sequence - b.sequence)[0]
+            studio = studio.sort((a, b) => a.sequence - b.sequence)[0]
+            publicArticles = publicArticles.sort((a, b) => a.sequence - b.sequence)[0]
+            other = other.sort((a, b) => a.sequence - b.sequence)[0]
 
             setPhotos({ exhibition: exhibition, studio: studio, publicArticles: publicArticles, other: other })
         }).catch((error) => {
             console.error("Error fetching upcomingExhibition:", error);
         });
         await axios.get(`http://hijonam.com/img/autobiography`).then((response) => {
-
-            const data = response.data.sort((a, b) => a.sequence - b.sequence).slice(-1)[0]
+            const data = response.data.sort((a, b) => b.sequence - a.sequence)[0]
             setAutobiographyContent(data);
         }).catch((error) => {
             console.error("Error fetching artworks:", error);
         });
     }
+    const loadCatalogue = async () => {
+        await axios.get(`http://hijonam.com/img/catalogue`).then((response) => {
+            var data = response.data.sort((a, b) => b.id - a.id).filter(item => item.lang === lang)
+            setCatalogue(data);
+        }).catch((error) => {
+            console.error("Error fetching artworks:", error);
+        });
+    }
     useEffect(() => {
-        fetchData()
+        fetchData();
+        loadCatalogue();
         const updateTime = () => {
             // 현재 로케일의 UTC 시간을 계산합니다.
             const curr = new Date();
@@ -128,6 +137,10 @@ export default function HomePage({ lang }) {
         const interval = setInterval(updateTime, 500);
         return () => clearInterval(interval);
     }, []);
+    useEffect(() => { loadCatalogue(); }, [lang]);
+    const formatFileName = (fileName) => {
+        return fileName.replace(/_/g, '\n');
+    };
     // 모바일 스타일링
     const mobileHomeClockStyle = { fontSize: isLgTablet ? '12px' : '13px', lineHeight: isLgTablet ? '14px' : '17px', fontFamily: 'Helvetica' }
     return (
@@ -401,7 +414,7 @@ export default function HomePage({ lang }) {
                                 </Grid>
                             </Grid>
 
-                            {/* Autobiography & Catalogue */}
+                            {/* Autobiography & Catalog */}
                             <Grid container textAlign='start' sx={{ mt: isTablet ? '20px' : '30px', height: '100%' }}>
                                 {/* Autobiography */}
                                 <Grid item xs={5.8}>
@@ -426,25 +439,78 @@ export default function HomePage({ lang }) {
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={0.4}></Grid>
-                                {/* Catalogue */}
+                                {/* Catalog */}
                                 <Grid item xs={5.8} sx={{ height: '100%' }}>
                                     <Grid container>
                                         <Grid item xs={7} sx={{ borderBottom: '1px solid black' }}>
-                                            Catalogue
+                                            Catalog
                                         </Grid>
                                         <Grid item xs={5} textAlign='end' sx={{ borderBottom: '1px solid black' }}>
-                                            <Link to={`/bio/catalogue/`} style={{ color: 'black', textDecoration: 'none' }}>
+                                            <Link to={`/bio/catalog/`} style={{ color: 'black', textDecoration: 'none' }}>
                                                 See All
                                             </Link>
                                         </Grid>
                                     </Grid>
-                                    <Grid container direction='column' justifyContent='center' sx={{ backgroundColor: '#333333', height: '100%', minHeight: isLgTablet ? '5svh' : '10svh' }}>
-                                        <Typography align='center' sx={{ color: 'white', p: 2, fontSize: isTablet ? '11px' : '15px' }}>CURRENTY CATALOGUE PAGE IS WORKING ON PROCESS</Typography>
-                                        {/* <Grid item xs={6} sx={{ border: '1px solid red', height: '100%' }}>
-                                            img</Grid>
-                                        <Grid item xs={6} sx={{ border: '1px solid blue', height: '100%' }}>
-                                            text</Grid> */}
-                                    </Grid>
+
+                                    {catalogue.length > 0 ?
+                                        catalogue.map((item, index) => {
+                                            const pdfFile = item.fileName.find(name => getFileType(name) === 'pdf');
+                                            const imageFile = item.fileName.find(name => getFileType(name) === 'image');
+                                            const fileUrl = pdfFile ? `/img/Catalogue/${pdfFile}` : `/img/Catalogue/${imageFile}`;
+                                            const handleContainerClick = () => {
+                                                if (pdfFile) {
+                                                    const link = document.createElement('a');
+                                                    link.href = fileUrl;
+                                                    link.download = pdfFile;
+                                                    document.body.appendChild(link);
+                                                    link.click();
+                                                    document.body.removeChild(link);
+                                                }
+                                            };
+                                            return (
+                                                <Grid container key={item.id} onClick={handleContainerClick} sx={{ cursor: 'pointer' }}>
+                                                    {pdfFile ? (
+                                                        <>
+                                                            <Grid item xs={5.8}>
+                                                                <img src={`/img/Catalogue/${imageFile}`} className="rounded-3 mx-auto"
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        aspectRatio: '1 / 1',
+                                                                        objectFit: 'cover'
+                                                                    }}
+                                                                />
+                                                            </Grid>
+                                                            <Grid item xs={0.4}></Grid>
+                                                            <Grid item xs={5.8} container direction='column' justifyContent="flex-end" sx={{ paddingLeft: 2 }}>
+                                                                <Typography align='start' paragraph sx={{ fontFamily: 'Helvetica', fontSize: isTablet ? '11px' : '12px', whiteSpace: 'pre-line' }}>
+                                                                    {formatFileName(pdfFile)}
+                                                                </Typography>
+                                                            </Grid>
+                                                        </>
+                                                    ) : (
+                                                        <img src={`/img/Catalogue/${imageFile}`} className="rounded-3 mx-auto"
+                                                            style={{
+                                                                width: '100%',
+                                                                aspectRatio: '1 / 1',
+                                                                objectFit: 'cover'
+                                                            }}
+                                                        />
+                                                    )}
+                                                    <Grid >
+                                                    </Grid>
+
+                                                </Grid>
+                                            )
+                                        })
+                                        :
+                                        <>
+
+                                            <Grid container direction='column' justifyContent='center' sx={{ backgroundColor: '#333333', height: '100%', minHeight: isLgTablet ? '5svh' : '10svh' }}>
+                                                <Typography align='center' sx={{ color: 'white', p: 2, fontSize: isTablet ? '11px' : '15px' }}>CURRENTY CATALOGUE PAGE IS WORKING ON PROCESS</Typography>
+                                            </Grid>
+                                        </>
+                                    }
+
                                 </Grid>
                             </Grid>
 
@@ -486,10 +552,11 @@ export default function HomePage({ lang }) {
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
+                    </Grid >
 
                     {/* 오른쪽 큰 사진 */}
-                    <Grid item xs={7} sx={{ height: '95svh' }}>
+                    < Grid item xs={7} sx={{ height: '95svh' }
+                    }>
                         <img src={`/img/Main/${imgData[0]}`} style={{
                             top: 0,
                             left: 0,
@@ -497,8 +564,8 @@ export default function HomePage({ lang }) {
                             height: '100%',
                             objectFit: 'cover'
                         }} />
-                    </Grid>
-                </Grid>
+                    </Grid >
+                </Grid >
             )}
         </>
 

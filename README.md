@@ -5,7 +5,23 @@
 
 
 ### TodoList || Bug Report || Request
+- https://white-salt.tistory.com/44 무한스크롤
+- Patina -> Metal
+
+### 2023.10.17
+{dev-catalogue}
+- Admin Artworks, Catalog : 드래그&드롭 여러번했을경우 계속 추가 기능
 - Catalogue PDF Upload
+    - User : Home, Biography 
+    - ADmin Upload
+- Admin Autobiography
+    - 새로 작성시 마지막 Order 생성
+    - Admin Autobiography FontSize : 12px 
+    - Stats Sequence 저장
+- Photos 이미지 여러개
+    - Admin Upload 가능
+    - User Page
+- Public Articles JPG-> Webp
 
 ### 2023.10.16
 {main}

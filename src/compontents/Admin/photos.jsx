@@ -442,12 +442,15 @@ const DialogComponent = React.memo(({ dialog, form, handleDialogClose, editMode,
             }
             return new File([file], sanitizedFileName, { type: file.type });
         });
-        setLocalFormState({ ...localFormState, fileName: sanitizedFileObjects })
+        const updatedFiles = [...localFormState.fileName, ...sanitizedFileObjects];
+        setLocalFormState({ ...localFormState, fileName: updatedFiles })
+        // setLocalFormState({ ...localFormState, fileName: sanitizedFileObjects })
         const imageUrls = Array.from(files).map(file => URL.createObjectURL(file));
-        setPreviewImages(imageUrls);
+        setPreviewImages(prevPreviewImages => [...prevPreviewImages, ...imageUrls]);
     };
     const handleSave = () => {
         delete localFormState.img;
+        // console.log(localFormState);
         saveBtn(localFormState);
         setPreviewImages([]);
     };

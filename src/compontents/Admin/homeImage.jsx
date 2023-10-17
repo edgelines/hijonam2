@@ -70,7 +70,8 @@ export default function HomeImageChagePage({ loadDataUrl }) {
 
         // console.log('files', sanitizedFileObjects);
         // console.log('files', files);
-        setForm({ ...form, fileName: sanitizedFileObjects });
+        const updatedFiles = [...form.fileName, ...sanitizedFileObjects];
+        setForm({ ...form, fileName: updatedFiles });
         // setForm({ ...form, fileName: files })
         const imageUrls = Array.from(files).map(file => URL.createObjectURL(file));
         setPreviewImages(imageUrls);
