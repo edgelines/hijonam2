@@ -195,7 +195,26 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
                 return item;
             });
             const res = resDate.sort((a, b) => a.id - b.id)
-            setData(res);
+            // setData(res);
+
+            // 기존의 데이터와 새로 fetch로 불러온 데이터를 합치고, 장르가 All이 아닐경우 해당장르만 재필터링함 ( 첫로딩시 'All' 로 불러오기 때문에 )
+            // 기존의데이터 필터링 (선택적)
+            let 기존의데이터 = genre !== 'All'
+                ? selectedData.filter(item => item.genres === genre)
+                : [];
+            // console.log('기존의데이터 :', 기존의데이터)
+            // 기존의데이터와 새 데이터를 합칩니다.
+            const 합쳐진데이터 = 기존의데이터.concat(res);
+            const 중복제거데이터 = 합쳐진데이터.filter((item, index, array) => {
+                return array.findIndex(otherItem => otherItem.id === item.id) === index;
+            })
+
+            const newArr = genre !== 'All'
+                ? 중복제거데이터.filter(item => item.genres === genre)
+                : 중복제거데이터;
+            // console.log('newArr :', newArr)
+            // 합쳐진데이터를 상태로 설정합니다.
+            setSelectedData(newArr);
             setIsLoading(false);
         }).catch((error) => {
             setSeverity('error');
@@ -222,25 +241,6 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
     }
     // 첫랜더링시 장르 테이블에서 장르 리스트 불러오고, 전체 오리진 데이터 불러옴
     useEffect(() => { loadGenres(); loadOriginData(); }, [])
-
-    // SelectedData Hook. 기존의 데이터와 새로 fetch로 불러온 데이터를 합치고, 장르가 All이 아닐경우 해당장르만 재필터링함 ( 첫로딩시 'All' 로 불러오기 때문에 )
-    useEffect(() => {
-        // 기존의데이터 필터링 (선택적)
-        let 기존의데이터 = genre !== 'All'
-            ? selectedData.filter(item => item.genres === genre)
-            : selectedData;
-        // console.log('기존의데이터 :', 기존의데이터)
-        // 기존의데이터와 새 데이터를 합칩니다.
-        const 합쳐진데이터 = 기존의데이터.concat(data);
-        const set = new Set(합쳐진데이터);
-        const newArr = [...set];
-        const newArr2 = genre !== 'All'
-            ? newArr.filter(item => item.genres === genre)
-            : newArr;
-        // console.log('newArr :', newArr2)
-        // 합쳐진데이터를 상태로 설정합니다.
-        setSelectedData(newArr2);
-    }, [data]);
 
     // 장르를 누르게 되었을때 첫번째 페이지부터 다시 불러오게 만듬.
     useEffect(() => {
@@ -340,7 +340,7 @@ const MemoizedTable = React.memo(function TableComponent({ selectedData, editBtn
     const handleScroll = (event) => {
         const { offsetHeight, scrollTop, scrollHeight } = event.target;
         // console.log(offsetHeight + scrollTop, scrollHeight);  // Log the values to check
-        if (offsetHeight + scrollTop + 20 >= scrollHeight || isLoading) {
+        if (offsetHeight + scrollTop + 20 >= scrollHeight) {
             setPageNum(prevPageNum => prevPageNum + 1);
         }
     }
