@@ -9,7 +9,9 @@
 ### 2023.10.18
 - {dev-AdminArtworksHistoy}
     - Filter ArtGenre : 스크롤 하단에 도달하면 다음페이지 호출기능 테스트
+        - [Bug] : 첫로딩시 data가 3번 잡힘. -> Hook 조절
     - Filter Artwork Status : 첫로딩시 전체 데이터 불러와서 상태별로 filter (기존방식)
+- Artworks.fileName에 존재하지 않는 이미지 삭제 ( Sever코드 참고 )
 
 ### 2023.10.17
 {dev-catalogue}

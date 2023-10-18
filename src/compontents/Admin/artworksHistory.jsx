@@ -10,7 +10,7 @@ import { NumericFormat } from 'react-number-format';
 
 // import { VisuallyHiddenInput, AntSwitch } from '../util.jsx';
 
-import { TableVirtuoso } from 'react-virtuoso';
+// import { TableVirtuoso } from 'react-virtuoso';
 
 export default function ArtworksHistoryPage({ loadDataUrl }) {
     const isLgTablet = useMediaQuery('(max-width:1400px)');
@@ -172,7 +172,7 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
     const handleClose = (event, reason) => { if (reason === 'clickaway') { return; } setSnackbar(false); };
 
     // FetchData
-    const fetchData = async (pageNum, pageSize = 10) => {
+    const fetchData = async (pageNum, pageSize = 15) => {
         setIsLoading(true);
         await axios.get(`http://hijonam.com/test/adminArtworks`, {
             params: {
@@ -208,7 +208,7 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
         var tmp = ['All'];
         res.data.forEach((value) => { tmp.push(value.genres); });
         setGenresList(tmp);
-        setGenre(tmp[0]);
+        // setGenre(tmp[0]);
     }
     const loadOriginData = async () => {
         const res = await axios.get(`http://hijonam.com/img/artworks`);
@@ -220,32 +220,42 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
         var newArr = [...set];
         setLocationList(newArr);
     }
-    useEffect(() => { fetchData(pageNum); loadGenres(); loadOriginData(); }, [])
+    // 첫랜더링시 장르 테이블에서 장르 리스트 불러오고, 전체 오리진 데이터 불러옴
+    useEffect(() => { loadGenres(); loadOriginData(); }, [])
+
+    // SelectedData Hook. 기존의 데이터와 새로 fetch로 불러온 데이터를 합치고, 장르가 All이 아닐경우 해당장르만 재필터링함 ( 첫로딩시 'All' 로 불러오기 때문에 )
     useEffect(() => {
         // 기존의데이터 필터링 (선택적)
         let 기존의데이터 = genre !== 'All'
             ? selectedData.filter(item => item.genres === genre)
             : selectedData;
-
+        // console.log('기존의데이터 :', 기존의데이터)
         // 기존의데이터와 새 데이터를 합칩니다.
         const 합쳐진데이터 = 기존의데이터.concat(data);
         const set = new Set(합쳐진데이터);
         const newArr = [...set];
+        const newArr2 = genre !== 'All'
+            ? newArr.filter(item => item.genres === genre)
+            : newArr;
+        // console.log('newArr :', newArr2)
         // 합쳐진데이터를 상태로 설정합니다.
-        setSelectedData(newArr);
+        setSelectedData(newArr2);
     }, [data]);
 
+    // 장르를 누르게 되었을때 첫번째 페이지부터 다시 불러오게 만듬.
     useEffect(() => {
         fetchData(1);
         setPageNum(1);
-        let filtered = [...data];
-        if (genre !== 'All') {
-            filtered = filtered.filter(item => item.genres === genre);
-        }
-        setSelectedData(filtered);
     }, [genre]);
-    useEffect(() => { fetchData(pageNum); }, [pageNum])
 
+    // pageNum이 2 이상일 경우에만 작동. 1일경우 장르를 눌렀을때 똑같이 한번 더 작동하게됨.
+    useEffect(() => {
+        if (pageNum > 1) {
+            fetchData(pageNum)
+        }
+    }, [pageNum])
+
+    // Artwork 상태코드, 전체 Origin 데이터에서 불러옴.
     useEffect(() => {
         let filtered = [...originData];
         if (genre && sales !== 'All') {
