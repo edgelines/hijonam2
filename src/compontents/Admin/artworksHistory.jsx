@@ -1,4 +1,4 @@
-import React, { FC, useState, forwardRef, useEffect, useMemo } from 'react';
+import React, { FC, useState, forwardRef, useRef, useEffect, useMemo } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from 'axios';
 import {
@@ -17,9 +17,12 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
     const [snackbar, setSnackbar] = useState(false);
     const [severity, setSeverity] = useState('success');
 
-    const [data, setData] = useState([]); // 오리진데이터
+    const [pageNum, setPageNum] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [originData, setOriginData] = useState([]);
+    const [data, setData] = useState([]); // fetchData들의 merge.
     const [genresList, setGenresList] = useState([]); // 장르 리스트
-    const [genre, setGenre] = useState(''); // Selected Genres
+    const [genre, setGenre] = useState('All'); // Selected Genres
     const [sales, setSales] = useState('All');
     const [selectedData, setSelectedData] = useState([]); // Table Data
     const [locationList, setLocationList] = useState([]);
@@ -161,27 +164,23 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
     };
 
     // Handler
-    // const [filterByArtGenre, setFilterByArtGenre] = useState(null);
-    const handleFilterByArtGenre = (event) => {
-        // setFilterByArtGenre(event.target.value);
-        setGenre(event.target.value)
-    }
     // 장르리스트에서 장르 선택
-    const handleFilterByArtworkStatus = (event) => {
-        setSales(event.target.value);
-    }
+    const handleFilterByArtGenre = (event) => { setGenre(event.target.value); }
+    // ArtworksStatus
+    const handleFilterByArtworkStatus = (event) => { setSales(event.target.value); }
     const handleDialogClose = () => { resetForm(); setDialog(false); }
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setSnackbar(false);
-    };
-
+    const handleClose = (event, reason) => { if (reason === 'clickaway') { return; } setSnackbar(false); };
 
     // FetchData
-    const fetchData = async () => {
-        await axios.get(`${url}${loadDataUrl}`).then((response) => {
+    const fetchData = async (pageNum, pageSize = 10) => {
+        setIsLoading(true);
+        await axios.get(`http://hijonam.com/test/adminArtworks`, {
+            params: {
+                pageNum,
+                pageSize,
+                genres: genre !== 'All' ? genre : undefined
+            }
+        }).then((response) => {
             const dateFields = ['return_date', 'sales_date', 'borrow_date'];
             const resDate = response.data.map(item => {
                 dateFields.forEach(field => {
@@ -196,33 +195,59 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
                 return item;
             });
             const res = resDate.sort((a, b) => a.id - b.id)
-
             setData(res);
-            setSelectedData(res);
-            var tmp = [], location = [];
-            res.forEach((value) => { tmp.push(value.genres); location.push(value.location); });
-            tmp.push('All');
-            var set = new Set(tmp);
-            var newArr = [...set];
-            setGenresList(newArr);
-            setGenre(newArr[1]);
-
-            // 작품 보관 위치 
-            var set = new Set(location);
-            var newArr = [...set];
-            setLocationList(newArr);
+            setIsLoading(false);
         }).catch((error) => {
-            setSeverity('error')
+            setSeverity('error');
+            setIsLoading(false);
             console.error("Error fetching artworks:", error);
         });
     }
-
-    useEffect(() => { fetchData(); }, [])
+    const loadGenres = async () => {
+        const res = await axios.get(`http://hijonam.com/img/genres`);
+        var tmp = ['All'];
+        res.data.forEach((value) => { tmp.push(value.genres); });
+        setGenresList(tmp);
+        setGenre(tmp[0]);
+    }
+    const loadOriginData = async () => {
+        const res = await axios.get(`http://hijonam.com/img/artworks`);
+        setOriginData(res.data);
+        var location = [];
+        res.data.forEach((value) => { location.push(value.location); });
+        // 작품 보관 위치 
+        var set = new Set(location);
+        var newArr = [...set];
+        setLocationList(newArr);
+    }
+    useEffect(() => { fetchData(pageNum); loadGenres(); loadOriginData(); }, [])
     useEffect(() => {
+        // 기존의데이터 필터링 (선택적)
+        let 기존의데이터 = genre !== 'All'
+            ? selectedData.filter(item => item.genres === genre)
+            : selectedData;
+
+        // 기존의데이터와 새 데이터를 합칩니다.
+        const 합쳐진데이터 = 기존의데이터.concat(data);
+        const set = new Set(합쳐진데이터);
+        const newArr = [...set];
+        // 합쳐진데이터를 상태로 설정합니다.
+        setSelectedData(newArr);
+    }, [data]);
+
+    useEffect(() => {
+        fetchData(1);
+        setPageNum(1);
         let filtered = [...data];
         if (genre !== 'All') {
             filtered = filtered.filter(item => item.genres === genre);
         }
+        setSelectedData(filtered);
+    }, [genre]);
+    useEffect(() => { fetchData(pageNum); }, [pageNum])
+
+    useEffect(() => {
+        let filtered = [...originData];
         if (genre && sales !== 'All') {
             if (sales === "Available") {
                 filtered = filtered.filter(data => data.sales == 0 && !data.holder_name);
@@ -239,7 +264,8 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
             }
         }
         setSelectedData(filtered);
-    }, [genre, sales])
+    }, [sales])
+
     const labelStyle = { fontSize: isLgTablet ? '13px' : '14px', textAlign: 'start' }
     return (
         <Grid container>
@@ -291,16 +317,35 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
 
                 {/* History Table */}
                 <Grid item xs={10.3}>
-                    <MemoizedTable selectedData={selectedData} editBtn={editBtn} />
+                    <MemoizedTable selectedData={selectedData} editBtn={editBtn} isLoading={isLoading} setPageNum={setPageNum} sales={sales} />
+                    {/* <MemoizedTable selectedData={selectedData} editBtn={editBtn} /> */}
                 </Grid>
             </Grid>
         </Grid>
     )
 }
 
-const MemoizedTable = React.memo(function TableComponent({ selectedData, editBtn }) {
+const MemoizedTable = React.memo(function TableComponent({ selectedData, editBtn, isLoading, setPageNum, sales }) {
+    const tableContainerRef = useRef(null);  // Create a ref
+    const handleScroll = (event) => {
+        const { offsetHeight, scrollTop, scrollHeight } = event.target;
+        // console.log(offsetHeight + scrollTop, scrollHeight);  // Log the values to check
+        if (offsetHeight + scrollTop + 20 >= scrollHeight || isLoading) {
+            setPageNum(prevPageNum => prevPageNum + 1);
+        }
+    }
+
+    useEffect(() => {
+        if (sales === 'All') {
+            const tableContainerElement = tableContainerRef.current;
+            if (tableContainerElement) {
+                tableContainerElement.addEventListener('scroll', handleScroll);
+                return () => tableContainerElement.removeEventListener('scroll', handleScroll);
+            }
+        }
+    }, [isLoading]);
     return (
-        <TableContainer sx={{ height: '75vh', width: '100%', fontSize: '12px' }}>
+        <TableContainer ref={tableContainerRef} sx={{ height: '75vh', width: '100%', fontSize: '12px' }}>
             <Table size="small">
                 <TableBody>
                     {selectedData.map((row) => (

@@ -5,8 +5,11 @@
 
 
 ### TodoList || Bug Report || Request
-- https://white-salt.tistory.com/44 무한스크롤
-- Patina -> Metal
+
+### 2023.10.18
+- {dev-AdminArtworksHistoy}
+    - Filter ArtGenre : 스크롤 하단에 도달하면 다음페이지 호출기능 테스트
+    - Filter Artwork Status : 첫로딩시 전체 데이터 불러와서 상태별로 filter (기존방식)
 
 ### 2023.10.17
 {dev-catalogue}
@@ -22,6 +25,11 @@
     - Admin Upload 가능
     - User Page
 - Public Articles JPG-> Webp
+- Artworks Genres : Patina -> Metal
+- 무한스크롤
+    - https://white-salt.tistory.com/44
+    - test.js에 cors 등록 후 출력이됨, ( img쪽은 cors등록을 하니 hijonam.com 원 소스에서 Not Allowed origin! )
+    - Admin에서 호출시 10개 반환이 되는데, 랜더링페이지에선 2개밖에 안나옴
 
 ### 2023.10.16
 {main}
