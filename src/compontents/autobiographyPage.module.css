@@ -1,0 +1,33 @@
+.listGroupitem:hover {
+    /* cursor: move;
+    cursor: -webkit-grabbing; */
+    transform: scale(1.15);
+    z-index: 100;
+    background-color: #f4f4f4;
+}
+
+
+
+@media print {
+    @page {
+        size : A4;
+        margin: 20mm;
+    }
+    .printLogo{
+        width: 100px !important;
+        margin-top: 2vh; 
+        margin-bottom: 0.5vh;
+    }
+    .printLogoRightBox{
+        width: 265px !important;
+        margin-right : 16vw;
+    }
+    .printClock{
+        font-size: 12px !important;
+    }
+    .printContent {
+        width : 100%;
+        box-sizing: border-box;
+    }
+    .printView{ font-size : 12px !important; }
+}
