@@ -528,10 +528,7 @@ const DialogComponent = React.memo(({ dialog, data, form, handleDialogClose, sav
     const [localFormState, setLocalFormState] = useState(form);
     const [errors, setErrors] = useState({ sales_date: '', borrow_date: '', return_date: '' });
 
-    useEffect(() => {
-        setLocalFormState(form);
-    }, [form]);
-
+    useEffect(() => { setLocalFormState(form); }, [form]);
     const serialDef = useMemo(() => {
         if (localFormState.serial_number) {
             return localFormState.serial_number; // If the serial number already exists, return it
@@ -607,6 +604,7 @@ const DialogComponent = React.memo(({ dialog, data, form, handleDialogClose, sav
         const filteredFormState = Object.fromEntries(
             Object.entries(localFormState).filter(([key, value]) => value !== null)
         );
+        // console.log(filteredFormState);
         // delete localFormState.fileName;
         saveBtn(filteredFormState);
     };
@@ -1003,11 +1001,12 @@ const DialogComponent = React.memo(({ dialog, data, form, handleDialogClose, sav
                                         <TextField
                                             variant="standard"
                                             label="Note"
-                                            name="executed"
+                                            name="note"
                                             fullWidth
                                             multiline
                                             margin="nomal"
                                             rows={3}
+                                            onChange={handleFormText}
                                             value={localFormState.note}
                                             sx={{ backgroundColor: '#fff8db' }}
                                         />

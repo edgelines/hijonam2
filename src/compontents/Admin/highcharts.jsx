@@ -35,7 +35,7 @@ export function Chart({ data, height, Select }) {
             headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
             pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>',
             formatter: function () {
-                console.log(this.point);
+                // console.log(this.point);
                 return `<span style="color:${this.point.color}">${this.point.name}</span><br/><b>${(this.point.y).toLocaleString('ko-KR')}</b>`;
             },
         },

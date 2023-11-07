@@ -10,6 +10,9 @@
 {master}
 - commit.1
   - Admin>ArtworksHistory > put API 오타 수정
+- commit.2
+  - Admin>ArtworksHistory > note onchage 누락 수정
+  - Admin>report > 월별 재정렬 ( ex. 2023-11 2023-04 .. 이런식으로 나오는거 수정 )
 
 ### 2023.11.06
 - commit.1

@@ -202,13 +202,19 @@ export default function ArtworksPage({ loadDataUrl }) {
     const filterDataByPeriod = (period) => {
         var tmp2 = data.filter(item => item.sales === 1);
 
+        tmp2.sort((a, b) => {
+            const dateA = new Date(a.sales_date);
+            const dateB = new Date(b.sales_date);
+            return dateA - dateB; // 날짜를 비교합니다.
+        });
         // return originData.value.reduce((acc, cur) => {
         return tmp2.reduce((acc, cur) => {
             const salesDate = new Date(cur.sales_date);
             let periodKey = '';
             switch (period) {
                 case 'month':
-                    periodKey = `${salesDate.getFullYear()}-${salesDate.getMonth() + 1}`;
+                    // periodKey = `${salesDate.getFullYear()}-${salesDate.getMonth() + 1}`;
+                    periodKey = `${salesDate.getFullYear()}-${String(salesDate.getMonth() + 1).padStart(2, '0')}`; // 월을 두 자리로 맞춥니다.
                     break;
                 case 'quarter':
                     periodKey = `${salesDate.getFullYear()}-Q${Math.floor(salesDate.getMonth() / 3) + 1}`;
@@ -228,7 +234,7 @@ export default function ArtworksPage({ loadDataUrl }) {
                     totalPrice: cur.price,
                 });
             }
-
+            // console.log(acc)
             return acc;
         }, []);
     }
