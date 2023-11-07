@@ -134,7 +134,6 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
             location: content.location,
             ho: content.ho,
             grade: content.grade,
-            fileName: content.fileName,
         });
         setDialog(true);
     };
@@ -148,8 +147,25 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
 
     // DB CRUD Function
     const updateDatabase = async (newFormData) => {
+        const formData = new FormData();
+        Object.keys(newFormData).forEach((key) => {
+            if (key !== "fileName") {
+                formData.append(key, newFormData[key]);
+            }
+        });
+        // 파일 배열 처리
+        if (newFormData.fileName && newFormData.fileName.length > 0) {
+            // const fileName = Array.from(newFormData.fileName).map(file => { console.log(file) });
+            const fileName = Array.from(newFormData.fileName).map(file => file);
+            formData.append("fileName", JSON.stringify(fileName));
+        }
+        // for (let [key, value] of formData.entries()) {
+        //     console.log(`${key}: ${value}`);
+        // }
+
         try {
-            const response = await axios.put(`${IMG}/${loadDataUrl}/${newFormData.id}`, newFormData);
+            // console.log(newFormData);
+            const response = await axios.put(`${IMG}/${loadDataUrl}/Artworks/${newFormData.id}`, formData);
             setSnackbar(true);
             setSeverity('success');
             setDialog(false);
@@ -587,7 +603,13 @@ const DialogComponent = React.memo(({ dialog, data, form, handleDialogClose, sav
         }));
     };
 
-    const handleSave = () => { saveBtn(localFormState); };
+    const handleSave = () => {
+        const filteredFormState = Object.fromEntries(
+            Object.entries(localFormState).filter(([key, value]) => value !== null)
+        );
+        // delete localFormState.fileName;
+        saveBtn(filteredFormState);
+    };
 
     return (
         <Dialog open={dialog}

@@ -450,7 +450,12 @@ const DialogComponent = React.memo(({ dialog, form, data, handleDialogClose, edi
     };
     const handleSave = () => {
         delete localFormState.img;
-        saveBtn(localFormState);
+        // console.log(localFormState);
+        const filteredFormState = Object.fromEntries(
+            Object.entries(localFormState).filter(([key, value]) => value !== null)
+        );
+        // console.log(filteredFormState);
+        saveBtn(filteredFormState);
         setPreviewImages([]);
     };
     const handleClose = () => {

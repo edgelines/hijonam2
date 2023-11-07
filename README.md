@@ -6,6 +6,17 @@
 
 ### TodoList || Bug Report || Request
 
+### 2023.11.07
+{master}
+- commit.1
+  - Admin>ArtworksHistory > put API 오타 수정
+
+### 2023.11.06
+- commit.1
+  - Admin > Artworks > title_kr null 현상 고침
+- commit.2
+  - Admin > Artworks > 잘못된 주석처리 해제
+
 ### 2023.10.31
 - webpack config
   - .env
