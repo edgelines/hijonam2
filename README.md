@@ -6,6 +6,15 @@
 
 ### TodoList || Bug Report || Request
 
+### 2023.11.08
+{master}
+- commit.1
+  - Admin>Dashboard > RadioBtn PaddingTop, PaddingBottom 조정
+  - Admin>ArtworksHistory 
+    - 장르를 변경시 스크롤 강제 상단으로 이동
+    - 스크롤 하단 도달시 다음 페이지 데이터 불러오기
+      - 20px => 100px
+
 ### 2023.11.07
 {master}
 - commit.1
@@ -13,7 +22,9 @@
 - commit.2
   - Admin>ArtworksHistory > note onchage 누락 수정
   - Admin>report > 월별 재정렬 ( ex. 2023-11 2023-04 .. 이런식으로 나오는거 수정 )
-
+- commit.3
+  - Admin>ArtworksHistory > Filter Status 수정
+  
 ### 2023.11.06
 - commit.1
   - Admin > Artworks > title_kr null 현상 고침

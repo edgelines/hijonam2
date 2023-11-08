@@ -258,21 +258,27 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
 
     // 장르를 누르게 되었을때 첫번째 페이지부터 다시 불러오게 만듬.
     useEffect(() => {
-        fetchData(1);
         setPageNum(1);
+        fetchData(1);
+        // console.log('genre : ', genre, pageNum)
     }, [genre]);
 
     // pageNum이 2 이상일 경우에만 작동. 1일경우 장르를 눌렀을때 똑같이 한번 더 작동하게됨.
     useEffect(() => {
         if (pageNum > 1) {
             fetchData(pageNum)
+            // console.log('pageNum : ', genre, pageNum);
         }
     }, [pageNum])
 
     // Artwork 상태코드, 전체 Origin 데이터에서 불러옴.
     useEffect(() => {
         let filtered = [...originData];
-        if (genre && sales !== 'All') {
+        if (genre !== 'All') {
+            filtered = filtered.filter(data => data.genres === genre)
+            console.log(filtered);
+        }
+        if (sales !== 'All') {
             if (sales === "Available") {
                 filtered = filtered.filter(data => data.sales == 0 && !data.holder_name);
             } else if (sales === "Sold") {
@@ -341,7 +347,7 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
 
                 {/* History Table */}
                 <Grid item xs={10.3}>
-                    <MemoizedTable selectedData={selectedData} editBtn={editBtn} isLoading={isLoading} setPageNum={setPageNum} sales={sales} />
+                    <MemoizedTable selectedData={selectedData} editBtn={editBtn} isLoading={isLoading} setPageNum={setPageNum} sales={sales} genre={genre} />
                     {/* <MemoizedTable selectedData={selectedData} editBtn={editBtn} /> */}
                 </Grid>
             </Grid>
@@ -349,13 +355,14 @@ export default function ArtworksHistoryPage({ loadDataUrl }) {
     )
 }
 
-const MemoizedTable = React.memo(function TableComponent({ selectedData, editBtn, isLoading, setPageNum, sales }) {
+const MemoizedTable = React.memo(function TableComponent({ selectedData, editBtn, isLoading, setPageNum, sales, genre }) {
     const tableContainerRef = useRef(null);  // Create a ref
     const handleScroll = (event) => {
         if (isLoading) return;
         const { offsetHeight, scrollTop, scrollHeight } = event.target;
         // console.log(offsetHeight + scrollTop, scrollHeight);  // Log the values to check
-        if (offsetHeight + scrollTop + 20 >= scrollHeight) {
+        if (offsetHeight + scrollTop + 100 >= scrollHeight) {
+            // console.log(offsetHeight + scrollTop + 100, scrollHeight);
             setPageNum(prevPageNum => prevPageNum + 1);
         }
     }
@@ -369,8 +376,15 @@ const MemoizedTable = React.memo(function TableComponent({ selectedData, editBtn
             }
         }
     }, [isLoading]);
+
+    // 장르가 변경되었을때 스크롤 상단으로 옮기기
+    useEffect(() => {
+        if (tableContainerRef.current) {
+            tableContainerRef.current.scrollTop = 0; // 스크롤을 맨 위로 이동
+        }
+    }, [genre])
     return (
-        <TableContainer ref={tableContainerRef} sx={{ height: '75vh', width: '100%', fontSize: '12px' }}>
+        <TableContainer ref={tableContainerRef} sx={{ height: '90svh', width: '100%', fontSize: '12px' }}>
             <Table size="small">
                 <TableBody>
                     {selectedData.map((row) => (

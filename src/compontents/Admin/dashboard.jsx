@@ -24,6 +24,7 @@ export default function AdminDashboardPage() {
     const [currentPage, setCurrentPage] = useState(null);
     const menuStyle = { textAlign: 'start', fontWeight: 600, mt: 1, color: 'black' }
     const labelStyle = { fontSize: isLgTablet ? '13px' : '14px', textAlign: 'start' }
+    const radioStyle = { paddingLeft: '9px', paddingTop: '6px', paddingBottom: '6px' }
     // handler
     const openGoogleAnalytics = () => { window.open('https://analytics.google.com/', '_blank') }
     const handlePageChange = (event) => { setCurrentPage(event.target.value); }
@@ -38,36 +39,36 @@ export default function AdminDashboardPage() {
                         onChange={handlePageChange} // 페이지 변경 핸들러
                     >
                         <FormLabel sx={{ textAlign: 'start', fontWeight: 600, color: 'black' }}>Home</FormLabel>
-                        <FormControlLabel value="Home Image" control={<Radio size='small' />} label="Home Image" sx={{ '.MuiFormControlLabel-label': labelStyle }} margin='dense' />
-                        <FormControlLabel value="Rolling Image" control={<Radio size='small' />} label="Rolling Image" sx={{ '.MuiFormControlLabel-label': labelStyle }} margin='normal' />
+                        <FormControlLabel value="Home Image" control={<Radio size='small' sx={radioStyle} />} label="Home Image" sx={{ '.MuiFormControlLabel-label': labelStyle }} margin='dense' />
+                        <FormControlLabel value="Rolling Image" control={<Radio size='small' sx={radioStyle} />} label="Rolling Image" sx={{ '.MuiFormControlLabel-label': labelStyle }} margin='normal' />
 
                         <FormLabel sx={menuStyle}>Biography</FormLabel>
-                        <FormControlLabel value="Awards" control={<Radio size='small' />} label="Awards" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Awards" control={<Radio size='small' sx={radioStyle} />} label="Awards" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         {/* <FormControlLabel value="Published Articles" control={<Radio size='small' />} label="Published Articles" sx={{ '.MuiFormControlLabel-label': labelStyle }} /> */}
-                        <FormControlLabel value="Artistic Engagement" control={<Radio size='small' />} label="Artistic Engagement" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Photos" control={<Radio size='small' />} label="Photos" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Autobiography" control={<Radio size='small' />} label="Autobiography" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Catalogue" control={<Radio size='small' />} label="Catalogue" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Artistic Engagement" control={<Radio size='small' sx={radioStyle} />} label="Artistic Engagement" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Photos" control={<Radio size='small' sx={radioStyle} />} label="Photos" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Autobiography" control={<Radio size='small' sx={radioStyle} />} label="Autobiography" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Catalogue" control={<Radio size='small' sx={radioStyle} />} label="Catalogue" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
 
                         <FormLabel sx={menuStyle}>Artworks</FormLabel>
-                        <FormControlLabel value="Genres Main Image" control={<Radio size='small' />} label="Genres Main Image" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Artworks" control={<Radio size='small' />} label="Artworks" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Genres Main Image" control={<Radio size='small' sx={radioStyle} />} label="Genres Main Image" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Artworks" control={<Radio size='small' sx={radioStyle} />} label="Artworks" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
 
                         <FormLabel sx={menuStyle}>Exhibition</FormLabel>
-                        <FormControlLabel value="Solo" control={<Radio size='small' />} label="Solo" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Group" control={<Radio size='small' />} label="Group" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Artfair" control={<Radio size='small' />} label="Artfair" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Upcoming" control={<Radio size='small' />} label="Upcoming" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Solo" control={<Radio size='small' sx={radioStyle} />} label="Solo" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Group" control={<Radio size='small' sx={radioStyle} />} label="Group" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Artfair" control={<Radio size='small' sx={radioStyle} />} label="Artfair" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Upcoming" control={<Radio size='small' sx={radioStyle} />} label="Upcoming" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
 
                         <FormLabel sx={menuStyle}>Admin</FormLabel>
-                        <FormControlLabel value="User Account" control={<Radio size='small' />} label="User Account" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Check Contact" control={<Radio size='small' />} label="Check Contact" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Artworks History" control={<Radio size='small' />} label="Artworks History" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Price List" control={<Radio size='small' />} label="Price List" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Report" control={<Radio size='small' />} label="Report" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Price Policy" control={<Radio size='small' />} label="Price Policy" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Contact Book" control={<Radio size='small' />} label="Contact Book" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
-                        <FormControlLabel value="Analytics" control={<Radio size='small' />} label="Analytics" onClick={openGoogleAnalytics} sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="User Account" control={<Radio size='small' sx={radioStyle} />} label="User Account" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Check Contact" control={<Radio size='small' sx={radioStyle} />} label="Check Contact" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Artworks History" control={<Radio size='small' sx={radioStyle} />} label="Artworks History" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Price List" control={<Radio size='small' sx={radioStyle} />} label="Price List" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Report" control={<Radio size='small' sx={radioStyle} />} label="Report" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Price Policy" control={<Radio size='small' sx={radioStyle} />} label="Price Policy" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Contact Book" control={<Radio size='small' sx={radioStyle} />} label="Contact Book" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Analytics" control={<Radio size='small' sx={radioStyle} />} label="Analytics" onClick={openGoogleAnalytics} sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         {/* <FormControlLabel value="Test" control={<Radio size='small' />} label="Test" sx={{ '.MuiFormControlLabel-label': labelStyle }} /> */}
                     </RadioGroup>
                 </Grid>
