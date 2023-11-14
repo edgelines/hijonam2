@@ -18,6 +18,7 @@ import PhotosPage from './photos.jsx';
 import AutobiographyPage from './autobiography.jsx';
 import RollingImageChagePage from './rollingImage.jsx';
 import Catalogues from './catalogues.jsx';
+import ArtworksGrade from './artworksGrade.jsx'
 import TestPage from './Test/test.jsx';
 export default function AdminDashboardPage() {
     const isLgTablet = useMediaQuery('(max-width:1366px)');
@@ -68,6 +69,7 @@ export default function AdminDashboardPage() {
                         <FormControlLabel value="Report" control={<Radio size='small' sx={radioStyle} />} label="Report" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         <FormControlLabel value="Price Policy" control={<Radio size='small' sx={radioStyle} />} label="Price Policy" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         <FormControlLabel value="Contact Book" control={<Radio size='small' sx={radioStyle} />} label="Contact Book" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
+                        <FormControlLabel value="Artworks Grade" control={<Radio size='small' sx={radioStyle} />} label="Artworks Grade" sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         <FormControlLabel value="Analytics" control={<Radio size='small' sx={radioStyle} />} label="Analytics" onClick={openGoogleAnalytics} sx={{ '.MuiFormControlLabel-label': labelStyle }} />
                         {/* <FormControlLabel value="Test" control={<Radio size='small' />} label="Test" sx={{ '.MuiFormControlLabel-label': labelStyle }} /> */}
                     </RadioGroup>
@@ -126,6 +128,8 @@ const ContentsComponent = ({ currentPage }) => {
             return <AutobiographyPage loadDataUrl={'autobiography'} name={currentPage} />;
         case 'Catalogue':
             return <Catalogues loadDataUrl={'catalogue'} name={currentPage} />;
+        case 'Artworks Grade':
+            return <ArtworksGrade loadDataUrl={'artworksGrade'} name={currentPage} />;
         case 'Test':
             return <TestPage loadDataUrl={'testTable'} name={currentPage} />;
         default:
@@ -153,6 +157,7 @@ const AdminHome = () => {
         { title: 'Price List', subtitle: 'Artworks 제출용 List ( 가격 입력폼 )' },
         { title: 'Report', subtitle: 'Artworks Report' },
         { title: 'Contack Book', subtitle: '연락처 관리' },
+        { title: 'Artworks Grade', subtitle: '작품 등급 배수 관리' },
     ]
     items = items.map((item, index) => {
         return {

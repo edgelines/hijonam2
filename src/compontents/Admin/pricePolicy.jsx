@@ -3,25 +3,23 @@ import {
     Grid, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputAdornment, TextField, MenuItem,
     Box, IconButton, Collapse, Snackbar, Alert,
 } from '@mui/material';
-// import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { NumericFormatCustom, API } from '../util.jsx';
 import styles from './pricePolicy.module.css';
-// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// import Collapse from 'react-bootstrap/Collapse';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export default function PricePolicyPage({ loadDataUrl }) {
     // Img Data State
     const [snackbar, setSnackbar] = useState(false);
-    const [severity, setSeverity] = useState(null);
+    const [severity, setSeverity] = useState('success');
     const vertical = 'bottom';
     const horizontal = 'center';
     const [orignData, setOrignData] = useState([]);
     const [collapse, setCollapse] = useState(false);
     const [form, setForm] = useState([])
     const [cal, setCal] = useState({ ho: '', price: '', gradeText: '', grade: null, exchange: '', fee: '', discountRate: '' })
+    const [artworksGrade, setArtworksGrade] = useState({ M: '', M1: '', M2: '', status: 'load' });
 
     const fetchData = async () => {
         try {
@@ -34,14 +32,20 @@ export default function PricePolicyPage({ loadDataUrl }) {
                 Hanji: tmp.filter((item) => item.genres === 'Hanji')[0].price,
                 Patina: tmp.filter((item) => item.genres === 'Patina')[0].price
             })
+            const grade = await axios.get(`${API}/artworksGrade`);
+            var tmp = grade.data.sort((a, b) => a.id - b.id);
+            setArtworksGrade({
+                M: tmp.filter((item) => item.grade === 'M')[0].point,
+                M1: tmp.filter((item) => item.grade === 'M1')[0].point,
+                M2: tmp.filter((item) => item.grade === 'M2')[0].point,
+                M3: tmp.filter((item) => item.grade === 'M3')[0].point,
+                status: 'secceeded'
+            })
         } catch (error) {
             console.error('Error fetching data:', error)
         }
     }
-    useEffect(() => {
-        fetchData();
-    }, [])
-
+    useEffect(() => { fetchData(); }, [])
 
     // Table Const
     const hoList = [
@@ -224,9 +228,14 @@ export default function PricePolicyPage({ loadDataUrl }) {
                     {/* 호수, 호당가격, 등급, 환율, 브로커수수료 */}
                     <Grid container spacing={5} sx={{ height: '110px' }}>
                         <Grid item xs={2}>
-                            <div>M★ : 5</div>
-                            <div>M1 : 3</div>
-                            <div>M2 : 2</div>
+                            {artworksGrade.status === 'secceeded' ?
+                                <>
+                                    <div>M★ : {artworksGrade.M}</div>
+                                    <div>M1 : {artworksGrade.M1}</div>
+                                    <div>M2 : {artworksGrade.M2}</div>
+                                    <div>M3 : {artworksGrade.M3}</div>
+                                </> : <div>Loading...</div>
+                            }
                         </Grid>
                         <Grid item xs={2}>
                             <TextField label="호수" variant="standard" fullWidth name="ho" value={cal.ho} onChange={handleCal} />
@@ -248,8 +257,8 @@ export default function PricePolicyPage({ loadDataUrl }) {
                         </Grid>
                         <Grid item xs={2}>
                             <TextField label="Grade" variant="standard" select fullWidth name="grade" defaultValue={1} onChange={handleCal}>
-                                {['M★', 'M1', 'M2', '-'].map((item) => (
-                                    <MenuItem key={item} value={item === 'M★' ? 5 : item === 'M1' ? 3 : item === 'M2' ? 2 : 1}>{item}</MenuItem>
+                                {['M★', 'M1', 'M2', 'M3', '-'].map((item) => (
+                                    <MenuItem key={item} value={item === 'M★' ? artworksGrade.M : item === 'M1' ? artworksGrade.M1 : item === 'M2' ? artworksGrade.M2 : item === 'M3' ? artworksGrade.M3 : 1}>{item}</MenuItem>
                                 ))}
                             </TextField>
                         </Grid>

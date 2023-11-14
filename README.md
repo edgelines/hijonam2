@@ -6,6 +6,12 @@
 
 ### TodoList || Bug Report || Request
 
+### 2023.11.14
+{master}
+- Commit.1
+  - Admin > report.jsx
+    - Buyer sales date 정렬
+
 ### 2023.11.08
 {master}
 - commit.1

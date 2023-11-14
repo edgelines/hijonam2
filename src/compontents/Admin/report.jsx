@@ -95,6 +95,7 @@ export default function ArtworksPage({ loadDataUrl }) {
                 });
                 return item;
             });
+            tableData = tableData.sort((a, b) => new Date(b.sales_date) - new Date(a.sales_date))
             const result = tableData.map((item) => {
                 return {
                     ...item,

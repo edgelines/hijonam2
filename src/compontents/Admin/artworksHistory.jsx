@@ -748,7 +748,7 @@ const DialogComponent = React.memo(({ dialog, data, form, handleDialogClose, sav
                                             onChange={handleFormText}
                                             value={localFormState.grade !== null && localFormState.grade !== undefined ? localFormState.grade : '-'}
                                         >
-                                            {['M★', 'M1', 'M2', '-'].map((item) => (
+                                            {['M★', 'M1', 'M2', 'M3', '-'].map((item) => (
                                                 <MenuItem value={item} key={item}>{item}</MenuItem>
                                             ))}
                                         </TextField>
